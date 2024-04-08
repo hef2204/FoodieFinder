@@ -29,6 +29,12 @@ class Restaurant:
     Kosher: str
     order_table: str
     Availability: str
-    rating: str
-    reviews: str
     discounts: str
+
+
+@dataclass
+class Menu:
+    name: str
+    price: str
+    description: str
+    category: str

@@ -5,9 +5,8 @@ CREATE TABLE IF NOT EXISTS restaurants (
                     phone_number TEXT,
                     type TEXT,
                     Kosher TEXT ,
-                    order_table_option TEXT NULL,
+                    order_table TEXT NULL,
                     availability TEXT NULL,
-                    rating FLOAT NOT NULL DEFAULT 0.0,
                     discounts FLOAT NOT NULL DEFAULT 0.0,
                     rating_count INTEGER NOT NULL DEFAULT 0
 );
@@ -76,8 +75,8 @@ CREATE TABLE IF NOT EXISTS ratings (
 
 
 INSERT INTO users (username, password, email, first_name, last_name, role) VALUES ('user1', '1234', 'DDD', 'John', 'Doe', 'user');
-INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table_option, Availability, rating, discounts) VALUES ('Burger King', 'Tel Aviv', '03-1234567', 'Fast Food', 'No', 'Yes', 'Yes', 4.5, 0.0);
-INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table_option, Availability, rating, discounts) VALUES ('Pizza Hut', 'Jerusalem', '02-1234567', 'Pizza', 'Yes', 'Yes', 'Yes', 4.0, 0.0);
+INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Burger King', 'Tel Aviv', '03-1234567', 'Fast Food', 'No', 'Yes', 'Yes', 0.0);
+INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Pizza Hut', 'Jerusalem', '02-1234567', 'Pizza', 'Yes', 'Yes', 'Yes', 0.0);
 INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (1, 1, 4.5);
 INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (2, 1, 4.0);
 INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (1, 1, 3.6);

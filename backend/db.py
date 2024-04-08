@@ -10,7 +10,7 @@ DATABASE = CURRENT_DIR / "database.db"
 def get_db():
     #Connect to the SQLite database, and return the connection object
     if "db" not in g:
-        g.db = sqlite3.connect(DATABASE)
+        g.db = sqlite3.connect(DATABASE, timeout=10)
         g.db.row_factory = sqlite3.Row
     return g.db
 
