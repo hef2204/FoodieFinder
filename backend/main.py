@@ -21,7 +21,7 @@ def root():
     # response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/home')
+@app.route('/homepage')
 def home():
     response = make_response("Welcome to the home page!")
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -353,7 +353,24 @@ def menu_by_restaurant():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
-
+@app.route('/register', methods=["POST"])
+def signup():
+    db = get_db()
+    if request.json is not None:
+        user = User(**request.json)
+        db.execute(
+            "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
+            (user.username, user.password, user.email, user.first_name, user.last_name)
+        )
+        db.commit()
+        close_db()
+        response = make_response({"message": "User added successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 
 
 
