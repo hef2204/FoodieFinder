@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import "../css/login.css"
 
 
 const Login: React.FC = () => {
@@ -43,7 +44,7 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div>
+        <div className="login-container">
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -56,6 +57,7 @@ const Login: React.FC = () => {
                 </div>
                 <button type="submit">Login</button>
             </form>
+            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
         </div>
     );
 }

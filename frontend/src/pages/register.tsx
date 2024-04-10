@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../css/register.css';
+
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -42,13 +44,19 @@ const Register: React.FC = () => {
         <div>
             <h1>Register</h1>
             <form>
+                <label>Username:</label>
                 <input type="username" value={username} onChange={e => setUsername(e.target.value)} />
+                <label>Password:</label>
                 <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                <label>Email:</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                <label>First Name:</label>
                 <input type="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                <label>Last Name:</label>
                 <input type="lastName" value={lastName} onChange={e => setLastName(e.target.value)} />
-                <button type="button" onClick={handleRegister}>register</button>
+                <button type="button" onClick={handleRegister}>Register</button>
             </form>
+            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
         </div>
     );
 };

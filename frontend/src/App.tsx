@@ -1,22 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Login from './login';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import Login from './pages/login';
+import Register from './pages/register';
+import './css/homepage.css';
 
-const HomePage: React.FC = () => {
+
+function HomePage() {
     return (
         <div>
-            <h1>Welcome to the Restaurant App!</h1>
-            <p>This is the home page.</p>
-            <Router>
-                <div>
-                    <Link to="/login">Login</Link>
-                    <Routes>
-                        <Route path="/login" element={<Login />} />
-                    </Routes>
-                </div>
-            </Router>
+            <div>
+                <h1>Foodie Finder</h1>
+                <p>Find the best food in town!</p>
+            </div>
+            <div className="link-container">
+                <Link to="/pages/login'">Login</Link>
+                <Link to="/pages/register">Register</Link>
+            </div>
         </div>
     );
-};
+}
+        
 
-export default HomePage;
+export default function App() {
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/pages/login" element={<Login />} />
+                <Route path="/pages/register" element={<Register />} />
+            </Routes>
+        </BrowserRouter>
+    );
+}
