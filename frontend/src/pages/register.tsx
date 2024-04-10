@@ -6,15 +6,18 @@ const Register: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [first_name, setFirstName] = useState('');
+    const [last_name, setLastName] = useState('');
     
 
     // Updated handleRegister function
     const handleRegister = async () => {
-        const registerData = {
-            email,
-            password
+        const user = {
+            username: username,
+            password: password,
+            email: email,
+            first_name: first_name,
+            last_name: last_name
         };
 
         try {
@@ -23,7 +26,7 @@ const Register: React.FC = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(registerData)
+                body: JSON.stringify(user)
             });
 
             if (!response.ok) {
@@ -51,9 +54,9 @@ const Register: React.FC = () => {
                 <label>Email:</label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
                 <label>First Name:</label>
-                <input type="firstName" value={firstName} onChange={e => setFirstName(e.target.value)} />
+                <input type="firstName" value={first_name} onChange={e => setFirstName(e.target.value)} />
                 <label>Last Name:</label>
-                <input type="lastName" value={lastName} onChange={e => setLastName(e.target.value)} />
+                <input type="lastName" value={last_name} onChange={e => setLastName(e.target.value)} />
                 <button type="button" onClick={handleRegister}>Register</button>
             </form>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
