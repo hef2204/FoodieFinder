@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Login from './login';
 
 const HomePage: React.FC = () => {
@@ -10,7 +10,9 @@ const HomePage: React.FC = () => {
             <Router>
                 <div>
                     <Link to="/login">Login</Link>
-                    <Route path="/login" component={Login} />
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                    </Routes>
                 </div>
             </Router>
         </div>
