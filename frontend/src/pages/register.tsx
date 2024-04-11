@@ -48,15 +48,15 @@ const Register: React.FC = () => {
             <h1>Register</h1>
             <form>
                 <label>Username:</label>
-                <input type="username" value={username} onChange={e => setUsername(e.target.value)} />
+                <input type="username" value={username} onChange={e => setUsername(e.target.value)} placeholder='Username' />
                 <label>Password:</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder='Password' />
                 <label>Email:</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' />
                 <label>First Name:</label>
-                <input type="firstName" value={first_name} onChange={e => setFirstName(e.target.value)} />
+                <input type="first name" value={first_name} onChange={e => setFirstName(e.target.value)} placeholder='First Name'/>
                 <label>Last Name:</label>
-                <input type="lastName" value={last_name} onChange={e => setLastName(e.target.value)} />
+                <input type="lastName" value={last_name} onChange={e => setLastName(e.target.value)} placeholder='Last Name' />
                 <button type="button" onClick={handleRegister}>Register</button>
             </form>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>

@@ -1,5 +1,5 @@
 from models import User, Manager, Restaurant, Menu
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, Request
 from flask_cors import CORS
 from dotenv import load_dotenv
 from db import get_db, close_db
@@ -174,20 +174,25 @@ def delete_restaurant():
 def login():
     db = get_db()
     if request.json is not None:
-        username = request.json["username"]
-        password = request.json["password"]
-        user = db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)).fetchone()
+        username = request.json.get("username")
+        password = request.json.get("password")
+        if username is None or password is None:
+            response = make_response({"message": "Invalid credentials"}, 400)
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response
+        user = db.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username, password)).fetchone()
+        # user = db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)).fetchone()
         if user is not None:
             user = dict(user)
-            response = make_response({"message": "Login successful", "user": user})
+            response = make_response({"message": "Login successful", "user": user}, 200)
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response
         else:
-            response = make_response({"message": "Invalid credentials"})
+            response = make_response({"message": "Invalid credentials"}, 401)
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response
     else:
-        response = make_response({"message": "Invalid request"})
+        response = make_response({"message": "Invalid request"}, 400)
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
@@ -195,20 +200,20 @@ def login():
 def login_manager():
     db = get_db()
     if request.json is not None:
-        full_name = request.json["full_name"]
+        username = request.json["username"]
         password = request.json["password"]
-        manager = db.execute("SELECT * FROM managers WHERE full_name=? AND password=?", (full_name, password)).fetchone()
+        manager = db.execute("SELECT * FROM managers WHERE full_name=? AND password=?", (username, password)).fetchone()
         if manager is not None:
             manager = dict(manager)
-            response = make_response({"message": "Login successful", "manager": manager})
+            response = make_response({"message": "Login successful", "manager": manager}, 200)
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response
         else:
-            response = make_response({"message": "Invalid credentials"})
+            response = make_response({"message": "Invalid credentials"}, 401)
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response
     else:
-        response = make_response({"message": "Invalid request"})
+        response = make_response({"message": "Invalid request"}, 400)
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
