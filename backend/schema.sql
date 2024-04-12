@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS managers (
                     id INTEGER PRIMARY KEY,
+                    username TEXT NOT NULL UNIQUE,
                     full_name TEXT,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL,
@@ -45,7 +46,8 @@ CREATE TABLE IF NOT EXISTS menu (
 
 
 CREATE TABLE IF NOT EXISTS admin (
-                    id INTEGER PRIMARY KEY NOT NULL UNIQUE, 
+                    id INTEGER PRIMARY KEY NOT NULL UNIQUE,
+                    username TEXT NOT NULL UNIQUE,
                     full_name TEXT,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL,
@@ -77,9 +79,7 @@ CREATE TABLE IF NOT EXISTS ratings (
 INSERT INTO users (username, password, email, first_name, last_name, role) VALUES ('user1', '1234', 'DDD', 'John', 'Doe', 'user');
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Burger King', 'Tel Aviv', '03-1234567', 'Fast Food', 'No', 'Yes', 'Yes', 0.0);
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Pizza Hut', 'Jerusalem', '02-1234567', 'Pizza', 'Yes', 'Yes', 'Yes', 0.0);
-INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (1, 1, 4.5);
-INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (2, 1, 4.0);
-INSERT INTO ratings (restaurant_id, user_id, rating) VALUES (1, 1, 3.6);
+INSERT INTO admin (username, full_name, password, email, role) VALUES ('admin1', 'Admin', '1234', 'hh@cc.com', 'admin');
 
 
 SELECT restaurant_id, COUNT(*) as rating_count

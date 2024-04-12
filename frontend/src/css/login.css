@@ -62,3 +62,12 @@ button {
 .back-button:hover {
     background-color: #007BFF;
 }
+
+.link-container1 {
+    position: absolute; /* or 'fixed' if you want it to stay in the corner when scrolling */
+    top: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}

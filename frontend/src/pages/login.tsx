@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import "../css/login.css"
+
+
 
 export type LoginProps = {
     onLogin: (username: string, role: string) => void;
@@ -17,13 +20,20 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
         setPassword(e.target.value);
     };
 
+   
+
+
     const handleSubmit = async (e: React.FormEvent) => {
+        console.log('Form submitted');
         e.preventDefault();
 
         if (!username || !password) {
+            console.log('Both fields are required');
             setError('Both fields are required');
-            return;
+            
+            return
         }
+        
 
 
 
@@ -42,15 +52,26 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             });
 
             if (!response.ok) {
+                console.log('Response status:', response.status);
+                console.log('Response status text:', response.statusText);
                 throw new Error('Login was unsuccessful. Please try again.');
             }
 
             const data = await response.json();
+            console.log('response data:', data);
             onLogin(username, data.user.role); // Make sure 'role' is being returned from the server
+
+            // Redirect to the home page
+            window.location.href = '/';
+            
+
+
         } catch (error) {
             console.error(error);
             setError((error as Error).message);
         }
+        
+
     };
 
     return (
@@ -63,6 +84,10 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             <button type="submit">Login</button>
         </form>
         <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            <div className="link-container2">
+                <Link to="/pages/about">About</Link>
+            </div>
+
         </div>
         
     );

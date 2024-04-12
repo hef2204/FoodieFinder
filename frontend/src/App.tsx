@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
@@ -8,11 +9,35 @@ import './css/homepage.css';
 
 
 function HomePage() {
+    const [search, setSearch] = useState('');
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearch(e.target.value);
+    };
+
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log(`Searching for ${search}`);
+    };
+
     return (
         <div>
-            <div>
+            <div className='header'>
                 <h1>Foodie Finder</h1>
-                <p>Find the best food in town!</p>
+                {/* <p>Find the best food in town!</p> */}
+            </div>
+            <div className="gif">
+                <img src="https://tenor.com/view/food-foodie-hungry-gif-533923900697883794.gif" alt="Foodie Finder" />
+            </div>
+
+            <div className="search">
+                <input
+                    type="search"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={handleSearchChange}
+                />
+                <button type="button" onClick={handleSearchSubmit}>Search</button>
             </div>
             <div className="link-container">
                 <Link to="/pages/login">Login</Link>
@@ -22,6 +47,7 @@ function HomePage() {
         </div>
     );
 }
+
         
 
 export default function App() {

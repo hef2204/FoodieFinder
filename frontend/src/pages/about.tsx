@@ -1,12 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import '../css/about.css';
+
 
 const About: React.FC = () => {
     return (
         <div>
             <h1>About US</h1>
-            <p>Welcome to the FoodieFinder app!</p>
             <p>
-            "Welcome to FoodieFinder – your ultimate dining companion!
+            "Welcome to FoodieFinder - your ultimate dining companion!
             Easily discover restaurants based on location, cuisine, kosher status, prices, and ratings. 
             You can also make reservations, order takeout, and even get discounts.
             With FoodieFinder, you can find the perfect restaurant for any occasion,
@@ -14,6 +16,12 @@ const About: React.FC = () => {
             Download the app today and start exploring the best dining options in your area!"
             </p>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            <div className="link-container1">
+                <Link to="/pages/login">Login</Link>
+                <Link to="/pages/register">Register</Link>
+            </div>
+
+
         </div>
     );
 };

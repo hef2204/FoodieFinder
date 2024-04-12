@@ -60,6 +60,7 @@ const Register: React.FC = () => {
                 <button type="button" onClick={handleRegister}>Register</button>
             </form>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            
         </div>
     );
 };

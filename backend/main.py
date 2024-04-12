@@ -170,31 +170,43 @@ def delete_restaurant():
         return response
     
 
+
 @app.route('/login', methods=["POST"])
 def login():
     db = get_db()
-    if request.json is not None:
-        username = request.json.get("username")
-        password = request.json.get("password")
-        if username is None or password is None:
-            response = make_response({"message": "Invalid credentials"}, 400)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
-        user = db.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username, password)).fetchone()
-        # user = db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)).fetchone()
+    data = request.get_json() or {}
+    username = data.get("username")
+    password = data.get("password")
+    print('Username:', username)  # Add this line
+    print('Password:', password) 
+
+    if not username or not password:
+        return response({"message": "Invalid credentials"}, 400)
+    
+    tables = ['users', 'managers', 'admin']
+    user = None
+
+    for table in tables:
+        print(f"Querying table {table}...")
+        user = db.execute(f"SELECT username, role FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
+        print(f"User from table {table}:", user)
         if user is not None:
-            user = dict(user)
-            response = make_response({"message": "Login successful", "user": user}, 200)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
-        else:
-            response = make_response({"message": "Invalid credentials"}, 401)
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response
-    else:
-        response = make_response({"message": "Invalid request"}, 400)
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+            break
+
+    # user = db.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username, password)).fetchone()
+
+    if user:
+        return response({"message": "Login successful", "user": dict(user)}, 200)
+
+    return response({"message": "Invalid credentials"}, 401)
+
+def response(body, status):
+    res = make_response(body, status)
+    res.headers.add("Access-Control-Allow-Origin", "*")
+    return res
+
+
+
     
 @app.route('/login_manager', methods=["POST"])
 def login_manager():
@@ -376,7 +388,34 @@ def signup():
         response = make_response({"message": "Invalid request"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
+@app.route('/register_manager', methods=["POST"])
+def signup_manager():
+    db = get_db()
+    if request.json is not None:
+        manager = Manager(**request.json)
+        db.execute(
+            "INSERT INTO managers (full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?)",
+            (manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+        )
+        db.commit()
+        close_db()
+        response = make_response({"message": "Manager added successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    
+@app.route('/registred_user_page')
+def registred_user_page():
+    response = make_response("Welcome to the user page!")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
+
+    
 
 
 
