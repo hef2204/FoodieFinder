@@ -8,6 +8,7 @@ import './css/homepage.css';
 import AdminPage from './pages/adminPage.tsx'; 
 import UserDashboard from './pages/UserPage.tsx';
 import AddManager from './pages/AddManager';
+import AddRestaurant from './pages/AddRestaurant';
 
 
 
@@ -73,6 +74,7 @@ export default function App() {
                 <Route path="/pages/UserPage" element={<UserDashboard />} />
                 {/* <Route path="/pages/managerPage" element={<ManagerPage />} /> */}
                 <Route path="/pages/AddManager" element={<AddManager />} />
+                <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
 
             </Routes>
         </BrowserRouter>

@@ -13,6 +13,7 @@ function AdminPage() {
                     <li><Link to="/admin/stats">View Statistics</Link></li>
                     <li><Link to="/admin/content">Moderate Content</Link></li>
                     <li><Link to="/pages/AddManager">Add Manager</Link></li>
+                    <li><Link to="/pages/AddRestaurant">Add Restaurant</Link></li>
                 </ul>
             </nav>
             <main>

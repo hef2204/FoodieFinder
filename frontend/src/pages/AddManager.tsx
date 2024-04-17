@@ -17,7 +17,7 @@ class AddManager extends React.Component {
 
     addManager = () => {
         const manager = this.state;
-        fetch('http://127.0.0.1:5000/add_manager', {
+        fetch('http://127.0.0.1:5000/admin/add_restaurant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

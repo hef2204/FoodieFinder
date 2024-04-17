@@ -13,7 +13,7 @@
     border-radius: 10px; /* Increase border-radius for a smoother look */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Increase shadow intensity */
     margin: auto; /* Center the form horizontally */
-    background-color: #fff; /* Add a white background to the form */
+    background-color: #000000; /* Add a white background to the form */
 }
 
 .input-field {
@@ -41,5 +41,5 @@
 }
 
 body {
-    background-color: #f0f0f0; /* Change background color to a lighter shade */
+    background-color: #1a1818; /* Change background color to a lighter shade */
 }

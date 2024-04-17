@@ -1,5 +1,5 @@
 import React from 'react';
-import '../pages/AddRestaurant.css';
+import '../css/AddRestaurant.css';
 
 
 class AddRestaurant extends React.Component {
@@ -21,7 +21,7 @@ class AddRestaurant extends React.Component {
 
     addRestaurant = () => {
         const restaurant = this.state;
-        fetch('http://127.0.0.1:5000/add_restaurant', {
+        fetch('http://127.0.0.1:5000/admin/add_restaurant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
