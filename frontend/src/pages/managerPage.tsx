@@ -1,23 +1,23 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-interface ManagerPageProps {
-    manager_name: string;
-    // Add any other props that you need
-}
+type ManagerPageProps = {
+    managerName: string;
+    restaurantName: string;
+};
 
-const ManagerPage: React.FC<ManagerPageProps> = ({ manager_name }) => {
+const ManagerPage: React.FC<ManagerPageProps> = ({ managerName, restaurantName }) => {
     return (
         <div>
-            <h1>Welcome, {manager_name}!</h1>
-            <div>
-                <h2>Your Profile</h2>
-                {/* Display the user's profile information here */}
-            </div>
-            <div>
-                <h2>Your Activity</h2>
-                {/* Display the user's activity or other data here */}
-            </div>
-            <button>Logout</button>
+            <h1>Welcome, {managerName}!</h1>
+            <h2>You are managing: {restaurantName}</h2>
+            <p>From here, you can manage different aspects of your restaurant.</p>
+            <ul>
+                <li><Link to="/manage-menu">Manage Menu</Link></li>
+                <li><Link to="/manage-orders">Manage Orders</Link></li>
+                <li><Link to="/manage-staff">Manage Staff</Link></li>
+                <li><Link to="/manage-reviews">Manage Reviews</Link></li>
+            </ul>
         </div>
     );
 };

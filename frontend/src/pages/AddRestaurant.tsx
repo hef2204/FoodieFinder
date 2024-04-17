@@ -47,6 +47,7 @@ class AddRestaurant extends React.Component {
                     <input className="input-field" name="discounts" value={this.state.discounts} onChange={this.handleChange} placeholder="Discounts" />
                     <button className="button" onClick={this.addRestaurant}>Add Restaurant</button>
                 </div>
+                <button className='back-button' onClick={() => window.history.back()}>back</button>
             </div>
         );
     }

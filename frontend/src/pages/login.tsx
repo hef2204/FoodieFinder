@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import "../css/login.css"
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -12,6 +14,8 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
     };
@@ -59,16 +63,22 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
 
             const data = await response.json();
             console.log('response data:', data);
+            console.log(data.user.firstLogin);
             onLogin(username, data.user.role); // Make sure 'role' is being returned from the server
 
             // Redirect to the home page
             if (data.user.role === 'manager') {
-                window.location.href = '/pages/managerPage';
+                if (data.user.firstLogin) {
+                    navigate('/pages/addRestaurant');
+                } else {
+                    navigate('/pages/ManagerPage');
+                }
             } else if (data.user.role === 'user') {
-                window.location.href = '/pages/userPage';
+                navigate('/pages/userPage');
             } else if (data.user.role === 'admin') {
-                window.location.href = '/pages/adminPage';
+                navigate('/pages/adminPage');
             }
+                
             
 
 

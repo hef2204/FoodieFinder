@@ -5,6 +5,8 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
+from manager.manager_functions import manager_functions
+from flask_login import LoginManager
 
 
 
@@ -15,7 +17,15 @@ from admin.admin_functions import admin_functions
 
 load_dotenv()
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
 app.register_blueprint(admin_functions)
+app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
 cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
@@ -102,47 +112,6 @@ def add_manager():
     return response
 
 
-# @app.route('/add_restaurant', methods=["POST"])
-# def add_restaurant():
-#     db = get_db()
-#     # restaurant = Restaurant(**request.json)
-#     if request.json is not None:
-#         restaurant = Restaurant(request.json["name"], 
-#                                 request.json["location"],
-#                                 request.json["phone_number"],
-#                                 request.json["type"],
-#                                 request.json["Kosher"],
-#                                 request.json["order_table"],
-#                                 request.json["Availability"],
-#                                 request.json["discounts"])
-#         db.execute(
-#             "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-#             (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts)
-#         )
-#         db.commit()
-#         close_db()
-#         response = make_response({"message": "Restaurant added successfully"})
-#         # response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-#     else:
-#         response = make_response({"message": "Invalid request"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-
-# @app.route('/delete_user', methods=["POST"])
-# def delete_user():
-#     db = get_db()
-#     if request.json is not None:
-#         db.execute("DELETE FROM users WHERE username=?", (request.json["username"],))
-#         db.commit()
-#         close_db()
-#         response = make_response({"message": "User deleted successfully"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-#     else:
-#         response = make_response({"message": "Invalid request"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
 
 
 
@@ -162,22 +131,10 @@ def delete_manager():
         return response
     
 
-# @app.route('/delete_restaurant', methods=["POST"])
-# def delete_restaurant():
-#     db = get_db()
-#     if request.json is not None:
-#         db.execute("DELETE FROM restaurants WHERE name=?", (request.json["name"],))
-#         db.commit()
-#         close_db()
-#         response = make_response({"message": "Restaurant deleted successfully"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-#     else:
-#         response = make_response({"message": "Invalid request"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-    
-
+def response(body, status):
+    res = make_response(body, status)
+    res.headers.add("Access-Control-Allow-Origin", "*")
+    return res
 
 @app.route('/login', methods=["POST"])
 def login():
@@ -185,25 +142,24 @@ def login():
     data = request.get_json() or {}
     username = data.get("username")
     password = data.get("password")
-    print('Username:', username)  # Add this line
-    print('Password:', password) 
 
     if not username or not password:
         return response({"message": "Invalid credentials"}, 400)
     
     tables = ['users', 'managers', 'admin']
     user = None
+    table_used = None
 
     for table in tables:
-        print(f"Querying table {table}...")
-        user = db.execute(f"SELECT username, role FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
-        print(f"User from table {table}:", user)
+        user = db.execute(f"SELECT username, role, firstLogin FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
         if user is not None:
+            table_used = table
             break
 
-    # user = db.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username, password)).fetchone()
-
     if user:
+        if user['firstLogin']:
+            db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
+            db.commit()
         return response({"message": "Login successful", "user": dict(user)}, 200)
 
     return response({"message": "Invalid credentials"}, 401)
@@ -212,6 +168,8 @@ def response(body, status):
     res = make_response(body, status)
     res.headers.add("Access-Control-Allow-Origin", "*")
     return res
+
+
 
 
 
@@ -238,27 +196,7 @@ def login_manager():
         return response
     
 
-# @app.route('/login_restaurant', methods=["POST"])
-# def login_restaurant():
-#     db = get_db()
-#     if request.json is not None:
-#         name = request.json["name"]
-#         password = request.json["password"]
-#         restaurant = db.execute("SELECT * FROM restaurants WHERE name=? AND password=?", (name, password)).fetchone()
-#         if restaurant is not None:
-#             restaurant = dict(restaurant)
-#             response = make_response({"message": "Login successful", "restaurant": restaurant})
-#             response.headers.add("Access-Control-Allow-Origin", "*")
-#             return response
-#         else:
-#             response = make_response({"message": "Invalid credentials"})
-#             response.headers.add("Access-Control-Allow-Origin", "*")
-#             return response
-#     else:
-#         response = make_response({"message": "Invalid request"})
-#         response.headers.add("Access-Control-Allow-Origin", "*")
-#         return response
-    
+
 @app.route('/update_user', methods=["POST"])
 def update_user():
     db = get_db()
@@ -327,41 +265,9 @@ def menu():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/add_menu', methods=["POST"])
-def add_menu():
-    db = get_db()
-    if request.json is not None:
-        menu = Menu(**request.json)
-        db.execute(
-            "INSERT INTO menu (name, price, description, restaurant) VALUES (?, ?, ?, ?)",
-            (menu.name, menu.price, menu.description, menu.restaurant)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Menu added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
-@app.route('/delete_menu', methods=["POST"])
-def delete_menu():
-    db = get_db()
-    if request.json is not None:
-        db.execute("DELETE FROM menu WHERE name=?", (request.json["name"],))
-        db.commit()
-        close_db()
-        response = make_response({"message": "Menu deleted successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
 
+    
+   
 @app.route('/menu_by_restaurant', methods=["POST"])
 def menu_by_restaurant():
     db = get_db()
@@ -379,7 +285,7 @@ def menu_by_restaurant():
         return response
 
 @app.route('/register', methods=["POST"])
-def signup():
+def register():
     db = get_db()
     if request.json is not None:
         user = User(**request.json)
@@ -390,25 +296,6 @@ def signup():
         db.commit()
         close_db()
         response = make_response({"message": "User added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
-@app.route('/register_manager', methods=["POST"])
-def signup_manager():
-    db = get_db()
-    if request.json is not None:
-        manager = Manager(**request.json)
-        db.execute(
-            "INSERT INTO managers (full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?)",
-            (manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Manager added successfully"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     else:
@@ -442,6 +329,24 @@ def handle_filters(filters):
     filtered_restaurants = filter_restaurants(restaurants, filters)
     return filtered_restaurants
 
+def change_firstLogin():
+    db = get_db()
+    db.execute("UPDATE users SET firstLogin = 1")
+    db.commit()
+    close_db()
+
+
+@app.route('/manager_page')
+def manager_page():
+    response = make_response("Welcome to the manager page!")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/manager_info')
+def manager_info():
+    response = make_response("Welcome to the manager info page!")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
     
 
 

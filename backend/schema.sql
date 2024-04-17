@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS users (
                     email TEXT,
                     first_name TEXT,
                     last_name TEXT,
-                    role TEXT NOT NULL DEFAULT 'user'
+                    role TEXT NOT NULL DEFAULT 'user',
+                    firstLogin BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS managers (
@@ -30,8 +31,8 @@ CREATE TABLE IF NOT EXISTS managers (
                     email TEXT NOT NULL,
                     restaurant TEXT NOT NULL,
                     phone_number TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'manager'
-
+                    role TEXT NOT NULL DEFAULT 'manager',
+                    firstLogin BOOLEAN NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS menu (
@@ -51,7 +52,8 @@ CREATE TABLE IF NOT EXISTS admin (
                     full_name TEXT,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'admin'
+                    role TEXT NOT NULL DEFAULT 'admin',
+                    firstLogin BOOLEAN NOT NULL DEFAULT 1
 
 );
 CREATE TABLE IF NOT EXISTS reviews (
@@ -76,11 +78,10 @@ CREATE TABLE IF NOT EXISTS ratings (
 
 
 
-INSERT INTO users (username, password, email, first_name, last_name, role) VALUES ('user1', '1234', 'DDD', 'John', 'Doe', 'user');
-INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Burger King', 'Tel Aviv', '03-1234567', 'Fast Food', 'No', 'Yes', 'Yes', 0.0);
-INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES ('Pizza Hut', 'Jerusalem', '02-1234567', 'Pizza', 'Yes', 'Yes', 'Yes', 0.0);
-INSERT INTO admin (username, full_name, password, email, role) VALUES ('admin1', 'Admin', '1234', 'hh@cc.com', 'admin');
-
+INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user1', 'user1', 'sfsdf', 'sdf', 'sdf', 'admin', 1);
+INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user2', 'user2', 'sfsdf', 'sdf', 'sdf', 'admin', 1);
+INSERT INTO admin (username, password, email, full_name, role, firstLogin) VALUES ('admin1', 'admin1', 'sfsdf', 'sdf', 'admin', 1);
+INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager1', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'admin', 1);
 
 SELECT restaurant_id, COUNT(*) as rating_count
 FROM ratings

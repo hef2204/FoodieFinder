@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Router } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
 import About from './pages/about';
@@ -9,6 +9,8 @@ import AdminPage from './pages/adminPage.tsx';
 import UserDashboard from './pages/UserPage.tsx';
 import AddManager from './pages/AddManager';
 import AddRestaurant from './pages/AddRestaurant';
+// import ManagerPage from './pages/managerPage.tsx';
+import ManagerPageRoute from './ManagerPage.tsx';
 
 
 
@@ -57,9 +59,20 @@ function HomePage() {
 export default function App() {
     const handleLogin = (username: string, role: string) => {
         console.log(`Logged in as ${username} with role ${role}`);
-    
-    
-    };
+     };
+
+    // const handleLogout = () => {
+    //     console.log('Logged out');
+    // }
+
+    // type RestaurantPageProps = {
+    //     managerName: string;
+    //     restaurantName: string;
+    // };
+
+
+
+
     return (
         <BrowserRouter>
             <Helmet>
@@ -72,7 +85,7 @@ export default function App() {
                 <Route path="/pages/about" element={<About />} />
                 <Route path="/pages/adminPage" element={<AdminPage />} />
                 <Route path="/pages/UserPage" element={<UserDashboard />} />
-                {/* <Route path="/pages/managerPage" element={<ManagerPage />} /> */}
+                <Route path="/pages/ManagerPage" element={<ManagerPageRoute />} />
                 <Route path="/pages/AddManager" element={<AddManager />} />
                 <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
 

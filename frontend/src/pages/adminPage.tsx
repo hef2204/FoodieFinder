@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import '../css/adminPage.css';
 
 
@@ -8,18 +8,19 @@ function AdminPage() {
         <div>
             <h1>Admin Page</h1>
             <nav>
-                <ul>
-                    <li><Link to="/admin/users">Manage Users</Link></li>
-                    <li><Link to="/admin/stats">View Statistics</Link></li>
-                    <li><Link to="/admin/content">Moderate Content</Link></li>
-                    <li><Link to="/pages/AddManager">Add Manager</Link></li>
-                    <li><Link to="/pages/AddRestaurant">Add Restaurant</Link></li>
-                </ul>
+            <ul className='navbar1'>
+                
+                <li className="dropdown">
+                    <NavLink to="/pages" activeClassName="active-link">Menu</NavLink>
+                    <div className="dropdown-content">
+                        <NavLink exact to="/pages/AddManager" activeClassName="active">Add Manager</NavLink>
+                        <NavLink exact to="/pages/AddRestaurant" activeClassName="active">Add Restaurant</NavLink>
+                        <NavLink exact to="/admin/users" activeClassName="active">Manage Users</NavLink>
+                        <NavLink exact to="/admin/stats" activeClassName="active">View Statistics</NavLink>
+                    </div>
+                </li>
+            </ul>
             </nav>
-            <main>
-                <h2>Welcome, Admin!</h2>
-                <p>Use the links above to navigate to different admin functions.</p>
-            </main>
         </div>
     );
 }
