@@ -5,6 +5,10 @@ import Login from './pages/login';
 import Register from './pages/register';
 import About from './pages/about';
 import './css/homepage.css';
+import AdminPage from './pages/adminPage.tsx'; 
+import UserDashboard from './pages/UserPage.tsx';
+import AddManager from './pages/AddManager';
+
 
 
 
@@ -48,11 +52,12 @@ function HomePage() {
     );
 }
 
-        
 
 export default function App() {
     const handleLogin = (username: string, role: string) => {
         console.log(`Logged in as ${username} with role ${role}`);
+    
+    
     };
     return (
         <BrowserRouter>
@@ -64,6 +69,11 @@ export default function App() {
                 <Route path="/pages/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/pages/register" element={<Register />} />
                 <Route path="/pages/about" element={<About />} />
+                <Route path="/pages/adminPage" element={<AdminPage />} />
+                <Route path="/pages/UserPage" element={<UserDashboard />} />
+                {/* <Route path="/pages/managerPage" element={<ManagerPage />} /> */}
+                <Route path="/pages/AddManager" element={<AddManager />} />
+
             </Routes>
         </BrowserRouter>
     );

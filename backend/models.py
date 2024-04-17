@@ -13,6 +13,7 @@ class User:
 
 @dataclass
 class Manager:
+    username: str
     full_name: str
     password: str
     email: str

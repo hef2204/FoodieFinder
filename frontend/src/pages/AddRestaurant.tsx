@@ -1,5 +1,5 @@
 import React from 'react';
-import './AddRestaurant.css';
+import '../pages/AddRestaurant.css';
 
 
 class AddRestaurant extends React.Component {

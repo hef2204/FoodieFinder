@@ -1,14 +1,14 @@
 import React from 'react';
 
-interface ManagerDashboardProps {
-    username: string;
+interface ManagerPageProps {
+    manager_name: string;
     // Add any other props that you need
 }
 
-const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ username }) => {
+const ManagerPage: React.FC<ManagerPageProps> = ({ manager_name }) => {
     return (
         <div>
-            <h1>Welcome, {username}!</h1>
+            <h1>Welcome, {manager_name}!</h1>
             <div>
                 <h2>Your Profile</h2>
                 {/* Display the user's profile information here */}
@@ -22,4 +22,4 @@ const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ username }) => {
     );
 };
 
-export default ManagerDashboard;
+export default ManagerPage;

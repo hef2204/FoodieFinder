@@ -62,7 +62,13 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             onLogin(username, data.user.role); // Make sure 'role' is being returned from the server
 
             // Redirect to the home page
-            window.location.href = '/';
+            if (data.user.role === 'manager') {
+                window.location.href = '/pages/managerPage';
+            } else if (data.user.role === 'user') {
+                window.location.href = '/pages/userPage';
+            } else if (data.user.role === 'admin') {
+                window.location.href = '/pages/adminPage';
+            }
             
 
 

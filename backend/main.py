@@ -84,8 +84,8 @@ def add_manager():
     db = get_db()
     manager = Manager(**request.get_json())
     db.execute(
-        "INSERT INTO managers (full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?)",
-        (manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+        "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
+        (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
     )
     db.commit()
     close_db()
