@@ -1,0 +1,65 @@
+.UserTable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 1px 3px white;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: center;
+}
+
+tr:nth-child {
+    background-color: #f2f2f2;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+td {
+    font-size: 14px;
+    color: white; /* Add this line */
+}
+
+tr:hover {
+    background-color: #650a8f;
+    cursor: pointer;
+}
+
+.back-button-UserTable {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.back-button-UserTable button {
+    background-color: #4CAF50; /* Green background */
+    border: none; /* Remove border */
+    color: white; /* White text */
+    padding: 15px 32px; /* Some padding */
+    text-align: center; /* Centered text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer; /* Mouse pointer on hover */
+    transition-duration: 0.4s; /* Transition */
+}
+
+.back-button-UserTable button:hover {
+    background-color: white; /* White background */
+    color: black; /* Black text */
+}

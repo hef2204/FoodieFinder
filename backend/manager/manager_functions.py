@@ -66,12 +66,22 @@ def add_menu():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
-@manager_functions.route("/manager/manager-info", methods=["GET"])
-@login_required
-def manager_info():
-    if current_user.role != 'manager':
-        return jsonify({'error': 'Not authorized'}), 403
-    
-    manager_name = current_user.username
-    restaurant_name = current_user.restaurant.name
-    return jsonify({'managername': manager_name, 'restaurantname': restaurant_name})
+
+@manager_functions.route('/update_restaurant', methods=["POST"])
+def update_restaurant():
+    db = get_db()
+    if request.json is not None:
+        restaurant = Restaurant(**request.json)
+        db.execute(
+            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, rating=?, discounts=? WHERE name=?",
+            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.rating, restaurant.discounts, restaurant.name)
+        )
+        db.commit()
+        close_db()
+        response = make_response({"message": "Restaurant updated successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
+
 export type LoginProps = {
     onLogin: (username: string, role: string) => void;
 };
@@ -15,6 +16,8 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    
+    
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
@@ -37,7 +40,6 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             
             return
         }
-        
 
 
 
@@ -55,24 +57,21 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
                 body: JSON.stringify(loginData)
             });
 
-            if (!response.ok) {
-                console.log('Response status:', response.status);
-                console.log('Response status text:', response.statusText);
-                throw new Error('Login was unsuccessful. Please try again.');
+            if (response.status === 200) {
+                console.log('Login successful');
+            } else {
+                console.log('Login failed');
+                setError('Login failed');
             }
+         
 
             const data = await response.json();
             console.log('response data:', data);
-            console.log(data.user.firstLogin);
-            onLogin(username, data.user.role); // Make sure 'role' is being returned from the server
+            onLogin(username, data.user.role); 
 
             // Redirect to the home page
             if (data.user.role === 'manager') {
-                if (data.user.firstLogin) {
-                    navigate('/pages/addRestaurant');
-                } else {
-                    navigate('/pages/ManagerPage');
-                }
+                    navigate('/pages/managerPage');
             } else if (data.user.role === 'user') {
                 navigate('/pages/userPage');
             } else if (data.user.role === 'admin') {

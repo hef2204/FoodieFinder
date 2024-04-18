@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS restaurants (
                     order_table TEXT NULL,
                     availability TEXT NULL,
                     discounts FLOAT NOT NULL DEFAULT 0.0,
-                    rating_count INTEGER NOT NULL DEFAULT 0
+                    rating_count INTEGER NOT NULL DEFAULT 0,
+                    manager_id INTEGER,
+                    FOREIGN KEY(manager_id) REFERENCES managers(id)
 );
 
 
@@ -24,7 +26,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS managers (
-                    id INTEGER PRIMARY KEY,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username TEXT NOT NULL UNIQUE,
                     full_name TEXT,
                     password TEXT NOT NULL,
@@ -78,10 +80,14 @@ CREATE TABLE IF NOT EXISTS ratings (
 
 
 
-INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user1', 'user1', 'sfsdf', 'sdf', 'sdf', 'admin', 1);
-INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user2', 'user2', 'sfsdf', 'sdf', 'sdf', 'admin', 1);
+INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user1', 'user1', 'sfsdf', 'sdf', 'sdf', 'user', 1);
+INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user2', 'user2', 'sfsdf', 'sdf', 'sdf', 'user', 1);
 INSERT INTO admin (username, password, email, full_name, role, firstLogin) VALUES ('admin1', 'admin1', 'sfsdf', 'sdf', 'admin', 1);
-INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager1', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'admin', 1);
+INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager1', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
+INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager2', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
+INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager3', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
+
+
 
 SELECT restaurant_id, COUNT(*) as rating_count
 FROM ratings

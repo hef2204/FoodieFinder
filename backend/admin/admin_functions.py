@@ -57,6 +57,13 @@ class AdminActions:
         users = db.execute("SELECT * FROM users").fetchall()
         close_db()
         return {"users": [dict(user) for user in users]}
+    
+    @staticmethod
+    def view_statistics():
+        db = get_db()
+        statistics = db.execute("SELECT * FROM statistics").fetchall()
+        close_db()
+        return {"statistics": [dict(statistic) for statistic in statistics]}
 
 
 @admin_functions.route("/admin/delete_user", methods=["DELETE"])
@@ -93,43 +100,50 @@ def delete_restaurant():
 @admin_functions.route("/admin/add_restaurant", methods=["POST"])
 def add_restaurant():
     db = get_db()
-    # restaurant = Restaurant(**request.json)
-    if request.json is not None:
-        restaurant = Restaurant(request.json["name"], 
-                                request.json["location"],
-                                request.json["phone_number"],
-                                request.json["type"],
-                                request.json["Kosher"],
-                                request.json["order_table"],
-                                request.json["Availability"],
-                                request.json["discounts"])
-        db.execute(
-            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Restaurant added successfully"})
-        # response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+    data = request.get_json()
+    restaurant = Restaurant(**data['restaurant'])
+    manager_id = data['managerId']  # Extract managerId from the request
+    cursor = db.cursor()
+
+    cursor.execute(
+        "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, manager_id)
+    )
+    db.commit()
+    close_db()
+    response = make_response({"message": "Restaurant added successfully"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+    
+    
 
 @admin_functions.route("/admin/add_manager", methods=["POST"])
 def add_manager():
-        db = get_db()
-        manager = Manager(**request.get_json())
-        db.execute(
-            "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
-            (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Manager added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+    db = get_db()
+    manager = Manager(**request.get_json())
+    print(f"Manager: {manager.__dict__}")  # Print the manager object
+    cursor = db.cursor()
+
+    # Check if the username already exists
+    cursor.execute("SELECT * FROM managers WHERE username = ?", (manager.username,))
+    existing_manager = cursor.fetchone()
+    if existing_manager is not None:
+        return make_response({"message": "Username already exists"}, 400)
+
+    # If the username doesn't exist, insert the new manager
+    cursor.execute(
+        "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
+        (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+    )
+    db.commit()
+    manager_id = cursor.lastrowid  # Get the ID of the new manager
+    print(f"Manager ID: {manager_id}")  # Print the manager ID
+    close_db()
+    response = make_response({"message": "Manager added successfully", "managerId": manager_id})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
 
 @admin_functions.route("/admin/delete_manager", methods=["DELETE"])
 def delete_manager():
@@ -153,6 +167,15 @@ def manage_users():
     users = db.execute("SELECT * FROM users").fetchall()
     close_db()
     return {"users": [dict(user) for user in users]}
+
+@admin_functions.route('/admin/view_statistics', methods=['GET'])
+def view_statistics():
+    db = get_db()
+    statistics = db.execute("SELECT * FROM statistics").fetchall()
+    close_db()
+    return {"statistics": [dict(statistic) for statistic in statistics]}
+
+
 
 
 
