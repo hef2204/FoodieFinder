@@ -6,16 +6,42 @@ from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
+<<<<<<< HEAD
+=======
+from flask_login import LoginManager, login_user
+from UserClasses import User
+
+
+
+
+
+>>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
 
 
 
 load_dotenv()
 app = Flask(__name__)
+<<<<<<< HEAD
+=======
+app.secret_key = "secret"
+login_manager = LoginManager()
+@login_manager.user_loader
+def load_user(user_id):
+    db = get_db()
+    row = db.execute("SELECT * FROM users WHERE username = ?", (user_id,)).fetchone()
+    if row:
+        return User(row)
+    return None
+
+login_manager.init_app(app)
+
+
+>>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
-cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
+cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"], supports_credentials=True)
 print(FRONTEND_URL)
 
 
@@ -24,28 +50,6 @@ print(FRONTEND_URL)
 def root():
     response = make_response("Hello from the backend!")
     # response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-@app.route('/homepage')
-def home():
-    response = make_response("Welcome to the home page!")
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
-
-@app.route('/add_user', methods=["POST"])
-def add_user():
-    db = get_db()
-    user = User(**request.json)
-    db.execute(
-        "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
-        (user.username, user.password, user.email, user.first_name, user.last_name)
-    )
-    db.commit()
-    close_db()
-    response = make_response({"message": "User added successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 
@@ -70,6 +74,8 @@ def login():
             break
 
     if user:
+        user = User(user)
+        login_user(user)  # Log the user in
         if user['firstLogin']:
             db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
             db.commit()
@@ -81,6 +87,79 @@ def response(body, status):
     res = make_response(body, status)
     res.headers.add("Access-Control-Allow-Origin", "*")
     return res
+
+@app.route('/homepage')
+def home():
+    response = make_response("Welcome to the home page!")
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+
+@app.route('/add_user', methods=["POST"])
+def add_user():
+    db = get_db()
+    user = User(**request.json)
+    db.execute(
+        "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
+        (user.username, user.password, user.email, user.first_name, user.last_name)
+    )
+    db.commit()
+    close_db()
+    response = make_response({"message": "User added successfully"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+<<<<<<< HEAD
+@app.route('/login', methods=["POST"])
+def login():
+    db = get_db()
+    data = request.get_json() or {}
+    username = data.get("username")
+    password = data.get("password")
+=======
+@app.route('/add_manager', methods=["POST"])
+def add_manager():
+    db = get_db()
+    manager = Manager(**request.get_json())
+    db.execute(
+        "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
+        (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+    )
+    db.commit()
+    close_db()
+    response = make_response({"message": "Manager added successfully"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+
+
+
+@app.route('/delete_manager', methods=["POST"])
+def delete_manager():
+    db = get_db()
+    if request.json is not None:
+        db.execute("DELETE FROM managers WHERE full_name=?", (request.json["full_name"],))
+        db.commit()
+        close_db()
+        response = make_response({"message": "Manager deleted successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    
+
+def response(body, status):
+    res = make_response(body, status)
+    res.headers.add("Access-Control-Allow-Origin", "*")
+    return res
+
+>>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
+
 
 
 @app.route('/logout', methods=["POST"])
