@@ -6,7 +6,8 @@ from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
-from flask_login import LoginManager
+from flask_login import LoginManager, login_user
+from UserClasses import User
 
 
 
@@ -17,18 +18,24 @@ from flask_login import LoginManager
 
 load_dotenv()
 app = Flask(__name__)
+app.secret_key = "secret"
 login_manager = LoginManager()
-login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    db = get_db()
+    row = db.execute("SELECT * FROM users WHERE username = ?", (user_id,)).fetchone()
+    if row:
+        return User(row)
+    return None
+
+login_manager.init_app(app)
 
 
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
-cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"])
+cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"], supports_credentials=True)
 print(FRONTEND_URL)
 
 
@@ -38,6 +45,42 @@ def root():
     response = make_response("Hello from the backend!")
     # response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+
+@app.route('/login', methods=["POST"])
+def login():
+    db = get_db()
+    data = request.get_json() or {}
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return response({"message": "Invalid credentials"}, 400)
+    
+    tables = ['users', 'managers', 'admin']
+    user = None
+    table_used = None
+
+    for table in tables:
+        user = db.execute(f"SELECT username, role, firstLogin FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
+        if user is not None:
+            table_used = table
+            break
+
+    if user:
+        user = User(user)
+        login_user(user)  # Log the user in
+        if user['firstLogin']:
+            db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
+            db.commit()
+        return response({"message": "Login successful", "user": dict(user)}, 200)
+
+    return response({"message": "Invalid credentials"}, 401)
+
+def response(body, status):
+    res = make_response(body, status)
+    res.headers.add("Access-Control-Allow-Origin", "*")
+    return res
 
 @app.route('/homepage')
 def home():
@@ -136,38 +179,7 @@ def response(body, status):
     res.headers.add("Access-Control-Allow-Origin", "*")
     return res
 
-@app.route('/login', methods=["POST"])
-def login():
-    db = get_db()
-    data = request.get_json() or {}
-    username = data.get("username")
-    password = data.get("password")
 
-    if not username or not password:
-        return response({"message": "Invalid credentials"}, 400)
-    
-    tables = ['users', 'managers', 'admin']
-    user = None
-    table_used = None
-
-    for table in tables:
-        user = db.execute(f"SELECT username, role, firstLogin FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
-        if user is not None:
-            table_used = table
-            break
-
-    if user:
-        if user['firstLogin']:
-            db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
-            db.commit()
-        return response({"message": "Login successful", "user": dict(user)}, 200)
-
-    return response({"message": "Invalid credentials"}, 401)
-
-def response(body, status):
-    res = make_response(body, status)
-    res.headers.add("Access-Control-Allow-Origin", "*")
-    return res
 
 
 

@@ -6,9 +6,13 @@ const ManagerPageRoute: React.FC = () => {
     const [restaurantName, setRestaurantName] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:5000/manager/manager-info', { credentials: 'include'}) // replace with your API endpoint
+        fetch('http://localhost:5000/manager/manager-info', { 
+        method: 'GET',    
+        credentials: 'include'
+    }) 
         .then(response => response.json())
         .then(data => {
+            console.log(data);
             setManagerName(data.manager_name);
             setRestaurantName(data.restaurant_name);
         });

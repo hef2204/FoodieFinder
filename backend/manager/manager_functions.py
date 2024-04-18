@@ -1,7 +1,7 @@
 from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
 from models import Restaurant, Manager, Menu
-from flask_login import login_required, current_user
+from flask_login import login_required, current_user, login_user, logout_user, LoginManager
 manager_functions = Blueprint("manager_functions", __name__)
 
 
@@ -66,12 +66,15 @@ def add_menu():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
-@manager_functions.route("/manager/manager-info", methods=["GET"])
+@manager_functions.route("/manager/manager-info", methods=["GET", "POST"])
 @login_required
 def manager_info():
+    if not current_user.is_authenticated:
+        return jsonify({'error': 'Not logged in'}), 401
+
     if current_user.role != 'manager':
         return jsonify({'error': 'Not authorized'}), 403
-    
+
     manager_name = current_user.username
     restaurant_name = current_user.restaurant.name
     return jsonify({'managername': manager_name, 'restaurantname': restaurant_name})
