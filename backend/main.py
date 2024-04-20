@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
-<<<<<<< HEAD
-=======
 from flask_login import LoginManager, login_user
 from UserClasses import User
 
@@ -15,14 +13,11 @@ from UserClasses import User
 
 
 
->>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
 
 
 
 load_dotenv()
 app = Flask(__name__)
-<<<<<<< HEAD
-=======
 app.secret_key = "secret"
 login_manager = LoginManager()
 @login_manager.user_loader
@@ -36,7 +31,6 @@ def load_user(user_id):
 login_manager.init_app(app)
 
 
->>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
@@ -158,7 +152,6 @@ def response(body, status):
     res.headers.add("Access-Control-Allow-Origin", "*")
     return res
 
->>>>>>> 59c59e30af16320c7c26c82cb28c0bf0b993d612
 
 
 
