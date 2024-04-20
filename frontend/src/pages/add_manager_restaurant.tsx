@@ -52,7 +52,7 @@ class AddManagerAndRestaurant extends React.Component {
             restaurant
         };
 
-        fetch('http://127.0.0.1:5000/admin/add_manager_and_restaurant"', {
+        fetch('http://127.0.0.1:5000/admin/add_manager_and_restaurant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
