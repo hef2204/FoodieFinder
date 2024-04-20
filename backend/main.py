@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
-from flask_login import LoginManager, login_user
-from UserClasses import User
+
+
 
 
 
@@ -19,18 +19,6 @@ from UserClasses import User
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = "secret"
-login_manager = LoginManager()
-@login_manager.user_loader
-def load_user(user_id):
-    db = get_db()
-    row = db.execute("SELECT * FROM users WHERE username = ?", (user_id,)).fetchone()
-    if row:
-        return User(row)
-    return None
-
-login_manager.init_app(app)
-
-
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
@@ -68,8 +56,7 @@ def login():
             break
 
     if user:
-        user = User(user)
-        login_user(user)  # Log the user in
+        user = dict(user)
         if user['firstLogin']:
             db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
             db.commit()
@@ -105,14 +92,7 @@ def add_user():
     return response
 
 
-<<<<<<< HEAD
-@app.route('/login', methods=["POST"])
-def login():
-    db = get_db()
-    data = request.get_json() or {}
-    username = data.get("username")
-    password = data.get("password")
-=======
+
 @app.route('/add_manager', methods=["POST"])
 def add_manager():
     db = get_db()
