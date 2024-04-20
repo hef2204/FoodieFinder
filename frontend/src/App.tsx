@@ -14,6 +14,7 @@ import ManagerPageRoute from './ManagerPage.tsx';
 import StatisticsPage from './pages/StatisticsPage';
 import RestaurantPage from './pages/restaurantPage.tsx';
 import UsersTable from './pages/UsersTable.tsx';
+import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
 
 
 
@@ -55,6 +56,7 @@ function HomePage() {
                 <Link to="/pages/about">About</Link>
                 <Link to="/pages/adminPage">Admin Page</Link>
                 <Link to="/pages/restaurantPage">restaurantPage</Link>
+                <Link to="/pages/add_manager_restaurant">Add Manager and Restaurant</Link>
             </div>
         </div>
     );
@@ -89,6 +91,7 @@ export default function App() {
                     <Route path="/pages/StatisticsPage" element={<StatisticsPage />} />
                     <Route path="/pages/restaurantPage" element={<RestaurantPage />} />
                     <Route path="/pages/users" element={<UsersTable />} />
+                    <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
 
 
                 </Routes>

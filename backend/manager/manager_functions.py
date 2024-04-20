@@ -1,7 +1,6 @@
 from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
 from models import Restaurant, Manager, Menu
-from flask_login import login_required, current_user
 manager_functions = Blueprint("manager_functions", __name__)
 
 
