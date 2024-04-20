@@ -211,10 +211,3 @@ def view_statistics():
 
 
 
-
-
-
-
-
-
-
