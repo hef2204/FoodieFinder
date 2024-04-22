@@ -18,9 +18,13 @@ function AdminPage() {
                         <NavLink exact to="/pages/users" activeClassName="active">Manage Users</NavLink>
                         <NavLink exact to="/pages/managers" activeClassName="active">Manage managers</NavLink>
                         <NavLink exact to="/pages/restaurantPage" activeClassName="active">restaurants</NavLink>
-                        <NavLink exact to="/pages/StatisticsPage" activeClassName="active">View Statistics</NavLink>
+                        <NavLink exact to="/pages/add_manager_restaurant" activeClassName="active">Add Manager and Restaurant</NavLink>
+                       
                     </div>
                 </li>
+                <div>
+                <button className="button" onClick={() => {localStorage.clear(); window.location.href = '/';}}>Logout</button>
+                </div>
             </ul>
             </nav>
         </div>

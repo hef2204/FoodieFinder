@@ -1,16 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 type ManagerPageProps = {
     managerName: string;
-    restaurantName: string;
+    restaurantid: string;
 };
 
 const ManagerPage: React.FC<ManagerPageProps> = ({ managerName, restaurantName }) => {
+    const { restaurantId } = useParams();
+    
+
     return (
         <div>
             <h1>Welcome, {managerName}!</h1>
-            <h2>You are managing: {restaurantName}</h2>
+            <h2>You are managing: {restaurantid}</h2>
             <p>From here, you can manage different aspects of your restaurant.</p>
             <ul>
                 <li><Link to="/manage-menu">Manage Menu</Link></li>

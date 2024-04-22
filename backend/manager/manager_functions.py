@@ -27,6 +27,17 @@ class ManagerActions:
         close_db()
         return {"message": "Menu added successfully"}
     
+    @staticmethod
+    def update_restaurant(restaurant):
+        db = get_db()
+        db.execute(
+            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, rating=?, discounts=? WHERE name=?",
+            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.rating, restaurant.discounts, restaurant.name)
+        )
+        db.commit()
+        close_db()
+        return {"message": "Restaurant updated successfully"}
+    
 
 
 @manager_functions.route("/manager/delete_menu", methods=["DELETE"])

@@ -15,6 +15,7 @@ import StatisticsPage from './pages/StatisticsPage';
 import RestaurantPage from './pages/restaurantPage.tsx';
 import UsersTable from './pages/UsersTable.tsx';
 import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
+import RestaurantDetailPage from './pages/RestaurantDetailPage.tsx';
 
 
 
@@ -54,9 +55,10 @@ function HomePage() {
                 <Link to="/pages/login">Login</Link>
                 <Link to="/pages/register">Register</Link>
                 <Link to="/pages/about">About</Link>
-                <Link to="/pages/adminPage">Admin Page</Link>
-                <Link to="/pages/restaurantPage">restaurantPage</Link>
-                <Link to="/pages/add_manager_restaurant">Add Manager and Restaurant</Link>
+                
+                
+                
+            
             </div>
         </div>
     );
@@ -72,30 +74,30 @@ export default function App() {
 
 
 
-    return (
+     return (
         
-            <BrowserRouter>
-                <Helmet>
-                    <title>FoodieFinder</title>
-                </Helmet>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/pages/login" element={<Login onLogin={handleLogin} />} />
-                    <Route path="/pages/register" element={<Register />} />
-                    <Route path="/pages/about" element={<About />} />
-                    <Route path="/pages/adminPage" element={<AdminPage />} />
-                    <Route path="/pages/UserPage" element={<UserDashboard />} />
-                    <Route path="/pages/ManagerPage" element={<ManagerPageRoute />} />
-                    <Route path="/pages/AddManager" element={<AddManager />} />
-                    <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
-                    <Route path="/pages/StatisticsPage" element={<StatisticsPage />} />
-                    <Route path="/pages/restaurantPage" element={<RestaurantPage />} />
-                    <Route path="/pages/users" element={<UsersTable />} />
-                    <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
+        <BrowserRouter>
+            <Helmet>
+                <title>FoodieFinder</title>
+            </Helmet>
+            <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/pages/login" element={<Login onLogin={handleLogin} />} />
+                <Route path="/pages/register" element={<Register />} />
+                <Route path="/pages/about" element={<About />} />
+                <Route path="/pages/adminPage" element={<AdminPage />} />
+                <Route path="/pages/UserPage" element={<UserDashboard />} />
+                {/* <Route path="/pages/managerPage/:restaurantId" component={ManagerPage} /> */}
+                <Route path="/pages/AddManager" element={<AddManager />} />
+                <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
+                <Route path="/pages/restaurantPage" element={<RestaurantPage />} />
+                <Route path="/pages/users" element={<UsersTable />} />
+                <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
+                <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
 
 
-                </Routes>
-            </BrowserRouter>
-        
-    );
+            </Routes>
+        </BrowserRouter>
+    
+);
 }

@@ -37,6 +37,8 @@ const Register: React.FC = () => {
 
             // Handle the response data here. For example, you can save the user's token to local storage:
             localStorage.setItem('token', data.token);
+            localStorage.setItem('username', data.username);
+            localStorage.setItem('role', data.role);
         } catch (error) {
             console.error('Error:', error);
             // Handle the error here. For example, you can set an error message to state and display it to the user.

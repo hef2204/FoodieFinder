@@ -68,16 +68,22 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
             const data = await response.json();
             console.log('response data:', data);
             onLogin(username, data.user.role); 
+            
 
             // Redirect to the home page
-            if (data.user.role === 'manager') {
-                    navigate('/pages/managerPage');
-            } else if (data.user.role === 'user') {
-                navigate('/pages/userPage');
-            } else if (data.user.role === 'admin') {
-                navigate('/pages/adminPage');
-            }
-                
+            
+            if (data && data.user) {
+                if (data.user.role === 'manager') {
+                    navigate(`/pages/managerPage/${data.user.restaurantId}`);
+                    localStorage.setItem('restaurantId', data.user.restaurantId);
+                } else if (data.user.role === 'user') {
+                    navigate('/pages/userPage');
+                    localStorage.setItem('userId', data.user.id);
+                } else if (data.user.role === 'admin') {
+                    navigate('/pages/adminPage');
+                    localStorage.setItem('userId', data.user.id);
+                }
+            }    
             
 
 

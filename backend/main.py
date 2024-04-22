@@ -18,7 +18,6 @@ from manager.manager_functions import manager_functions
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = "secret"
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
@@ -93,44 +92,21 @@ def add_user():
 
 
 
-@app.route('/add_manager', methods=["POST"])
-def add_manager():
-    db = get_db()
-    manager = Manager(**request.get_json())
-    db.execute(
-        "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
-        (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
-    )
-    db.commit()
-    close_db()
-    response = make_response({"message": "Manager added successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+# @app.route('/add_manager', methods=["POST"])
+# def add_manager():
+#     db = get_db()
+#     manager = Manager(**request.get_json())
+#     db.execute(
+#         "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
+#         (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+#     )
+#     db.commit()
+#     close_db()
+#     response = make_response({"message": "Manager added successfully"})
+#     response.headers.add("Access-Control-Allow-Origin", "*")
+#     return response
 
 
-
-
-
-@app.route('/delete_manager', methods=["POST"])
-def delete_manager():
-    db = get_db()
-    if request.json is not None:
-        db.execute("DELETE FROM managers WHERE full_name=?", (request.json["full_name"],))
-        db.commit()
-        close_db()
-        response = make_response({"message": "Manager deleted successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
-
-def response(body, status):
-    res = make_response(body, status)
-    res.headers.add("Access-Control-Allow-Origin", "*")
-    return res
 
 
 
@@ -191,6 +167,26 @@ def update_manager():
     
 
 
+# @app.route('/register', methods=["POST"])
+# def register():
+#     db = get_db()
+#     if request.json is not None:
+#         user = User(**request.json)
+#         db.execute(
+#             "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
+#             (user.username, user.password, user.email, user.first_name, user.last_name)
+#         )
+#         db.commit()
+#         close_db()
+#         response = make_response({"message": "User added successfully"})
+#         response.headers.add("Access-Control-Allow-Origin", "*")
+#         return response
+#     else:
+#         response = make_response({"message": "Invalid request"})
+#         response.headers.add("Access-Control-Allow-Origin", "*")
+#         return response
+
+
 @app.route('/register', methods=["POST"])
 def register():
     db = get_db()
@@ -202,13 +198,32 @@ def register():
         )
         db.commit()
         close_db()
-        response = make_response({"message": "User added successfully"})
+        response = make_response({"message": "User added successfully", "username": user.username})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     else:
         response = make_response({"message": "Invalid request"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
+@app.route('/restaurant_page/<int:restaurant_id>', methods=["GET"])
+def restaurant_page(restaurant_id):
+    db = get_db()
+    restaurant = db.execute("SELECT * FROM restaurants WHERE id=?", (restaurant_id,)).fetchone()
+    menu = db.execute("SELECT * FROM menu_items WHERE restaurant_id=?", (restaurant_id,)).fetchall()
+    close_db()
+    if restaurant is not None:
+        response = make_response({
+            "restaurant": dict(restaurant),
+            "menu": [dict(item) for item in menu]
+        })
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Restaurant not found"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
     
 
 
