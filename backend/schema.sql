@@ -13,6 +13,17 @@ CREATE TABLE IF NOT EXISTS restaurants (
                     FOREIGN KEY(manager_id) REFERENCES managers(id)
 );
 
+CREATE TABLE IF NOT EXISTS admin (
+                    id INTEGER PRIMARY KEY NOT NULL UNIQUE,
+                    username TEXT NOT NULL UNIQUE,
+                    full_name TEXT,
+                    password TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    role TEXT NOT NULL DEFAULT 'admin',
+                    firstLogin BOOLEAN NOT NULL DEFAULT 1
+
+);
+
 
 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY,
@@ -37,27 +48,17 @@ CREATE TABLE IF NOT EXISTS managers (
                     firstLogin BOOLEAN NOT NULL DEFAULT 1
 );
 
-CREATE TABLE IF NOT EXISTS menu (
-                    restaurant_id INTEGER NOT NULL,
-                    item_name TEXT NOT NULL,
-                    item_description TEXT NOT NULL,
-                    item_price FLOAT NOT NULL,
-                    rating FLOAT FLOAT NOT NULL CHECK(rating >= 0.0 AND rating <= 5.0),
-                    FOREIGN KEY(restaurant_id) REFERENCES restaurants(id)
-
+CREATE TABLE IF NOT EXISTS menu_items (
+    id INTEGER PRIMARY KEY,
+    restaurant_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    price FLOAT NOT NULL CHECK(price >= 0.0),
+    FOREIGN KEY(restaurant_id) REFERENCES restaurants(id)
 );
 
 
-CREATE TABLE IF NOT EXISTS admin (
-                    id INTEGER PRIMARY KEY NOT NULL UNIQUE,
-                    username TEXT NOT NULL UNIQUE,
-                    full_name TEXT,
-                    password TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'admin',
-                    firstLogin BOOLEAN NOT NULL DEFAULT 1
 
-);
 CREATE TABLE IF NOT EXISTS reviews (
                     id INTEGER PRIMARY KEY,
                     restaurant_id INTEGER NOT NULL,
