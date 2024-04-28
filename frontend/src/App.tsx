@@ -10,8 +10,7 @@ import UserDashboard from './pages/UserPage.tsx';
 import AddManager from './pages/AddManager';
 import AddRestaurant from './pages/AddRestaurant';
 // import ManagerPage from './pages/managerPage.tsx';
-import ManagerPageRoute from './ManagerPage.tsx';
-import StatisticsPage from './pages/StatisticsPage';
+import ManagerPage from './pages/managerPage.tsx';
 import RestaurantPage from './pages/restaurantPage.tsx';
 import UsersTable from './pages/UsersTable.tsx';
 import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
@@ -87,7 +86,7 @@ export default function App() {
                 <Route path="/pages/about" element={<About />} />
                 <Route path="/pages/adminPage" element={<AdminPage />} />
                 <Route path="/pages/UserPage" element={<UserDashboard />} />
-                {/* <Route path="/pages/managerPage/:restaurantId" component={ManagerPage} /> */}
+                <Route path="/pages/managerPage/:restaurantId" component={ManagerPage} /> 
                 <Route path="/pages/AddManager" element={<AddManager />} />
                 <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
                 <Route path="/pages/restaurantPage" element={<RestaurantPage />} />

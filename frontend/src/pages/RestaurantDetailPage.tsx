@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 
 interface Restaurant {
@@ -12,7 +12,7 @@ interface Restaurant {
     order_table: string;
     availability: string;
     menu: Array<{ name: string, description: string, price: number }>;
-    // Add other properties as needed
+    
 }
 
 interface MenuItem {
@@ -21,19 +21,27 @@ interface MenuItem {
     price: number;
 }
 
+interface User {
+    role: string;
+    restaurantId: number;
+}
+
+
 const RestaurantDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [menu, setMenu] = useState<MenuItem[]>([]);
+    const [user, setUser] = useState<User | null>(null);
+    const navigate = useNavigate();
     
 
     useEffect(() => {
-        // Fetch the restaurant data from your server
         fetch(`http://localhost:5000/restaurant_page/${id}`)
             .then(response => response.json())
             .then(data => {
                 setRestaurant(data.restaurant);
                 setMenu(data.menu);
+                setUser(data.user);
                         
              }) // Assuming the data is an object with a 'restaurant' property
             .catch(error => console.error('Error:', error));
@@ -41,6 +49,10 @@ const RestaurantDetailPage = () => {
 
     if (!restaurant) {
         return <div>Loading...</div>;
+    }
+
+    if (user && user.role === 'manager') {
+        navigate(`/pages/managerPage/${user.restaurantId}`);
     }
 
     return (
