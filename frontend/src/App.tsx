@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet';
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Link, Router } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
 import About from './pages/about';
@@ -9,12 +9,13 @@ import AdminPage from './pages/adminPage.tsx';
 import UserDashboard from './pages/UserPage.tsx';
 import AddManager from './pages/AddManager';
 import AddRestaurant from './pages/AddRestaurant';
-// import ManagerPage from './pages/managerPage.tsx';
-import ManagerPage from './pages/managerPage.tsx';
 import RestaurantPage from './pages/restaurantPage.tsx';
 import UsersTable from './pages/UsersTable.tsx';
 import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
 import RestaurantDetailPage from './pages/RestaurantDetailPage.tsx';
+import UpdateRestaurantPage from './pages/RestuarantUpdateForm.tsx';
+
+
 
 
 
@@ -86,7 +87,7 @@ export default function App() {
                 <Route path="/pages/about" element={<About />} />
                 <Route path="/pages/adminPage" element={<AdminPage />} />
                 <Route path="/pages/UserPage" element={<UserDashboard />} />
-                <Route path="/pages/managerPage/:restaurantId" component={ManagerPage} /> 
+                <Route path="/restaurant/:id/update" element={<UpdateRestaurantPage />} />
                 <Route path="/pages/AddManager" element={<AddManager />} />
                 <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
                 <Route path="/pages/restaurantPage" element={<RestaurantPage />} />

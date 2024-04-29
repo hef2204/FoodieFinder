@@ -19,6 +19,8 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 
 load_dotenv()
 app = Flask(__name__)
+jwt = JWTManager(app)
+app.config['JWT_SECRET_KEY'] = 'your-secret-key'
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
@@ -64,7 +66,10 @@ def login():
             restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
             if restaurant:
                 user['restaurantId'] = restaurant['id']
-        return response({"message": "Login successful", "user": dict(user)}, 200)
+                user['restaurantName'] = db.execute("SELECT name FROM restaurants WHERE id = ?", (restaurant['id'],)).fetchone()['name']
+        access_token = create_access_token(identity=user)
+        response = make_response({"message": "Login successful", "user": dict(user), "access_token": access_token})
+        return response
 
     return response({"message": "Invalid credentials"}, 401)
 
@@ -200,6 +205,22 @@ def restaurant_page(restaurant_id):
         response = make_response({"message": "Restaurant not found"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
+
+@app.route('/restaurant_page/<int:restaurant_id>/update', methods=["POST"])
+def update_restaurant():
+    db = get_db()
+    if request.json is not None:
+        restaurant = Restaurant(**request.json)
+        db.execute(
+            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, rating=?, discounts=? WHERE name=?",
+            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.rating, restaurant.discounts, restaurant.name)
+        )
+        db.commit()
+        close_db()
+        return {"message": "Restaurant updated successfully"}
+    else:
+        return {"message": "Invalid request"}
 
     
 

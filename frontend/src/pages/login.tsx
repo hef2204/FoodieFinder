@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-
 export type LoginProps = {
     onLogin: (username: string, role: string) => void;
 };
@@ -16,6 +15,7 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
     
     
 
@@ -63,19 +63,25 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
     
             const data = await response.json();
             console.log('response data:', data);
+
+            localStorage.setItem('token', data.access_token)
+            
     
             if (data && data.user) {
                 if (data.user.role === 'manager') {
                     if (data.user.restaurantId) {
-                        navigate(`/pages/managerPage/${data.user.restaurantId}`);
+                        navigate(`/restaurant/${data.user.restaurantId}`);
                         localStorage.setItem('restaurantId', data.user.restaurantId)
                         localStorage.setItem('userId', data.user.id);
+                        localStorage.setItem('restaurantname', data.user.restaurantName);
+                        localStorage.setItem('role', data.user.role);
                     } else {
                         console.error('Error: restaurantId is undefined');
                     }
                 } else if (data.user.role === 'user') {
                     navigate('/pages/userPage');
                     localStorage.setItem('userId', data.user.id);
+                    localStorage.setItem('role', data.user.role);
                     
                 } else if (data.user.role === 'admin') {
                     navigate('/pages/adminPage');

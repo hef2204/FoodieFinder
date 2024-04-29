@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { NavLink } from 'react-router-dom';
 import '../css/adminPage.css';
 
@@ -13,12 +13,12 @@ function AdminPage() {
                 <li className="dropdown">
                     <span className="active-link">Menu</span>
                     <div className="dropdown-content">
-                        <NavLink exact to="/pages/AddManager" activeClassName="active">Add Manager</NavLink>
-                        <NavLink exact to="/pages/AddRestaurant" activeClassName="active">Add Restaurant</NavLink>
-                        <NavLink exact to="/pages/users" activeClassName="active">Manage Users</NavLink>
-                        <NavLink exact to="/pages/managers" activeClassName="active">Manage managers</NavLink>
-                        <NavLink exact to="/pages/restaurantPage" activeClassName="active">restaurants</NavLink>
-                        <NavLink exact to="/pages/add_manager_restaurant" activeClassName="active">Add Manager and Restaurant</NavLink>
+                        <NavLink  to="/pages/AddManager">Add Manager</NavLink>
+                        <NavLink  to="/pages/AddRestaurant">Add Restaurant</NavLink>
+                        <NavLink  to="/pages/users">Manage Users</NavLink>
+                        <NavLink  to="/pages/managers">Manage managers</NavLink>
+                        <NavLink  to="/pages/restaurantPage">restaurants</NavLink>
+                        <NavLink  to="/pages/add_manager_restaurant">Add Manager and Restaurant</NavLink>
                        
                     </div>
                 </li>

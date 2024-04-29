@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 
 interface Restaurant {
@@ -21,18 +21,25 @@ interface MenuItem {
     price: number;
 }
 
-interface User {
-    role: string;
-    restaurantId: number;
-}
+
 
 
 const RestaurantDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [menu, setMenu] = useState<MenuItem[]>([]);
-    const [user, setUser] = useState<User | null>(null);
-    const navigate = useNavigate();
+    const [userRole, setUserRole] = useState<string | null>(null);
+
+    useEffect(() => {
+        const role = localStorage.getItem('role');
+        setUserRole(role);
+    } , []);
+    
+
+    const handleUpdateRestaurant = () => {
+        window.location.href = `/restaurant/${id}/update`;
+    };
+    
     
 
     useEffect(() => {
@@ -41,9 +48,9 @@ const RestaurantDetailPage = () => {
             .then(data => {
                 setRestaurant(data.restaurant);
                 setMenu(data.menu);
-                setUser(data.user);
+                
                         
-             }) // Assuming the data is an object with a 'restaurant' property
+             }) 
             .catch(error => console.error('Error:', error));
     }, [id]);
 
@@ -51,9 +58,7 @@ const RestaurantDetailPage = () => {
         return <div>Loading...</div>;
     }
 
-    if (user && user.role === 'manager') {
-        navigate(`/pages/managerPage/${user.restaurantId}`);
-    }
+   
 
     return (
         <div className="restaurant-detail">
@@ -64,6 +69,10 @@ const RestaurantDetailPage = () => {
             <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
             <p>Order Table: {restaurant.order_table}</p>
             <p>Availability: {restaurant.availability}</p>
+
+            {userRole === 'manager' && (
+                <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+            )}
             
             <Tabs defaultActiveKey="menu">
                 <Tab eventKey="menu" title="Menu">

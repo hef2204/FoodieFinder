@@ -95,3 +95,4 @@ def update_restaurant():
         response = make_response({"message": "Invalid request"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
