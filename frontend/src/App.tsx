@@ -15,6 +15,7 @@ import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
 import RestaurantDetailPage from './pages/RestaurantDetailPage.tsx';
 import UpdateRestaurantPage from './pages/RestaurantUpdateForm.tsx';
 import { Button } from 'react-bootstrap';
+import UserProfile from './pages/user-profile.tsx';
 
 
 
@@ -70,10 +71,15 @@ function HomePage() {
             </div>
             <div className="link-container">
                 {user ? (
-                    <Button onClick={() => {
-                        localStorage.clear();
-                        setUser(null);
-                        navigate("/")}}>Logout</Button>
+                    <>
+                        <Button onClick={() => {
+                            localStorage.clear();
+                            setUser(null);
+                            navigate("/")
+                            }}>Logout</Button>
+                            <Link to="/pages/restaurantPage">Restaurants</Link>
+                            <Link to="/pages/user-profile">Profile</Link> 
+                    </>
                 ) : (
                     <>
                         <Link to="/pages/login">Login</Link>
@@ -115,6 +121,7 @@ export default function App() {
                 <Route path="/pages/users" element={<UsersTable />} />
                 <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
                 <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
+                <Route path="/pages/user-profile" element={<UserProfile />} />
 
 
             </Routes>

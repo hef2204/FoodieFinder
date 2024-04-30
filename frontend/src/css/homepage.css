@@ -85,3 +85,16 @@ a:hover {
     left: 50%;
     transform: translateX(-50%);
 }
+
+button {
+    background-color: #add8e6; /* Light blue background */
+    color: #0056b3; /* Brighter blue for the text */
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button:hover {
+    background-color: #009BFF; /* Darker blue background on hover */
+    color: #0056b3;
+}
