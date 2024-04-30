@@ -63,10 +63,14 @@ def login():
             db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
             db.commit()
         if table_used == 'managers':
+
             restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
             if restaurant:
                 user['restaurantId'] = restaurant['id']
                 user['restaurantName'] = db.execute("SELECT name FROM restaurants WHERE id = ?", (restaurant['id'],)).fetchone()['name']
+                user['managerName'] = db.execute("SELECT username FROM managers WHERE id = ?", (user['id'],)).fetchone()['username']
+                
+            
         access_token = create_access_token(identity=user)
         response = make_response({"message": "Login successful", "user": dict(user), "access_token": access_token})
         return response

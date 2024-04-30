@@ -75,13 +75,15 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
                         localStorage.setItem('userId', data.user.id);
                         localStorage.setItem('restaurantname', data.user.restaurantName);
                         localStorage.setItem('role', data.user.role);
+                        localStorage.setItem("managerName", data.user.username)
                     } else {
                         console.error('Error: restaurantId is undefined');
                     }
                 } else if (data.user.role === 'user') {
-                    navigate('/pages/userPage');
+                    navigate('/');
                     localStorage.setItem('userId', data.user.id);
                     localStorage.setItem('role', data.user.role);
+                    localStorage.setItem('username', data.user.username);
                     
                 } else if (data.user.role === 'admin') {
                     navigate('/pages/adminPage');

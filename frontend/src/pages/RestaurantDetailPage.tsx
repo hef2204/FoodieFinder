@@ -29,11 +29,17 @@ const RestaurantDetailPage = () => {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [menu, setMenu] = useState<MenuItem[]>([]);
     const [userRole, setUserRole] = useState<string | null>(null);
+    const [managerName, setManagerName] = useState<string | null>(null);
 
     useEffect(() => {
         const role = localStorage.getItem('role');
         setUserRole(role);
     } , []);
+
+    useEffect(() => {
+        const managerName = localStorage.getItem('managerName');
+        setManagerName(managerName);
+    }, []);
     
 
     const handleUpdateRestaurant = () => {
@@ -63,6 +69,7 @@ const RestaurantDetailPage = () => {
     return (
         <div className="restaurant-detail">
             <h1>{restaurant.name}</h1>
+            {userRole === 'manager' && <h2>Welcome, {managerName}!</h2>}
             <p>Location: {restaurant.location}</p>
             <p>Phone Number: {restaurant.phone_number}</p>
             <p>Type: {restaurant.type}</p>

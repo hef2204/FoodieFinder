@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../css/RestuarantUpdateForm.css';
 
 interface Restaurant {
     id: number;
@@ -46,7 +47,7 @@ const UpdateRestaurantPage = () => {
         .catch(error => console.error('Error:', error));
     };
 
-    const handleAddMenuItem = (event) => {
+    const handleAddMenuItem = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (restaurant) {
@@ -64,7 +65,7 @@ const UpdateRestaurantPage = () => {
     }
 
     return (
-        <div>
+        <div className='handleUpdateRestaurant'>
             <form onSubmit={handleUpdateRestaurant}>
                 <label>
                     Name:
