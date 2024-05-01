@@ -12,7 +12,7 @@ const Register: React.FC = () => {
     const navigate = useNavigate()
     
 
-    // Updated handleRegister function
+    
     const handleRegister = async () => {
         const user = {
             username: username,
@@ -23,7 +23,7 @@ const Register: React.FC = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:5000/register', { // Replace with your backend's register endpoint
+            const response = await fetch('http://localhost:5000/register', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -37,7 +37,7 @@ const Register: React.FC = () => {
 
             const data = await response.json();
 
-            // Handle the response data here. For example, you can save the user's token to local storage:
+            
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
@@ -45,7 +45,7 @@ const Register: React.FC = () => {
             navigate('/')
         } catch (error) {
             console.error('Error:', error);
-            // Handle the error here. For example, you can set an error message to state and display it to the user.
+            
         }
     };
 
