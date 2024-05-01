@@ -110,21 +110,6 @@ def home():
 
 
 
-@app.route('/add_user', methods=["POST"])
-def add_user():
-    db = get_db()
-    user = User(**request.json)
-    db.execute(
-        "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
-        (user.username, user.password, user.email, user.first_name, user.last_name)
-    )
-    db.commit()
-    close_db()
-    response = make_response({"message": "User added successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-
 @app.route('/logout', methods=["POST"])
 def logout():
     return response({"message": "Logout successful"}, 200)

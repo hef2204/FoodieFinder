@@ -16,6 +16,7 @@ import RestaurantDetailPage from './pages/RestaurantDetailPage.tsx';
 import UpdateRestaurantPage from './pages/RestaurantUpdateForm.tsx';
 import { Button } from 'react-bootstrap';
 import UserProfile from './pages/user-profile.tsx';
+import ManagersTable from './pages/ManagersTable.tsx';
 
 
 
@@ -122,7 +123,7 @@ export default function App() {
                 <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
                 <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
                 <Route path="/pages/user-profile" element={<UserProfile />} />
-
+                <Route path="/pages/ManagersTable" element={<ManagersTable />} />
 
             </Routes>
         </BrowserRouter>

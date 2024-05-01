@@ -37,23 +37,7 @@ def delete_restaurant():
         return response
     
 
-@admin_functions.route("/admin/add_restaurant", methods=["POST"])
-def add_restaurant():
-    db = get_db()
-    data = request.get_json()
-    restaurant = Restaurant(**data['restaurant'])
-    manager_id = data['managerId']  # Extract managerId from the request
-    cursor = db.cursor()
 
-    cursor.execute(
-        "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, manager_id)
-    )
-    db.commit()
-    close_db()
-    response = make_response({"message": "Restaurant added successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
     
     
 
@@ -150,12 +134,24 @@ def manage_users():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@admin_functions.route('/admin/view_statistics', methods=['GET'])
-def view_statistics():
+@admin_functions.route('/admin/manage_managers', methods=['GET'])
+def manage_managers():
     db = get_db()
-    statistics = db.execute("SELECT * FROM statistics").fetchall()
+    managers = db.execute("SELECT * FROM managers").fetchall()
+    print(managers)
     close_db()
-    return {"statistics": [dict(statistic) for statistic in statistics]}
+    response = make_response({"managers": [dict(manager) for manager in managers]})
+    print(response)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+## future feature
+# @admin_functions.route('/admin/view_statistics', methods=['GET'])
+# def view_statistics():
+#     db = get_db()
+#     statistics = db.execute("SELECT * FROM statistics").fetchall()
+#     close_db()
+#     return {"statistics": [dict(statistic) for statistic in statistics]}
 
 
 

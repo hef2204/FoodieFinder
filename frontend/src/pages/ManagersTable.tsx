@@ -3,24 +3,29 @@ import { RouteComponentProps } from 'react-router-dom';
 import "../css/UsersTable.css"
 
 
-interface User {
+interface manager {
     id: number;
     username: string;
+    full_name: string;
     email: string;
-    first_name: string;
-    last_name: string;
+    restaurant: string;
+    phone_number: string;
     role: string;
+    
+    
+    
+    
 }
 
-const UsersTable = ({ match }: RouteComponentProps<MatchParams>) => {
-    const [user, setUser] = useState<User[]>([]);
+const ManagersTable = ({ match }: RouteComponentProps<MatchParams>) => {
+    const [manager, setManager] = useState<manager[]>([]);
 
     useEffect(() => {
         // Fetch the user data from your server
-        fetch(`http://localhost:5000/admin/manage_users`)
+        fetch(`http://localhost:5000/admin/manage_managers`)
             .then(response => response.json())
             .then((data) => {
-                setUser(data.users)
+                setManager(data.managers)
                 console.log(data)
             
             }) 
@@ -29,37 +34,35 @@ const UsersTable = ({ match }: RouteComponentProps<MatchParams>) => {
 
     
 
-    if (!user.length) {
+    if (!manager.length) {
         return <div>Loading...</div>;
     }
 return (
-    <div className='userTable'>
-        <h1>Users</h1>
+    <div className='managerTable'>
+        <h1>managers</h1>
     
     <table>
         <thead>
             <tr>
                 <th>username</th>
                 <th>email</th>
-                <th>first_name</th>
-                <th>last_name</th>
+                <th>full_name</th>
                 <th>role</th>
             </tr>
         </thead>
         <tbody>
-            {user.map((user) => (
-                <tr key={user.id}>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.first_name}</td>
-                    <td>{user.last_name}</td>
-                    <td>{user.role}</td>
+            {manager.map((manager) => (
+                <tr key={manager.id}>
+                    <td>{manager.username}</td>
+                    <td>{manager.email}</td>
+                    <td>{manager.full_name}</td>
+                    <td>{manager.role}</td>
                     
                 </tr>
             ))}
         </tbody>
     </table>
-    <div className='back-button-UserTable'>
+    <div className='back-button-ManagerTable'>
         <button onClick={() => window.history.back()}>Back</button>
     </div>
     </div>
@@ -67,4 +70,4 @@ return (
 
 };
 
-export default UsersTable;
+export default ManagersTable;

@@ -16,7 +16,7 @@ function AdminPage() {
                         <NavLink  to="/pages/AddManager">Add Manager</NavLink>
                         <NavLink  to="/pages/AddRestaurant">Add Restaurant</NavLink>
                         <NavLink  to="/pages/users">Manage Users</NavLink>
-                        <NavLink  to="/pages/managers">Manage managers</NavLink>
+                        <NavLink  to="/pages/ManagersTable">Manage managers</NavLink>
                         <NavLink  to="/pages/restaurantPage">restaurants</NavLink>
                         <NavLink  to="/pages/add_manager_restaurant">Add Manager and Restaurant</NavLink>
                        

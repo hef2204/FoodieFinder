@@ -77,7 +77,7 @@ def add_menu():
         return response
     
 
-@manager_functions.route('/update_restaurant', methods=["POST"])
+@manager_functions.route('/manager/update_restaurant', methods=["POST"])
 def update_restaurant():
     db = get_db()
     if request.json is not None:
@@ -95,4 +95,27 @@ def update_restaurant():
         response = make_response({"message": "Invalid request"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
+# @manager_functions.route("/manager/add_restaurant", methods=["POST"])
+# def add_another_restaurant_by_manager():
+#     db = get_db()
+#     if request.json is not None:
+#         restaurant = Restaurant(**request.json)
+#         manager_id = restaurant['manager_id']
+#### need to add manager_id to the restaurant class
+#         db.execute(
+#             "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+#             (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, restaurant.manager_id)
+#         )
+#         db.commit()
+#         close_db()
+#         response = make_response({"message": "Restaurant added successfully"})
+#         response.headers.add("Access-Control-Allow-Origin", "*")
+#         return response
+#     else:
+#         response = make_response({"message": "Invalid request"})
+#         response.headers.add("Access-Control-Allow-Origin", "*")
+#         return response
+    
+    
     
