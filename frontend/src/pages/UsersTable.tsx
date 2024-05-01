@@ -23,9 +23,15 @@ const UsersTable = ({ match }: RouteComponentProps<MatchParams>) => {
         // Fetch the user data from your server
         fetch(`http://localhost:5000/admin/manage_users`)
             .then(response => response.json())
-            .then(data => setUser(data.users)) // Assuming the data is an object with a 'users' property
+            .then((data) => {
+                setUser(data.users)
+                console.log(data)
+            
+            }) 
             .catch(error => console.error('Error:', error));
     }, []);
+
+    
 
     if (!user.length) {
         return <div>Loading...</div>;

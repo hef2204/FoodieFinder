@@ -1,4 +1,4 @@
-from flask import make_response, Blueprint, request
+from flask import make_response, Blueprint, request, Response
 from db import get_db, close_db
 from models import Restaurant, Manager
 
@@ -144,8 +144,11 @@ def delete_manager():
 def manage_users():
     db = get_db()
     users = db.execute("SELECT * FROM users").fetchall()
+    print(users)
     close_db()
-    return {"users": [dict(user) for user in users]}
+    response = make_response({"users": [dict(user) for user in users]})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 @admin_functions.route('/admin/view_statistics', methods=['GET'])
 def view_statistics():

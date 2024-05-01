@@ -64,7 +64,7 @@ def add_menu():
         menu = Menu(**request.json)
         db.execute(
             "INSERT INTO menu (name, price, description, restaurant) VALUES (?, ?, ?, ?)",
-            (menu.name, menu.price, menu.description, menu.restaurant)
+            (menu.name, menu.price, menu.description)
         )
         db.commit()
         close_db()
@@ -83,8 +83,8 @@ def update_restaurant():
     if request.json is not None:
         restaurant = Restaurant(**request.json)
         db.execute(
-            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, rating=?, discounts=? WHERE name=?",
-            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.rating, restaurant.discounts, restaurant.name)
+            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, discounts=? WHERE name=?",
+            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, restaurant.name)
         )
         db.commit()
         close_db()

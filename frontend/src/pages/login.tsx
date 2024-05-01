@@ -89,6 +89,7 @@ const Login: React.FC<LoginProps> = ({onLogin}) => {
                     navigate('/pages/adminPage');
                     if (data.user.id) {
                         localStorage.setItem('userId', data.user.id);
+                    
                     } else {
                         console.error('Error: admin id is undefined');
                     }
