@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import '../css/register.css';
 
 
@@ -8,6 +9,7 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState('');
     const [first_name, setFirstName] = useState('');
     const [last_name, setLastName] = useState('');
+    const navigate = useNavigate()
     
 
     // Updated handleRegister function
@@ -39,6 +41,8 @@ const Register: React.FC = () => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
+            localStorage.clear();
+            navigate('/')
         } catch (error) {
             console.error('Error:', error);
             // Handle the error here. For example, you can set an error message to state and display it to the user.
@@ -61,7 +65,7 @@ const Register: React.FC = () => {
                 <input type="lastName" value={last_name} onChange={e => setLastName(e.target.value)} placeholder='Last Name' />
                 <button type="button" onClick={handleRegister}>Register</button>
             </form>
-            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            <button className='back-button' onClick={() => navigate('/')}>back</button>
             
         </div>
     );
