@@ -1,14 +1,29 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export const UserContext = createContext();
+// UserContext to store the user's role
+const UserContext = createContext<{ user: { username: string, role: string } | null, setUser: React.Dispatch<React.SetStateAction<{ username: string, role: string } | null>> | null }>({ user: null, setUser: null });
 
-export const UserProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [role, setRole] = useState(null);
+// UserProvider component to provide the user's role to its children
+export function UserProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<{ username: string, role: string } | null>(null);
 
-    return (
-        <UserContext.Provider value={{ isLoggedIn, setIsLoggedIn, role, setRole }}>
-            {children}
-        </UserContext.Provider>
-    );
-};
+  useEffect(() => {
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
+
+    if (username && role) {
+      setUser({ username, role });
+    }
+  }, []);
+
+  return (
+    <UserContext.Provider value={{ user, setUser }}>
+      {children}
+    </UserContext.Provider>
+  );
+}
+
+//useUser hook to access the user's role
+export function useUser() {
+  return useContext(UserContext);
+}

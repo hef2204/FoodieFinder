@@ -1,9 +1,23 @@
 
 import { NavLink } from 'react-router-dom';
+import { useUser } from '../UserContext';
 import '../css/adminPage.css';
 
 
 function AdminPage() {
+    const { user } = useUser();
+
+    if (!user || user.role !== 'admin') {
+        console.log('Unauthorized');
+        console.log(user);
+        
+        return (
+            <div>
+                <h1>Unauthorized</h1>
+                <p>You do not have permission to view this page.</p>
+            </div>
+        );
+    }
     return (
         <div>
             <h1>Admin Page</h1>
@@ -30,5 +44,8 @@ function AdminPage() {
         </div>
     );
 }
+
+
+
 
 export default AdminPage;

@@ -1,6 +1,7 @@
 import React from 'react';
 
 
+
 class AddManagerAndRestaurant extends React.Component {
     state = {
         // Manager state

@@ -1,23 +1,29 @@
-import { Route, Redirect } from 'react-router-dom';
+import React from 'react';
+import { useUser } from './UserContext';
+import { Route, Navigate } from 'react-router-dom';
 
-export default function PrivateRoute({ children, ...rest }: any) {
-    const userRole = localStorage.getItem('role'); // Get user role from local storage
-
-    return (
-        <Route
-            {...rest}
-            render={({ location }) =>
-                userRole === 'manager' ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/",
-                            state: { from: location }
-                        }}
-                    />
-                )
-            }
-        />
-    );
+interface PrivateRouteProps {
+  path: string;
+  element: React.ReactElement;
+  roles: string[];
 }
+
+export const PrivateRoute: React.FC<PrivateRouteProps> = ({ path, element, roles }) => {
+  const { user } = useUser();
+
+  console.log('PrivateRoute', user, roles);
+  console
+
+
+
+  return (
+    <Route 
+      path={path} 
+    >
+      {user && roles.includes(user.role) 
+        ? element 
+        : <Navigate to="/pages/login" state={{ from: path }} />
+      }
+    </Route>
+  );
+};

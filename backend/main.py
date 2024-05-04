@@ -20,8 +20,8 @@ from flask_jwt_extended import JWTManager, create_access_token, jwt_required, ge
 
 load_dotenv()
 app = Flask(__name__)
-jwt = JWTManager(app)
 app.config['JWT_SECRET_KEY'] = 'your-secret-key'
+jwt = JWTManager(app)
 app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()

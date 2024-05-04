@@ -1,10 +1,18 @@
-from flask import make_response, Blueprint, request, Response
+from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
 from models import Restaurant, Manager
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 admin_functions = Blueprint("admin_functions", __name__)
 
 
+@admin_functions.before_request
+@jwt_required()
+def before_request():
+    current_user = get_jwt_identity()
+    if current_user['role'] != 'admin':
+        return jsonify({'msg': 'Access forbidden'}), 403
 
 @admin_functions.route("/admin/delete_user", methods=["DELETE"])
 def delete_user():
