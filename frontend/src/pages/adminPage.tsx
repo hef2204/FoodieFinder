@@ -1,11 +1,13 @@
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import '../css/adminPage.css';
 
 
+
 function AdminPage() {
     const { user } = useUser();
+    const navigate = useNavigate();
 
     if (!user || user.role !== 'admin') {
         console.log('Unauthorized');
@@ -15,6 +17,7 @@ function AdminPage() {
             <div>
                 <h1>Unauthorized</h1>
                 <p>You do not have permission to view this page.</p>
+                <button className="button" onClick={() => {navigate(-1)}}>back</button>
             </div>
         );
     }

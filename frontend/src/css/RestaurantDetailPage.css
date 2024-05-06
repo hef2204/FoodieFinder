@@ -1,45 +1,79 @@
-.restaurant-detail {
+.restaurant-detail1 {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    
+    background-image: url('https://images.unsplash.com/photo-1506084868230-d82d3bef2fcf?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 700px;
 }
 
-.restaurant-detail h1 {
-    font-size: 24px;
-    margin-bottom: 10px;
+.restaurant-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
 
-.restaurant-detail p {
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-
-.restaurant-detail table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.restaurant-detail table td {
-    padding: 8px;
-    border: 1px solid #ccc;
-}
-
-.restaurant-detail .back-button {
-    display: inline-block;
+.restaurant-buttons button {
     padding: 10px 20px;
-    margin-top: 20px;
-    background-color: #007bff;
-    color: #fff;
+    font-size: 16px;
     border: none;
     border-radius: 5px;
+    background-color: #ff6f61;
+    color: #d61515;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.restaurant-detail .back-button:hover {
-    background-color: #0056b3;
+.restaurant-buttons button:hover {
+    background-color: #ff4c3b;
+}
+
+.restaurant-buttons button.back-button {
+    background-color: #2d3142;
+}
+
+.restaurant-buttons button.back-button:hover {
+    background-color: #1b1e2b;
+}
+
+.tab-content {
+    margin-top: 20px;
+}
+
+.tab-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tab-content table th,
+.tab-content table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.tab-content table th {
+    background-color: #ff6f61;
+    color: #fff;
+}
+
+.tab-content table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tab-content table tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+@media (max-width: 600px) {
+    .restaurant-buttons {
+        flex-direction: column;
+    }
+
+    .restaurant-buttons button {
+        margin-bottom: 10px;
+    }
 }

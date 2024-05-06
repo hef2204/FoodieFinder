@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                             navigate(`/restaurant/${data.user.restaurantId}`);
                             localStorage.setItem('restaurantId', data.user.restaurantId)
                             localStorage.setItem('userId', data.user.id);
-                            localStorage.setItem('restaurantname', data.user.restaurantName);
+                            localStorage.setItem('restaurantName', data.user.restaurantName);
                             localStorage.setItem('role', data.user.role);
                             localStorage.setItem("managerName", data.user.username)
                         } else {
@@ -79,6 +79,7 @@ const Login: React.FC = () => {
                         localStorage.setItem('role', data.user.role);
                         localStorage.setItem('username', data.user.username);
                         localStorage.setItem('token', token);
+                        localStorage.setItem('firstName', data.user.firstName);
                         
                     } else if (data.user.role === 'admin') {
                         navigate('/pages/adminPage');

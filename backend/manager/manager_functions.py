@@ -2,7 +2,7 @@ from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
 from models import Restaurant, Manager, Menu
 manager_functions = Blueprint("manager_functions", __name__)
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 
@@ -39,13 +39,14 @@ class ManagerActions:
         close_db()
         return {"message": "Restaurant updated successfully"}
     
-@manager_functions.before_request
-@jwt_required()
-def before_request():
-    pass
+
 
 @manager_functions.route("/manager/delete_menu", methods=["DELETE"])
+@jwt_required()
 def delete_menu():
+    current_user = get_jwt_identity()
+    if current_user != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     if request.json is not None:
         db.execute("DELETE FROM menu WHERE name=?", (request.json["name"],))
@@ -59,30 +60,14 @@ def delete_menu():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
-
-
-@manager_functions.route("/manager/add_menu", methods=["POST"])
-def add_menu():
-    db = get_db()
-    if request.json is not None:
-        menu = Menu(**request.json)
-        db.execute(
-            "INSERT INTO menu (name, price, description, restaurant) VALUES (?, ?, ?, ?)",
-            (menu.name, menu.price, menu.description)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Menu added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
     
 
 @manager_functions.route('/manager/update_restaurant', methods=["POST"])
+@jwt_required()
 def update_restaurant():
+    current_user = get_jwt_identity()
+    if current_user != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     if request.json is not None:
         restaurant = Restaurant(**request.json)
@@ -101,7 +86,11 @@ def update_restaurant():
         return response
     
 @manager_functions.route("/manager/add_restaurant", methods=["POST"])
+@jwt_required()
 def add_another_restaurant_by_manager():
+    current_user = get_jwt_identity()
+    if current_user != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     if request.json is not None:
         restaurant = Restaurant(**request.json)
@@ -120,5 +109,45 @@ def add_another_restaurant_by_manager():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
+@manager_functions.route('/restaurant_page/<int:restaurant_id>/menu', methods=["POST"])
+@jwt_required()
+def add_menu(restaurant_id):
+    current_user = get_jwt_identity()
+    if current_user != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
+    db = get_db()
+    if request.json is not None:
+        menu = Menu(**request.json)
+        db.execute(
+            "INSERT INTO menu_items (name, price, description, restaurant_id) VALUES (?, ?, ?, ?)",
+            (menu.name, menu.price, menu.description, restaurant_id)
+        )
+        db.commit()
+        close_db()
+        response = make_response({"message": "Menu added successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    
+
+@manager_functions.route('/manager/profilePage', methods=["GET"])
+@jwt_required()
+def profile_page():
+    current_user = get_jwt_identity()
+    if current_user != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
+    db = get_db()
+    manager = db.execute("SELECT * FROM managers WHERE username=?", (current_user,)).fetchone()
+    restaurants = db.execute("SELECT * FROM restaurants WHERE manager_id=?", (manager["id"],)).fetchall()
+    close_db()
+    response = make_response({
+        "manager": dict(manager),
+        "restaurants": [dict(restaurant) for restaurant in restaurants]
+    })
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
     
     

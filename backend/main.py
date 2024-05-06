@@ -1,6 +1,6 @@
 
 from models import User, Manager, Restaurant, Menu
-from flask import Flask, request, make_response, Request, Blueprint, jsonify
+from flask import Flask, request, make_response, Blueprint, jsonify
 
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -70,6 +70,7 @@ def login():
                 user['restaurantId'] = restaurant['id']
                 user['restaurantName'] = db.execute("SELECT name FROM restaurants WHERE id = ?", (restaurant['id'],)).fetchone()['name']
                 user['managerName'] = db.execute("SELECT username FROM managers WHERE id = ?", (user['id'],)).fetchone()['username']
+                user['firstName'] = db.execute("SELECT first_name FROM users WHERE id = ?", (user['id'],)).fetchone()['first_name']
                 
             
         access_token = create_access_token(identity=user)
@@ -199,21 +200,31 @@ def restaurant_page(restaurant_id):
         return response
     
 
-@app.route('/restaurant_page/<int:restaurant_id>/update', methods=["POST"])
-def update_restaurant():
+
+    
+
+
+@app.route('/user_profile/<int:user_id>', methods=["GET", "PUT"])
+def user_profile(user_id):
     db = get_db()
-    if request.json is not None:
-        restaurant = Restaurant(**request.json)
+    if request.method == "GET":
+        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        close_db()
+        if user is None:
+            return make_response({"error": "User not found"}, 404)
+        response = make_response({"user": dict(user)})
+    elif request.method == "PUT":
+        data = request.get_json()
         db.execute(
-            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, discounts=? WHERE name=?",
-            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, restaurant.name)
+            "UPDATE users SET name = ?, email = ? WHERE id = ?",
+            (data['name'], data['email'], user_id)
         )
         db.commit()
         close_db()
-        return {"message": "Restaurant updated successfully"}
-    else:
-        return {"message": "Invalid request"}
-    
+        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        response = make_response({"user": dict(user)})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 

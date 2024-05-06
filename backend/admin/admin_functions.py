@@ -4,18 +4,19 @@ from models import Restaurant, Manager
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
+
+
 admin_functions = Blueprint("admin_functions", __name__)
 
 
-@admin_functions.before_request
-@jwt_required()
-def before_request():
-    current_user = get_jwt_identity()
-    if current_user['role'] != 'admin':
-        return jsonify({'msg': 'Access forbidden'}), 403
+
 
 @admin_functions.route("/admin/delete_user", methods=["DELETE"])
+@jwt_required()
 def delete_user():
+    current_user = get_jwt_identity()
+    if current_user != "admin":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     if request.json is not None:
         db.execute("DELETE FROM users WHERE username=?", (request.json["username"],))
@@ -133,7 +134,11 @@ def delete_manager():
     
 
 @admin_functions.route('/admin/manage_users', methods=['GET'])
+@jwt_required()
 def manage_users():
+    current_user = get_jwt_identity()
+    if current_user != "admin":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     users = db.execute("SELECT * FROM users").fetchall()
     print(users)
@@ -143,7 +148,11 @@ def manage_users():
     return response
 
 @admin_functions.route('/admin/manage_managers', methods=['GET'])
+@jwt_required()
 def manage_managers():
+    current_user = get_jwt_identity()
+    if current_user != "admin":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     managers = db.execute("SELECT * FROM managers").fetchall()
     print(managers)

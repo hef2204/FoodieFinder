@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
+import '../css/RestaurantDetailPage.css';
 
 interface Restaurant {
     id: number;
@@ -12,7 +13,6 @@ interface Restaurant {
     order_table: string;
     availability: string;
     menu: Array<{ name: string, description: string, price: number }>;
-    
 }
 
 interface MenuItem {
@@ -21,32 +21,29 @@ interface MenuItem {
     price: number;
 }
 
-
-
-
 const RestaurantDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
     const [menu, setMenu] = useState<MenuItem[]>([]);
     const [userRole, setUserRole] = useState<string | null>(null);
     const [managerName, setManagerName] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const [, setUser] = useState<{ username: string, role: string } | null>(null);
+    const [activeTab, setActiveTab] = useState<string>('menu');
 
     useEffect(() => {
         const role = localStorage.getItem('role');
         setUserRole(role);
-    } , []);
+    }, []);
 
     useEffect(() => {
         const managerName = localStorage.getItem('managerName');
         setManagerName(managerName);
     }, []);
-    
 
     const handleUpdateRestaurant = () => {
         window.location.href = `/restaurant/${id}/update`;
     };
-    
-    
 
     useEffect(() => {
         fetch(`http://localhost:5000/restaurant_page/${id}`)
@@ -54,9 +51,7 @@ const RestaurantDetailPage = () => {
             .then(data => {
                 setRestaurant(data.restaurant);
                 setMenu(data.menu);
-                
-                        
-             }) 
+            })
             .catch(error => console.error('Error:', error));
     }, [id]);
 
@@ -64,10 +59,39 @@ const RestaurantDetailPage = () => {
         return <div>Loading...</div>;
     }
 
-   
-
+    const handleTabChange = (key: string | null) => {
+        setActiveTab(key === activeTab ? null : key);
+    };
+    
+    
+    
+    
+    
     return (
-        <div className="restaurant-detail">
+        <div className="restaurant-detail1">
+            <div className="buttons-container">
+                {userRole === 'manager' && (
+                    <>
+                        <div className='updateRestaurant'>
+                            <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+                        </div>
+                        <div>
+                            <button onClick={() => {
+                                if (id) {
+                                    navigate(`/restaurant/${id}/menu`)
+                                } else {
+                                    console.error('Restaurant id is not defined');
+                                }
+                            }}>Update Menu</button>
+                            <button onClick={() => {
+                                localStorage.clear();
+                                setUser(null);
+                                navigate("/")
+                            }}>Logout</button>
+                        </div>
+                    </>
+                )}
+            </div>
             <h1>{restaurant.name}</h1>
             {userRole === 'manager' && <h2>Welcome, {managerName}!</h2>}
             <p>Location: {restaurant.location}</p>
@@ -76,28 +100,26 @@ const RestaurantDetailPage = () => {
             <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
             <p>Order Table: {restaurant.order_table}</p>
             <p>Availability: {restaurant.availability}</p>
-
-            {userRole === 'manager' && (
-                <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
-            )}
-            
-            <Tabs defaultActiveKey="menu">
+            <Tabs activeKey={activeTab} onSelect={handleTabChange}>
                 <Tab eventKey="menu" title="Menu">
-                    <table>
-                        <tbody>
-                            {menu.map((item) => (
-                                <tr key={item.name}>
-                                    <td>{item.name}</td>
-                                    <td>{item.description}</td>
-                                    <td>{item.price}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    {activeTab === 'menu' && (
+                        <table>
+                            <tbody>
+                                {menu.map((item) => (
+                                    <tr key={item.name}>
+                                        <td>{item.name}</td>
+                                        <td>{item.description}</td>
+                                        <td>{item.price}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </Tab>
             </Tabs>
             <button className='back-button' onClick={() => window.history.back()}>Back</button>
         </div>
+
     );
 }
 

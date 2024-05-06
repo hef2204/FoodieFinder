@@ -17,7 +17,7 @@ import UpdateRestaurantPage from './pages/RestaurantUpdateForm.tsx';
 import { Button } from 'react-bootstrap';
 import UserProfile from './pages/user-profile.tsx';
 import ManagersTable from './pages/ManagersTable.tsx';
-import { PrivateRoute } from './PrivateRoute.tsx';
+import ManagerPage from './pages/ManagerPage.tsx';
 
 
 
@@ -81,7 +81,7 @@ function HomePage() {
                             }}>Logout</Button>
                             <Link to="/pages/restaurantPage">Restaurants</Link>
                             <Link to="/pages/user-profile">Profile</Link> 
-                            <Link to="/pages/adminPage">admin</Link>
+                            
                     </>
                 ) : (
                     <>
@@ -115,16 +115,17 @@ export default function App() {
                 <Route path="/pages/login" element={<Login />} />
                 <Route path="/pages/register" element={<Register />} />
                 <Route path="/pages/about" element={<About />} />
-                <PrivateRoute path="/pages/adminPage" element={<AdminPage />} roles={['admin']} />
-                <PrivateRoute path="/restaurant/:id/update" element={<UpdateRestaurantPage />} roles={['admin', 'manager']} />
-                <PrivateRoute path="/pages/AddManager" element={<AddManager />} roles={['admin']} />
-                <PrivateRoute path="/pages/AddRestaurant" element={<AddRestaurant />} roles={['admin', 'manager']} />
-                <PrivateRoute path="/pages/restaurantPage" element={<RestaurantPage />} roles={['admin', 'manager']} />
-                <PrivateRoute path="/pages/users" element={<UsersTable />} roles={['admin']} />
-                <PrivateRoute path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} roles={['admin']} />
+                <Route path="/pages/adminPage" element={<AdminPage />} />
+                <Route path="/restaurant/:id/update" element={<UpdateRestaurantPage />} />
+                <Route path="/pages/AddManager" element={<AddManager />} />
+                <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
+                <Route path="/pages/restaurantPage" element={<RestaurantPage />} />
+                <Route path="/pages/users" element={<UsersTable />} />
+                <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
                 <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
                 <Route path="/pages/user-profile" element={<UserProfile />} />
-                <PrivateRoute path="/pages/ManagersTable" element={<ManagersTable />} roles={['admin']} />
+                <Route path="/pages/ManagersTable" element={<ManagersTable />} />
+                <Route path="/pages/managerPage" element={<ManagerPage />} />
                 </Routes>
             </UserProvider>
         </BrowserRouter>

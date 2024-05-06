@@ -1,63 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+}
 
 const UserProfile: React.FC = () => {
-    const [userData, setUserData] = useState({
-        name: '',
-        email: '',
-        age: 0,
-        // Add more fields as per your requirements
-    });
+    const userId = localStorage.getItem('userId');
+    const [user, setUser] = useState<User | null>(null);
+    const navigate = useNavigate();
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setUserData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+    useEffect(() => {
+        if (userId) {
+            fetch(`http://localhost:5000/user_profile/${userId}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        console.error(data.error);
+                    } else {
+                        setUser(data.user);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    }, [userId]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Perform update logic here
-        console.log(userData);
-    };
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
-            <h2>User Profile</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={userData.name}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        name="email"
-                        value={userData.email}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <label>
-                    Age:
-                    <input
-                        type="number"
-                        name="age"
-                        value={userData.age}
-                        onChange={handleInputChange}
-                    />
-                </label>
-                <br />
-                <button type="submit">Update</button>
-            </form>
+           <h1>User Profile</h1>
+            <p>Username: {user.username}</p>
+            <p>Email: {user.email}</p>
+            <p>First Name: {user.first_name}</p>
+            <p>Last Name: {user.last_name}</p>
+             {/* Add more profile information here */}
+         
+         <button className='LogOut' onClick={() => {
+            localStorage.clear();
+            setUser(null);
+            navigate("/")
+            }}>Logout</button>
         </div>
     );
 };
