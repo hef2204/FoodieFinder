@@ -1,38 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-
-
-
-interface Menu {
-    id: string;
-    name: string;
-    // Add more properties as needed
-}
+import React, { useState, useEffect } from 'react';
 
 interface Restaurant {
-    id: string;
+    id: number;
     name: string;
-    // Add more properties as needed
+    location: string;
+    phone_number: string;
+    type: string;
+    Kosher: string;
+    order_table: string;
+    availability: string;
+    menu: Array<{ name: string, description: string, price: string }>;
 }
 
-
-const AddMenuItem: React.FC = () => {
-    const { id } = useParams();
-    const [, setMenu] = useState<Menu | null>(null);
+const UpdateMenu: React.FC = () => {
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+
+    const token = localStorage.getItem('token');
+
+    
+        
 
     useEffect(() => {
-        fetch(`http://localhost:5000/restaurant/${id}/menu`)
+        fetch(`http://localhost:5000/restaurant_page/1`)
             .then(response => response.json())
             .then(data => {
                 setRestaurant(data.restaurant);
-                setMenu(data.menu);
             })
             .catch(error => console.error('Error:', error));
-    }, [id]);
+    }, []);
 
-    const handleAddMenuItem = () => {
-        // Add code to add a menu item
+    const handleAddMenuItem = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!restaurant) {
+            alert('Restaurant data is not loaded yet');
+            return;
+        }
+
+        const response = await fetch(`http://localhost:5000/restaurant_page/menu/${restaurant.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({ name, description, price })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setName('');
+            setDescription('');
+            setPrice('');
+            alert(data.message);
+        } else {
+            alert('Error: ' + data.message);
+        }
     };
 
     if (!restaurant) {
@@ -46,20 +72,20 @@ const AddMenuItem: React.FC = () => {
             <form onSubmit={handleAddMenuItem}>
                 <label>
                     Name:
-                    <input type="text" />
+                    <input type="text" value={name} onChange={e => setName(e.target.value)} />
                 </label>
                 <label>
                     Description:
-                    <input type="text" />
+                    <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
                 </label>
                 <label>
                     Price:
-                    <input type="number" />
+                    <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
                 </label>
-                <button type="submit">Add Menu Item</button>
+                <input type="submit" value="Add Menu Item" />
             </form>
         </div>
     );
-}
+};
 
-export default AddMenuItem;
+export default UpdateMenu;

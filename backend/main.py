@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
-from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token
 
 
 
@@ -26,7 +26,7 @@ app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
-cors = CORS(app, origins=FRONTEND_URL, methods=["GET", "POST", "DELETE"], supports_credentials=True)
+cors = CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST", "DELETE"], supports_credentials=True)
 print(FRONTEND_URL)
 
 
@@ -111,22 +111,10 @@ def home():
 
 
 
-@app.route('/logout', methods=["POST"])
-def logout():
-    return response({"message": "Logout successful"}, 200)
 
 
 @app.route('/restaurants', methods=["GET"])
 def get_restaurants():
-    db = get_db()
-    restaurants = db.execute("SELECT * FROM restaurants").fetchall()
-    close_db()
-    response = make_response({"restaurants": [dict(restaurant) for restaurant in restaurants]})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
-
-@app.route('/restaurant/<int:id>', methods=["GET"])
-def restaurant_data():
     db = get_db()
     restaurants = db.execute("SELECT * FROM restaurants").fetchall()
     close_db()
@@ -155,24 +143,7 @@ def update_user():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
-@app.route('/update_manager', methods=["POST"])
-def update_manager():
-    db = get_db()
-    if request.json is not None:
-        manager = Manager(**request.json)
-        db.execute(
-            "UPDATE managers SET email=?, restaurant=?, phone_number=? WHERE full_name=?",
-            (manager.email, manager.restaurant, manager.phone_number, manager.full_name)
-        )
-        db.commit()
-        close_db()
-        response = make_response({"message": "Manager updated successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+
     
 
 

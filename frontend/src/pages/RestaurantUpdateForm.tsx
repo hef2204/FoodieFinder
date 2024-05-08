@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import '../css/RestuarantUpdateForm.css';
+import '../css/RestaurantUpdateForm.css';
 
 interface Restaurant {
     id: number;
@@ -11,54 +11,78 @@ interface Restaurant {
     Kosher: string;
     order_table: string;
     availability: string;
-    menu: Array<{ name: string, description: string, price: number }>;
+    
 }
 
-interface MenuItem {
-    name: string;
-    description: string;
-    price: number;
-}
+
 
 const UpdateRestaurantPage = () => {
     const { id } = useParams<{ id: string }>();
     const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
-    const [newMenuItem, setNewMenuItem] = useState<MenuItem>({ name: '', description: '', price: 0 });
     const navigate = useNavigate();
 
     useEffect(() => {
         fetch(`http://localhost:5000/restaurant_page/${id}`)
             .then(response => response.json())
-            .then(data => setRestaurant(data.restaurant))
+            .then(data => { 
+                console.log("Data:", data),
+                setRestaurant(data.restaurant);
+            })
             .catch(error => console.error('Error:', error));
     }, [id]);
 
     const handleUpdateRestaurant = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        fetch(`http://localhost:5000/restaurant_page/${id}/update`, {
+    
+        if (!restaurant) {
+            console.error('Restaurant data is not loaded yet');
+            return;
+        }
+    
+        const updatedRestaurantData = {
+            id: restaurant.id,
+            name: restaurant.name,
+            location: restaurant.location,
+            phone_number: restaurant.phone_number,
+            type: restaurant.type,
+            Kosher: restaurant.Kosher,
+            order_table: restaurant.order_table,
+            availability: restaurant.availability
+        };
+    
+        console.log("before fetch");
+        fetch(`http://localhost:5000/manager/restaurant_page/update_restaurant/${restaurant.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(restaurant)
+            body: JSON.stringify(updatedRestaurantData)
         })
-        .then(() => navigate(`/restaurant/${id}`))
+        .then(response => {
+            console.log("Response:", response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Before navigate")
+            console.log("Data:", data);
+            console.log("Response Data:", data);
+            console.log("Data:", data);
+            navigate(`/restaurant/${id}`);
+        })
         .catch(error => console.error('Error:', error));
+        
+        console.log("Updated Restaurant Data:", updatedRestaurantData);
+        console.log("Restaurant id:", restaurant.id);
+        console.log("Restaurant Data:", restaurant);
+        console.log("After fetch");
+        
     };
+    
 
-    const handleAddMenuItem = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (restaurant) {
-            setRestaurant({
-                ...restaurant,
-                menu: [...restaurant.menu, newMenuItem]
-            });
-
-            setNewMenuItem({ name: '', description: '', price: 0 });
-        }
-    };
+    
 
     if (!restaurant) {
         return <div>Loading...</div>;
@@ -95,25 +119,9 @@ const UpdateRestaurantPage = () => {
                     Availability:
                     <input type="text" value={restaurant.availability} onChange={e => setRestaurant({...restaurant, availability: e.target.value})} />
                 </label>
-                
                 <button type="submit">Update</button>
             </form>
         
-            <form onSubmit={handleAddMenuItem}>
-                <label>
-                    Name:
-                    <input type="text" value={newMenuItem.name} onChange={e => setNewMenuItem({...newMenuItem, name: e.target.value})} />
-                </label>
-                <label>
-                    Description:
-                    <input type="text" value={newMenuItem.description} onChange={e => setNewMenuItem({...newMenuItem, description: e.target.value})} />
-                </label>
-                <label>
-                    Price:
-                    <input type="number" value={newMenuItem.price} onChange={e => setNewMenuItem({...newMenuItem, price: parseFloat(e.target.value)})} />
-                </label>
-                <button type="submit">Add Menu Item</button>
-         </form>
         </div>
     
     );

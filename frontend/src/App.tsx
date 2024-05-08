@@ -18,6 +18,8 @@ import { Button } from 'react-bootstrap';
 import UserProfile from './pages/user-profile.tsx';
 import ManagersTable from './pages/ManagersTable.tsx';
 import ManagerPage from './pages/ManagerPage.tsx';
+import AddMenuItem from './pages/UpdateMenu.tsx';
+import ResultsPage from './ResultsPage.tsx';
 
 
 
@@ -126,6 +128,9 @@ export default function App() {
                 <Route path="/pages/user-profile" element={<UserProfile />} />
                 <Route path="/pages/ManagersTable" element={<ManagersTable />} />
                 <Route path="/pages/managerPage" element={<ManagerPage />} />
+                <Route path="/restaurant/:id/menu" element={<AddMenuItem />} />
+                <Route path="/pages/results" element={<ResultsPage />} />
+                {/* <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} /> */}
                 </Routes>
             </UserProvider>
         </BrowserRouter>

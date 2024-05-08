@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import '../css/RestaurantDetailPage.css';
 
@@ -73,21 +73,28 @@ const RestaurantDetailPage = () => {
                 {userRole === 'manager' && (
                     <>
                         <div className='updateRestaurant'>
-                            <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+                            <button onClick={() => {
+                            if (id) {
+                                navigate(`/restaurant/${id}/update`);
+                            } else {
+                                console.error('Restaurant id is not defined');
+                            }
+                        }}>Update Restaurant</button>
                         </div>
                         <div>
                             <button onClick={() => {
                                 if (id) {
-                                    navigate(`/restaurant/${id}/menu`)
+                                    navigate(`/restaurant/:id/menu`)
                                 } else {
                                     console.error('Restaurant id is not defined');
                                 }
-                            }}>Update Menu</button>
+                            }}>Add to Menu</button>
                             <button onClick={() => {
                                 localStorage.clear();
                                 setUser(null);
                                 navigate("/")
                             }}>Logout</button>
+                            
                         </div>
                     </>
                 )}

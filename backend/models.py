@@ -40,7 +40,6 @@ class Menu:
     name: str
     price: str
     description: str
-    category: str
 
 
 class AdminActions:
