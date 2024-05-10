@@ -10,7 +10,7 @@ interface Restaurant {
     type: string;
     Kosher: string;
     order_table: string;
-    availability: string;
+    Availability: string;
     
 }
 
@@ -25,7 +25,7 @@ const UpdateRestaurantPage = () => {
         fetch(`http://localhost:5000/restaurant_page/${id}`)
             .then(response => response.json())
             .then(data => { 
-                console.log("Data:", data),
+                
                 setRestaurant(data.restaurant);
             })
             .catch(error => console.error('Error:', error));
@@ -47,11 +47,11 @@ const UpdateRestaurantPage = () => {
             type: restaurant.type,
             Kosher: restaurant.Kosher,
             order_table: restaurant.order_table,
-            availability: restaurant.availability
+            Availability: restaurant.Availability
         };
     
         console.log("before fetch");
-        fetch(`http://localhost:5000/manager/restaurant_page/update_restaurant/${restaurant.id}`, {
+        fetch(`http://localhost:5000/manager/restaurant_page/${restaurant.id}/update_restaurant`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,8 +75,6 @@ const UpdateRestaurantPage = () => {
         .catch(error => console.error('Error:', error));
         
         console.log("Updated Restaurant Data:", updatedRestaurantData);
-        console.log("Restaurant id:", restaurant.id);
-        console.log("Restaurant Data:", restaurant);
         console.log("After fetch");
         
     };
@@ -117,7 +115,7 @@ const UpdateRestaurantPage = () => {
                 </label>
                 <label>
                     Availability:
-                    <input type="text" value={restaurant.availability} onChange={e => setRestaurant({...restaurant, availability: e.target.value})} />
+                    <input type="text" value={restaurant.Availability} onChange={e => setRestaurant({...restaurant, Availability: e.target.value})} />
                 </label>
                 <button type="submit">Update</button>
             </form>

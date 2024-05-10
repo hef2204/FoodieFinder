@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import '../css/RestaurantDetailPage.css';
 
@@ -29,7 +29,7 @@ const RestaurantDetailPage = () => {
     const [managerName, setManagerName] = useState<string | null>(null);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
-    const [activeTab, setActiveTab] = useState<string>('menu');
+    const [activeTab, setActiveTab] = useState<string | null>('menu');
 
     useEffect(() => {
         const role = localStorage.getItem('role');
@@ -42,7 +42,7 @@ const RestaurantDetailPage = () => {
     }, []);
 
     const handleUpdateRestaurant = () => {
-        window.location.href = `/restaurant/${id}/update`;
+        navigate(`/restaurant/${id}/update`);
     };
 
     useEffect(() => {
@@ -73,13 +73,7 @@ const RestaurantDetailPage = () => {
                 {userRole === 'manager' && (
                     <>
                         <div className='updateRestaurant'>
-                            <button onClick={() => {
-                            if (id) {
-                                navigate(`/restaurant/${id}/update`);
-                            } else {
-                                console.error('Restaurant id is not defined');
-                            }
-                        }}>Update Restaurant</button>
+                        <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
                         </div>
                         <div>
                             <button onClick={() => {
@@ -107,7 +101,7 @@ const RestaurantDetailPage = () => {
             <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
             <p>Order Table: {restaurant.order_table}</p>
             <p>Availability: {restaurant.availability}</p>
-            <Tabs activeKey={activeTab} onSelect={handleTabChange}>
+            <Tabs activeKey={activeTab || undefined} onSelect={handleTabChange}>
                 <Tab eventKey="menu" title="Menu">
                     {activeTab === 'menu' && (
                         <table>

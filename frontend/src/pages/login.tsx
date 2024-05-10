@@ -56,7 +56,7 @@ const Login: React.FC = () => {
     
             if (response.ok) {
                 const data = await response.json();
-                const token = data.access_token; // The JWT token
+                const token = data.access_token; 
     
                 
                 localStorage.setItem('token', token);
@@ -64,7 +64,7 @@ const Login: React.FC = () => {
                 if (data && data.user) {
                     if (data.user.role === 'manager') {
                         if (data.user.restaurantId) {
-                            navigate(`/restaurant/${data.user.restaurantId}`);
+                            navigate(`/pages/managerPage`);
                             localStorage.setItem('restaurantId', data.user.restaurantId)
                             localStorage.setItem('userId', data.user.id);
                             localStorage.setItem('restaurantName', data.user.restaurantName);
@@ -96,28 +96,23 @@ const Login: React.FC = () => {
                 }
             } else {
                 console.log('Login failed');
-                // Handle login failure
             }
         } catch (error) {
             console.error('Error:', error);
-            // Handle error
         }
     };
 
     return (
-        <div>
+        <div className="login-container">
+            <Link className="about-link" to="/pages/about">About</Link>
             <h1>Login</h1>
-        <form onSubmit={handleSubmit}>
-            {error && <div>{error}</div>}
-            <input type="text" placeholder="Username" value={username} onChange={handleEmailChange} />
-            <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
-            <button type="submit">Login</button>
-        </form>
-        <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
-            <div className="link-container2">
-                <Link to="/pages/about">About</Link>
-            </div>
-
+            <form onSubmit={handleSubmit}>
+                {error && <div>{error}</div>}
+                <input type="text" placeholder="Username" value={username} onChange={handleEmailChange} />
+                <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
+                <button type="submit">Login</button>
+            </form>
+            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
         </div>
         
     );

@@ -1,73 +1,72 @@
+/* login.css */
+
+/* Container */
 .login-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     height: 100vh;
 }
 
-
-body {
-    margin: 0;
-    background-color: #000000;
-    font-family: Arial, sans-serif;
-    color: black;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    padding: 20px;
-    border-radius: 5px;
-    background-color: #12A737;
-    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.15);
-}
-
-input {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid black; /* Changed this line */
-}
-
-button {
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #0056b3; /* Set the color you want here */
-    color: black;
-    cursor: pointer;
-}
-
-button {
-    background-color: #0056b3;
-}
-
-
-.back-button {
+/* About link */
+.about-link {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 10px;
+    top: 20px;
+    /* left: 20px; */
+    color: #007bff;
+    text-decoration: none;
+    z-index: 1; /* Ensure it's above other elements */
+}
+
+/* Form */
+.login-form {
+    padding: 20px;
+    background-color: #f8f9fa;
     border-radius: 5px;
-    border: none;
-    background-color: #0056b3;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+/* Input fields */
+.input-field {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Submit button */
+.submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
     color: #fff;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
 }
 
+/* Submit button hover effect */
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Back button */
+.back-button {
+    /* Remove position, top, and right properties */
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1; /* Ensure it's above other elements */
+}
+
+/* Back button hover effect */
 .back-button:hover {
-    background-color: #007BFF;
-}
-
-.link-container1 {
-    position: absolute; /* or 'fixed' if you want it to stay in the corner when scrolling */
-    top: 10px;
-    right: 10px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    background-color: #bbb;
 }

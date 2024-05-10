@@ -1,6 +1,6 @@
 from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
-from models import Restaurant, Manager, Menu
+from models import Restaurant, Manager, Menu, RestaurantUpdate
 manager_functions = Blueprint("manager_functions", __name__)
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -80,15 +80,17 @@ def add_another_restaurant_by_manager():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     
-
-@manager_functions.route('/manager/restaurant_page/update_restaurant/<int:restaurant_id>', methods=["PUT"])
+############################################# Done
+@manager_functions.route('/manager/restaurant_page/<int:restaurant_id>/update_restaurant', methods=["PUT"])
 def update_restaurant(restaurant_id):
     db = get_db()
     if request.json is not None:
-        restaurant = Restaurant(**request.json)
+        
+        restaurant = RestaurantUpdate(**request.json)
+        
         db.execute(
-            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=? WHERE id=?",
-            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant_id)
+            "UPDATE restaurants SET name=?, location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=? WHERE id=?",
+            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant_id)
         )
         db.commit()
         close_db()
@@ -103,7 +105,7 @@ def update_restaurant(restaurant_id):
 
 
 
-############################################# Done
+
 @manager_functions.route('/restaurant_page/menu/<int:restaurant_id>', methods=["POST"])
 def add_menu(restaurant_id):
     db = get_db()
@@ -127,21 +129,34 @@ def add_menu(restaurant_id):
 
     
 
-@manager_functions.route('/manager/profilePage/', methods=["GET"])
+@manager_functions.route('/manager/profilePage', methods=["GET"])
+@jwt_required()
 def profile_page():
+   
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    print(user_role)
+    if user_role != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
-    manager = db.execute("SELECT * FROM managers WHERE id=?", (id,)).fetchone()
+    manager = db.execute("SELECT * FROM managers WHERE id=?", (current_user['id'],)).fetchone()
     if not manager:
         return jsonify({"message": "Manager not found"}), 404
-    restaurants = db.execute("SELECT * FROM restaurants WHERE manager_id=?", (id,)).fetchall()
+
+    restaurants = db.execute("SELECT * FROM restaurants WHERE manager_id=?", (current_user['id'],)).fetchall()
     close_db()
     response = make_response({
         "manager": dict(manager),
-        "restaurants": [dict(restaurant) for restaurant in restaurants]
+        "restaurants": [dict(restaurant) for restaurant in restaurants],
+        "manager_username": manager['username'], 
+        "restaurant_name": [restaurant['name'] for restaurant in restaurants],
+        "restaurant_id": [restaurant['id'] for restaurant in restaurants] 
     })
-    print(response)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
+
+
 ############################################################################################################    
 # @manager_functions.route('/manager/update_manager', methods=["POST"])
 # def update_manager():
@@ -182,3 +197,4 @@ def profile_page():
 #         response.headers.add("Access-Control-Allow-Origin", "*")
 #         close_db()
 #         return response
+

@@ -1,7 +1,59 @@
-.link-container2 {
+.container {
     display: flex;
-    justify-content: right;
-    right: 10;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set height to fill the viewport */
+    background-image: url('https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg'); /* Path to your background image */
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+    padding: 20px; /* Add padding for content */
+}
 
-    margin-top: 30px;
+/* Main heading */
+h1 {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Paragraph text */
+p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Back button */
+.back-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Back button hover effect */
+.back-button:hover {
+    background-color: #0056b3;
+}
+
+/* Link container */
+.link-container {
+    margin-top: 20px;
+}
+
+/* Links */
+.link-container a {
+    color: #007bff;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+/* Link hover effect */
+.link-container a:hover {
+    text-decoration: underline;
 }

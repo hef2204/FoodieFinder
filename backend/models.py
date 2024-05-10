@@ -20,10 +20,12 @@ class Manager:
     email: str
     restaurant: str
     phone_number: str
+    role: str = "manager" # default value
 
 
 @dataclass
 class Restaurant:
+    id: str
     name: str
     location: str
     phone_number: str
@@ -33,6 +35,18 @@ class Restaurant:
     Availability: str
     discounts: str
     manager_id: str
+
+
+@dataclass
+class RestaurantUpdate:
+    id: str
+    name: str
+    location: str
+    phone_number: str
+    type: str
+    Kosher: str
+    order_table: str
+    Availability: str
 
 
 @dataclass

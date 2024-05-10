@@ -84,6 +84,13 @@ const UpdateMenu: React.FC = () => {
                 </label>
                 <input type="submit" value="Add Menu Item" />
             </form>
+            <div className='back'>
+                <button onClick={() => {
+                    window.history.back();
+                }}>Back</button>
+
+
+            </div>
         </div>
     );
 };

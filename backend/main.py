@@ -8,6 +8,8 @@ from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
 from flask_jwt_extended import JWTManager, create_access_token
+from datetime import timedelta
+
 
 
 
@@ -26,7 +28,7 @@ app.register_blueprint(admin_functions)
 app.register_blueprint(manager_functions)
 app.config.from_prefixed_env()
 FRONTEND_URL = app.config.get("FRONTEND_URL")
-cors = CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST", "DELETE"], supports_credentials=True)
+cors = CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST", "DELETE", "PUT"], supports_credentials=True)
 print(FRONTEND_URL)
 
 
@@ -73,7 +75,7 @@ def login():
                 user['firstName'] = db.execute("SELECT first_name FROM users WHERE id = ?", (user['id'],)).fetchone()['first_name']
                 
             
-        access_token = create_access_token(identity=user)
+        access_token = create_access_token(identity=user, expires_delta=timedelta(seconds=500000))
         response = make_response({"message": "Login successful", "user": dict(user), "access_token": access_token})
         return response
 

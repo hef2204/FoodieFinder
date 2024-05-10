@@ -1,33 +1,70 @@
-.container {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.form {
+body {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set height to fill the viewport */
+    background-image: url('https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg'); /* Path to your background image */
+    background-size: cover; /* Cover the entire body */
+    background-position: center; /* Center the background image */
+    padding: 20px; /* Add padding for content */
 }
 
-.input-field {
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
+/* Form styles */
+.form {
+    width: 300px;
+    padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.8); /* Add opacity to the form background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Form title */
+.form h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Input field styles */
+.input-field {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Button styles */
 .button {
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007BFF;
-    color: white;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     cursor: pointer;
 }
 
+/* Button hover effect */
 .button:hover {
     background-color: #0056b3;
+}
+
+/* Back button styles */
+.back-button {
+    margin-top: 20px;
+    background-color: #ccc;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Back button hover effect */
+.back-button:hover {
+    background-color: #bbb;
 }

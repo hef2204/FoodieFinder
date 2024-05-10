@@ -60,10 +60,6 @@ function HomePage() {
                     <p>Find the best food in town!</p>
                 )}
             </div>
-            <div className="gif">
-                <img src="https://tenor.com/view/food-foodie-hungry-gif-533923900697883794.gif" alt="Foodie Finder" />
-            </div>
-
             <div className="search">
                 <input
                     type="search"
