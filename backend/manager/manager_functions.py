@@ -94,6 +94,11 @@ def update_restaurant(restaurant_id):
             (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant_id)
         )
         db.commit()
+        db.execute(
+            "UPDATE reservations SET restaurant_name=? WHERE restaurant_id=?",
+            (restaurant.name, restaurant_id)
+        )
+        db.commit()
         close_db()
         response = make_response({"message": "Restaurant updated successfully"})
         response.headers.add("Access-Control-Allow-Origin", "*")
@@ -155,6 +160,40 @@ def profile_page():
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+
+@manager_functions.route('/manager/manager_reservations', methods=["GET"])
+@jwt_required()
+def manager_reservations():
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    if user_role != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
+
+    db = get_db()
+    manager_id = current_user['id']
+
+    # Fetch restaurant ID associated with the manager
+    restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (manager_id,)).fetchone()
+    if restaurant is None:
+        return jsonify({"message": "Manager is not associated with any restaurant"}), 404
+
+    restaurant_id = restaurant['id']
+
+    # Fetch reservations for the manager's restaurant
+    reservations = db.execute(
+        "SELECT * FROM reservations WHERE restaurant_id = ?", (restaurant_id,)
+    ).fetchall()
+
+    reservations_list = []
+    for reservation in reservations:
+        reservations_list.append({
+            'id': reservation['id'],
+            'date': reservation['date'],
+            'time': reservation['time'],
+            'numberOfPeople': reservation['number_of_people']
+        })
+
+    return jsonify({"reservations": reservations_list}), 200
 
 
 ############################################################################################################    

@@ -16,6 +16,7 @@ admin_functions = Blueprint("admin_functions", __name__)
 def adminPage():
     current_user = get_jwt_identity()
     user_role = current_user['role']
+    print(user_role)
     if user_role != "admin":
         return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
@@ -85,7 +86,6 @@ def add_admin():
 def add_manager_and_restaurant():
     current_user = get_jwt_identity()
     user_role = current_user['role']
-    print(user_role)
     if user_role != "admin":
         return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
@@ -96,30 +96,34 @@ def add_manager_and_restaurant():
         return make_response({"message": "Missing 'manager' or 'restaurant' in request data"}, 400)
 
     try:
-        # Add manager
-        manager = Manager(**data['manager'])
-        print(data['manager'])
-        cursor = db.cursor()
-        cursor.execute("SELECT * FROM managers WHERE username = ?", (manager.username,))
-        existing_manager = cursor.fetchone()
-        if existing_manager is not None:
-            return make_response({"message": "Username already exists"}, 400)
-        cursor.execute(
-            "INSERT INTO managers (username, full_name, password, email, phone_number) VALUES (?, ?, ?, ?, ?)",
-            (manager.username, manager.full_name, manager.password, manager.email, manager.phone_number)
-        )
-        db.commit()
-        manager_id = cursor.lastrowid
+            manager = Manager(**data['manager'])
+            print(manager)
+            print(data['manager'])
+        
+            cursor = db.cursor()
+            cursor.execute("SELECT * FROM managers WHERE username = ?", (manager.username,))
+            existing_manager = cursor.fetchone()
+            if existing_manager is not None:
+                return make_response({"message": "Username already exists"}, 400)
+            cursor.execute(
+                "INSERT INTO managers (username, full_name, password, email, phone_number) VALUES (?, ?, ?, ?, ?)",
+                (manager.username, manager.full_name, manager.password, manager.email, manager.phone_number)
+            )
+            db.commit()
+            print("2")
+            manager_id = cursor.lastrowid
 
-        # Add restaurant
-        restaurant = Restaurant(**data['restaurant'])
-        cursor.execute(
-            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, manager_id)
-        )
-        db.commit()
+            # Add restaurant
+            restaurant = Restaurant(**data['restaurant'])
+            print(data['restaurant'])
+            cursor.execute(
+                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, manager_id)
+            )
+            db.commit()
     except Exception as e:
-        return make_response({"message": str(e)}, 500)
+            return make_response({"message": str(e)}, 500)
+    print("Manager and restaurant added successfully")
 
     response = make_response({"message": "Manager and restaurant added successfully", "managerId": manager_id})
     response.headers.add("Access-Control-Allow-Origin", "*")

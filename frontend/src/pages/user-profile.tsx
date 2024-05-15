@@ -45,11 +45,14 @@ const UserProfile: React.FC = () => {
             <p>Last Name: {user.last_name}</p>
              {/* Add more profile information here */}
          
-         <button className='LogOut' onClick={() => {
+            <button className='LogOut' onClick={() => {
             localStorage.clear();
             setUser(null);
             navigate("/")
             }}>Logout</button>
+            <button className='reservation' onClick={() => {
+                navigate("/pages/UserReservationPage")
+            }}>Reservations</button>
         </div>
     );
 };

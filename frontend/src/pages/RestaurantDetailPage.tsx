@@ -67,7 +67,7 @@ const RestaurantDetailPage = () => {
         setActiveTab(key === activeTab ? null : key);
     };
     
-    
+    // const restaurantId = restaurant.id;
     
     
     
@@ -92,6 +92,9 @@ const RestaurantDetailPage = () => {
                                 setUser(null);
                                 navigate("/")
                             }}>Logout</button>
+                            <button className='reservation-button' onClick={() => 
+                                navigate(`/pages/ManagerReservationPage`)
+                                }>View Reservations</button>
                             
                         </div>
                     </>

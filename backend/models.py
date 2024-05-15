@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from db import get_db, close_db
+from typing import Optional
 
 
 
@@ -18,23 +19,23 @@ class Manager:
     full_name: str
     password: str
     email: str
-    restaurant: str
+    # restaurant: str
     phone_number: str
     role: str = "manager" # default value
 
 
 @dataclass
 class Restaurant:
-    id: str
-    name: str
-    location: str
-    phone_number: str
-    type: str
-    Kosher: str
-    order_table: str
-    Availability: str
-    discounts: str
-    manager_id: str
+    id: Optional[str] = None
+    name: Optional[str] = None
+    location: Optional[str] = None
+    phone_number: Optional[str] = None
+    type: Optional[str] = None
+    Kosher: Optional[str] = None
+    order_table: Optional[str] = None
+    Availability: Optional[str] = None
+    discounts: Optional[str] = None
+    manager_id: Optional[str] = None
 
 
 @dataclass

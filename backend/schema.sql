@@ -74,6 +74,18 @@ CREATE TABLE IF NOT EXISTS ratings (
                     FOREIGN KEY(user_id) REFERENCES users(id)
 );
 
+CREATE TABLE IF NOT EXISTS reservations (
+                    id INTEGER PRIMARY KEY,
+                    restaurant_id INTEGER NOT NULL,
+                    restaurant_name TEXT NOT NULL,
+                    user_id INTEGER,
+                    date TEXT NOT NULL,
+                    time TEXT NOT NULL,
+                    number_of_people INTEGER NOT NULL,
+                    FOREIGN KEY(restaurant_id) REFERENCES restaurants(id),
+                    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
 
 
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, availability, discounts, rating_count, manager_id) VALUES ('Pizza Hut', '123 Main St', '123-456-7890', 'Italian', 'Yes', 'Yes', 'Yes', 0.0, 0, 1);

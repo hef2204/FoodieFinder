@@ -21,6 +21,9 @@ import ManagerPage from './pages/ManagerPage.tsx';
 import AddMenuItem from './pages/UpdateMenu.tsx';
 import ResultsPage from './ResultsPage.tsx';
 import AddAdmin from './pages/AddAdmin.tsx';
+import ReservationPage from './pages/ReservationPage.tsx';
+import UserReservationPage from './pages/UserReservationPage.tsx';
+import ManagerReservationPage from './pages/ManagerReservationPage.tsx';
 
 
 
@@ -97,12 +100,6 @@ function HomePage() {
 
 
 export default function App() {
-    
-
-
-
-
-
      return (
         
         <BrowserRouter>
@@ -130,6 +127,10 @@ export default function App() {
                 <Route path="/pages/results" element={<ResultsPage />} />
                 {/* <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} /> */}
                 <Route path="/pages/AddAdmin" element={<AddAdmin />} />
+                <Route path="/restaurant/:id/reservation" element={<ReservationPage />} />
+                <Route path="/pages/UserReservationPage" element={<UserReservationPage />} />
+                <Route path="/pages/ManagerReservationPage" element={<ManagerReservationPage />} />
+                
                 </Routes>
             </UserProvider>
         </BrowserRouter>

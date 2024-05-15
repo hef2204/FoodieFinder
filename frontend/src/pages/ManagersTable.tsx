@@ -54,14 +54,19 @@ const ManagersTable = () => {
             },
             body: JSON.stringify({ username })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete manager');
+            }
+            return response.json();
+        })
         .then((data) => {
             if (data.message === 'Unauthorized') {
                 console.error('Unauthorized request');
                 return;
             }
             if (data.message === 'Manager deleted successfully') {
-                setManager(manager.filter(m => m.username !== username));
+                setManager(prevManager => prevManager.filter(m => m.username !== username));
             }
         }) 
         .catch(error => console.error('Error:', error));

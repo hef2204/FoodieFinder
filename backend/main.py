@@ -137,12 +137,7 @@ def home():
     return response
 
 
-
-
-
-from flask import request
-
-@app.route('/restaurants', methods=["GET"])
+@app.route('/restaurants', methods=["GET", "DELETE"])
 def get_restaurants():
     filters = {}
 
@@ -249,16 +244,42 @@ def user_profile(user_id):
     return response
 
 
+@app.route('/restaurant_page/<int:restaurant_id>/reservation', methods=["POST"])
+def reservation(restaurant_id):
+    db = get_db()
+    data = request.get_json()
+    db.execute(
+        "INSERT INTO reservations (restaurant_id, restaurant_name, user_id, date, time, number_of_people) VALUES (?, ?, ?, ?, ?, ?)",
+        (restaurant_id, data['restaurant_name']  ,data['user_id'], data['date'], data['time'], data['number_of_people'])
+    )
+    db.commit()
+    close_db()
+    response = make_response({"message": "Reservation added successfully"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/user_profile/<int:user_id>/reservations', methods=["GET", "DELETE"])
+def user_reservations(user_id):
+    db = get_db()
+    if request.method == 'GET':
+        reservations = db.execute("SELECT id, restaurant_id, restaurant_name, date, time, number_of_people FROM reservations WHERE user_id = ?", (user_id,)).fetchall()
+        close_db()
+        response = make_response({"reservations": [dict(reservation) for reservation in reservations]})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    elif request.method == 'DELETE':
+        db.execute("DELETE FROM reservations WHERE user_id = ?", (user_id,))
+        db.commit()
+        close_db()
+        response = make_response({"message": "Reservations deleted successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request method"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
 
 
-
-
-
-
-
-
-
-    
 
 
 if __name__ == "__main__":
