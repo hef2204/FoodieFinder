@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+
 interface Restaurant {
     id: number;
     name: string;
-    // Add other properties as needed
+    
 }
 
 const ManagerPage: React.FC = () => {
@@ -35,23 +36,41 @@ const ManagerPage: React.FC = () => {
         });
     }, [token]);
 
-    const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        localStorage.setItem('restaurantId', event.target.value);
+        localStorage.setItem('restaurantName', event.target.selectedOptions[0].text);
         const selectedId = event.target.value;
         setSelectedRestaurantId(selectedId);
         navigate(`/restaurant/${selectedId}`);
     };
+    
+    <select onChange={handleSelectChange}>
+        {restaurantList.map(restaurant => (
+            <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+        ))}
+    </select>
 
+
+
+
+    
     return (
         <div>
             <h1>Manager Page</h1>
             <p>Welcome, {managerUsername}!</p>
             <p>You are managing:</p>
-            <select onChange={handleSelect} value={selectedRestaurantId}>
+            <select onChange={handleSelectChange} value={selectedRestaurantId}>
                 <option value="">Select a restaurant</option>
                 {restaurantList.map(restaurant => (
                     <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
                 ))}
             </select>
+            <div>
+                <button onClick={() => navigate("/pages/AddRestaurant")}>Add Restaurant</button>
+            </div>
+            <div>
+                <button onClick={() => navigate("/pages/AddManager")}>Add Manager</button>
+            </div>
             <div className='logout admin'>
                 <button onClick={() => {
                     localStorage.clear();

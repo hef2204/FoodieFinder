@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../css/UsersTable.css"
-
 
 interface User {
     id: number;
@@ -12,59 +12,90 @@ interface User {
     role: string;
 }
 
-const UsersTable = ({ match }: RouteComponentProps<MatchParams>) => {
-    const [user, setUser] = useState<User[]>([]);
+
+
+const UsersTable = () => {
+    const [users, setUsers] = useState<User[]>([]);
+    const token = localStorage.getItem('token');
+   
 
     useEffect(() => {
-        // Fetch the user data from your server
-        fetch(`http://localhost:5000/admin/manage_users`)
-            .then(response => response.json())
-            .then((data) => {
-                setUser(data.users)
-                console.log(data)
-            
-            }) 
-            .catch(error => console.error('Error:', error));
-    }, []);
+        fetch(`http://localhost:5000/admin/manage_users`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then((data) => {
+            if (data.message === 'Unauthorized') {
+                console.error('Unauthorized request');
+                return;
+            }
+            setUsers(data.users);
+        }) 
+        .catch(error => console.error('Error:', error));
+    }, [token]);
 
-    
+    const handleDelete = (username: string) => {
+        fetch(`http://localhost:5000/admin/manage_users`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ username }),
+        })
+        .then(response => response.json())
+        .then(data => {
+             console.log(data);
+             console.log('User deleted');
+                setUsers(users.filter(user => user.username !== username));
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
 
-    if (!user.length) {
+    if (!users.length) {
         return <div>Loading...</div>;
     }
-return (
-    <div className='userTable'>
-        <h1>Users</h1>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>username</th>
-                <th>email</th>
-                <th>first_name</th>
-                <th>last_name</th>
-                <th>role</th>
-            </tr>
-        </thead>
-        <tbody>
-            {user.map((user) => (
-                <tr key={user.id}>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.first_name}</td>
-                    <td>{user.last_name}</td>
-                    <td>{user.role}</td>
-                    
-                </tr>
-            ))}
-        </tbody>
-    </table>
-    <div className='back-button-UserTable'>
-        <button onClick={() => window.history.back()}>Back</button>
-    </div>
-    </div>
-);
 
+    return (
+        <div className='userTable'>
+            <h1>Users</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Role</th>
+                        <th>Delete</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    {users.map((user) => (
+                        <tr key={user.id}>
+                            <td>{user.username}</td>
+                            <td>{user.email}</td>
+                            <td>{user.first_name}</td>
+                            <td>{user.last_name}</td>
+                            <td>{user.role}</td>
+                            <td>
+                                <button onClick={() => handleDelete(user.username)}>
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div className='back-button-UserTable'>
+                <button onClick={() => window.history.back()}>Back</button>
+            </div>
+        </div>
+    );
 };
 
 export default UsersTable;

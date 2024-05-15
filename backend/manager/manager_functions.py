@@ -1,44 +1,44 @@
 from flask import make_response, Blueprint, request, jsonify
 from db import get_db, close_db
-from models import Restaurant, Manager, Menu, RestaurantUpdate
+from models import Restaurant, Manager, Menu, RestaurantUpdate, addRestaurant
 manager_functions = Blueprint("manager_functions", __name__)
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
-
-
-
-class ManagerActions:
-    @staticmethod
-    def delete_menu(name):
-        db = get_db()
-        db.execute("DELETE FROM menu WHERE name=?", (name,))
-        db.commit()
-        close_db()
-        return {"message": "Menu deleted successfully"}
-
-    @staticmethod
-    def add_menu(menu):
-        db = get_db()
+@manager_functions.route("/manager/add_manager", methods=["POST"])
+@jwt_required()
+def add_manager():
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    if user_role != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
+    db = get_db()
+    if request.json is not None:
+        manager_data = request.json
+        adding_manager_restaurant_id = manager_data['restaurantId']  # get restaurantId from the adding manager
+        new_manager_data = {
+            'username': manager_data['username'],
+            'full_name': manager_data['full_name'],
+            'password': manager_data['password'],
+            'email': manager_data['email'],
+            'phone_number': manager_data['phone_number'],
+            'restaurantId': adding_manager_restaurant_id  
+        }
         db.execute(
-            "INSERT INTO menu (name, price, description, restaurant) VALUES (?, ?, ?, ?)",
-            (menu.name, menu.price, menu.description, menu.restaurant)
+            "INSERT INTO managers (username, full_name, password, email, phone_number, restaurant_id) VALUES (?, ?, ?, ?, ?, ?)",
+            (new_manager_data['username'], new_manager_data['full_name'], new_manager_data['password'], new_manager_data['email'], new_manager_data['phone_number'], new_manager_data['restaurantId'])
         )
         db.commit()
         close_db()
-        return {"message": "Menu added successfully"}
-    
-    @staticmethod
-    def update_restaurant(restaurant):
-        db = get_db()
-        db.execute(
-            "UPDATE restaurants SET location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=?, rating=?, discounts=? WHERE name=?",
-            (restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.rating, restaurant.discounts, restaurant.name)
-        )
-        db.commit()
-        close_db()
-        return {"message": "Restaurant updated successfully"}
-    
+        response = make_response({"message": "Manager added successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    else:
+        response = make_response({"message": "Invalid request"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
+
 
 
 @manager_functions.route("/manager/delete_menu", methods=["DELETE"])
@@ -59,12 +59,13 @@ def delete_menu():
     
 
 
-    
+####done 
 @manager_functions.route("/manager/add_restaurant", methods=["POST"])
 def add_another_restaurant_by_manager():
     db = get_db()
     if request.json is not None:
-        restaurant = Restaurant(**request.json)
+        restaurant = addRestaurant(**request.json)
+        print(restaurant.__dict__)
         manager_id = restaurant.manager_id 
         db.execute(
             "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -105,7 +106,7 @@ def update_restaurant(restaurant_id):
 
 
 
-
+#### done
 @manager_functions.route('/restaurant_page/menu/<int:restaurant_id>', methods=["POST"])
 def add_menu(restaurant_id):
     db = get_db()
@@ -135,7 +136,6 @@ def profile_page():
    
     current_user = get_jwt_identity()
     user_role = current_user['role']
-    print(user_role)
     if user_role != "manager":
         return jsonify({"message": "Unauthorized"}), 401
     db = get_db()

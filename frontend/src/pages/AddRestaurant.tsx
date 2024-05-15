@@ -20,27 +20,25 @@ class AddRestaurant extends React.Component {
     }
 
     addRestaurant = () => {
+        const { name, location, phone_number, type, Kosher, order_table, Availability, discounts } = this.state;
+        const managerId = localStorage.getItem('userId') // You need to set this to the actual managerId
         const restaurant = {
-            name: this.state.name,
-            location: this.state.location,
-            phone_number: this.state.phone_number,
-            type: this.state.type,
-            Kosher: this.state.Kosher,
-            order_table: this.state.order_table,
-            Availability: this.state.Availability,
-            discounts: this.state.discounts
+            name,
+            location,
+            phone_number,
+            type,
+            Kosher,
+            order_table,
+            Availability,
+            discounts,
+            manager_id: managerId  // Nest manager_id within the restaurant object
         };
-        const managerId = ''; // You need to set this to the actual managerId
-        const body = {
-            restaurant,
-            managerId
-        };
-        fetch('http://127.0.0.1:5000//manager/add_restaurant', {
+        fetch('http://127.0.0.1:5000/manager/add_restaurant', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(body),
+            body: JSON.stringify(restaurant), // Send only the restaurant object
         })  
         .then(response => response.json())
         .then(data => console.log(data))

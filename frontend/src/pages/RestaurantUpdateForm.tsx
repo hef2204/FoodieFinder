@@ -71,6 +71,7 @@ const UpdateRestaurantPage = () => {
             console.log("Response Data:", data);
             console.log("Data:", data);
             navigate(`/restaurant/${id}`);
+            localStorage.setItem('restaurantName', restaurant.name);
         })
         .catch(error => console.error('Error:', error));
         

@@ -13,6 +13,7 @@ interface Restaurant {
     order_table: string;
     availability: string;
     menu: Array<{ name: string, description: string, price: number }>;
+    manager_id: number;
 }
 
 interface MenuItem {
@@ -27,6 +28,7 @@ const RestaurantDetailPage = () => {
     const [menu, setMenu] = useState<MenuItem[]>([]);
     const [userRole, setUserRole] = useState<string | null>(null);
     const [managerName, setManagerName] = useState<string | null>(null);
+    const [managerId, setManagerId] = useState<number | null>(null);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
     const [activeTab, setActiveTab] = useState<string | null>('menu');
@@ -34,6 +36,8 @@ const RestaurantDetailPage = () => {
     useEffect(() => {
         const role = localStorage.getItem('role');
         setUserRole(role);
+        const managerId = Number(localStorage.getItem('userId'));  
+        setManagerId(managerId);
     }, []);
 
     useEffect(() => {
@@ -70,7 +74,7 @@ const RestaurantDetailPage = () => {
     return (
         <div className="restaurant-detail1">
             <div className="buttons-container">
-                {userRole === 'manager' && (
+                {userRole === 'manager' && managerId === restaurant?.manager_id && (
                     <>
                         <div className='updateRestaurant'>
                         <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
@@ -94,7 +98,7 @@ const RestaurantDetailPage = () => {
                 )}
             </div>
             <h1>{restaurant.name}</h1>
-            {userRole === 'manager' && <h2>Welcome, {managerName}!</h2>}
+            {userRole === 'manager' && managerId === restaurant?.manager_id && <h2>Welcome, {managerName}!</h2>}
             <p>Location: {restaurant.location}</p>
             <p>Phone Number: {restaurant.phone_number}</p>
             <p>Type: {restaurant.type}</p>
@@ -118,7 +122,7 @@ const RestaurantDetailPage = () => {
                     )}
                 </Tab>
             </Tabs>
-            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+            <button className='back-button' onClick={() => navigate('/')}>Back</button>
         </div>
 
     );

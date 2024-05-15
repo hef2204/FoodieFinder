@@ -11,25 +11,26 @@ admin_functions = Blueprint("admin_functions", __name__)
 
 
 
-@admin_functions.route("/admin/delete_user", methods=["DELETE"])
+@admin_functions.route("/admin/adminPage", methods=["GET"])
 @jwt_required()
-def delete_user():
+def adminPage():
     current_user = get_jwt_identity()
-    if current_user != "admin":
+    user_role = current_user['role']
+    if user_role != "admin":
         return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
-    if request.json is not None:
-        db.execute("DELETE FROM users WHERE username=?", (request.json["username"],))
-        db.commit()
-        close_db()
-        response = make_response({"message": "User deleted successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
+    admin = db.execute("SELECT * FROM admin").fetchall()
+    if not admin:
+        return jsonify({"message": "Admin not found"}), 404
+    response = make_response({"message": "Welcome to the admin page"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+
+
+
+
+
 @admin_functions.route("/admin/delete_restaurant", methods=["DELETE"])
 def delete_restaurant():
     db = get_db()
@@ -49,36 +50,44 @@ def delete_restaurant():
 
     
     
-
-@admin_functions.route("/admin/add_manager", methods=["POST"])
-def add_manager():
+############################################## Done
+@admin_functions.route("/admin/add_admin", methods=["POST"])
+@jwt_required()
+def add_admin():
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    if user_role != "admin":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
-    manager = Manager(**request.get_json())
-    print(f"Manager: {manager.__dict__}")  # Print the manager object
-    cursor = db.cursor()
-
-    # Check if the username already exists
-    cursor.execute("SELECT * FROM managers WHERE username = ?", (manager.username,))
-    existing_manager = cursor.fetchone()
-    if existing_manager is not None:
-        return make_response({"message": "Username already exists"}, 400)
-
-    # If the username doesn't exist, insert the new manager
-    cursor.execute(
-        "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
-        (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
-    )
-    db.commit()
-    manager_id = cursor.lastrowid  # Get the ID of the new manager
-    print(f"Manager ID: {manager_id}")  # Print the manager ID
-    close_db()
-    response = make_response({"message": "Manager added successfully", "managerId": manager_id})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    if request.json is not None:
+        admin_data = request.json
+        new_admin_data = {
+            'username': admin_data['username'],
+            'full_name': admin_data['full_name'],
+            'password': admin_data['password'],
+            'email': admin_data['email'],
+            
+        }
+        db.execute(
+            "INSERT INTO admin (username, full_name, password, email) VALUES (?, ?, ?, ?)",
+            (new_admin_data['username'], new_admin_data['full_name'], new_admin_data['password'], new_admin_data['email'])
+        )
+        db.commit()
+        close_db()
+        response = make_response({"message": "Admin added successfully"})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+   
 
 
 @admin_functions.route("/admin/add_manager_and_restaurant", methods=["POST"])
+@jwt_required()
 def add_manager_and_restaurant():
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    print(user_role)
+    if user_role != "admin":
+        return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
     data = request.get_json()
 
@@ -89,14 +98,15 @@ def add_manager_and_restaurant():
     try:
         # Add manager
         manager = Manager(**data['manager'])
+        print(data['manager'])
         cursor = db.cursor()
         cursor.execute("SELECT * FROM managers WHERE username = ?", (manager.username,))
         existing_manager = cursor.fetchone()
         if existing_manager is not None:
             return make_response({"message": "Username already exists"}, 400)
         cursor.execute(
-            "INSERT INTO managers (username, full_name, password, email, restaurant, phone_number) VALUES (?, ?, ?, ?, ?, ?)",
-            (manager.username, manager.full_name, manager.password, manager.email, manager.restaurant, manager.phone_number)
+            "INSERT INTO managers (username, full_name, password, email, phone_number) VALUES (?, ?, ?, ?, ?)",
+            (manager.username, manager.full_name, manager.password, manager.email, manager.phone_number)
         )
         db.commit()
         manager_id = cursor.lastrowid
@@ -116,59 +126,86 @@ def add_manager_and_restaurant():
     return response
 
 
-
-@admin_functions.route("/admin/delete_manager", methods=["DELETE"])
-def delete_manager():
-    db = get_db()
-    if request.json is not None:
-        db.execute("DELETE FROM managers WHERE username=?", (request.json["username"],))
-        db.commit()
-        close_db()
-        response = make_response({"message": "Manager deleted successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
     
 
-@admin_functions.route('/admin/manage_users', methods=['GET'])
+@admin_functions.route('/admin/manage_users', methods=['GET', 'DELETE'])
 @jwt_required()
 def manage_users():
-    current_user = get_jwt_identity()
-    if current_user != "admin":
-        return jsonify({"message": "Unauthorized"}), 401
-    db = get_db()
-    users = db.execute("SELECT * FROM users").fetchall()
-    print(users)
-    close_db()
-    response = make_response({"users": [dict(user) for user in users]})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    if request.method == 'GET':
+        current_user = get_jwt_identity()
+        user_role = current_user['role']
+        if user_role != "admin":
+            return jsonify({"message": "Unauthorized"}), 401
+        db = get_db()
+        users = db.execute("SELECT * FROM users").fetchall()
+        close_db()
+        response = make_response({"users": [dict(user) for user in users]})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    elif request.method == 'DELETE':
+        current_user = get_jwt_identity()
+        user_role = current_user['role']
+        if user_role != "admin":
+            return jsonify({"message": "Unauthorized"}), 401
+        if request.json is None:
+            return jsonify({"message": "No JSON data provided"}), 400
+        username = request.json.get('username')
+        if not username:
+            return jsonify({"message": "Username not provided"}), 400
+        db = get_db()
+        user = db.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+        if not user:
+            return jsonify({"message": "User not found"}), 404
+        db.execute("DELETE FROM users WHERE username=?", (username,))
+        db.commit()
+        close_db()
+        return jsonify({"message": "User deleted successfully"}), 200
+    else:
+        return jsonify({"message": "Method not allowed"}), 405
 
-@admin_functions.route('/admin/manage_managers', methods=['GET'])
+
+@admin_functions.route('/admin/manage_managers', methods=['GET', 'DELETE'])
 @jwt_required()
 def manage_managers():
-    current_user = get_jwt_identity()
-    if current_user != "admin":
-        return jsonify({"message": "Unauthorized"}), 401
-    db = get_db()
-    managers = db.execute("SELECT * FROM managers").fetchall()
-    print(managers)
-    close_db()
-    response = make_response({"managers": [dict(manager) for manager in managers]})
-    print(response)
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    if request.method == 'GET':
+        current_user = get_jwt_identity()
+        user_role = current_user['role']
+        if user_role != "admin":
+            return jsonify({"message": "Unauthorized"}), 401
+        db = get_db()
+        managers = db.execute("SELECT * FROM managers").fetchall()
+        close_db()
+        response = make_response({"managers": [dict(manager) for manager in managers]})
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+    elif request.method == 'DELETE':
+        current_user = get_jwt_identity()
+        user_role = current_user['role']
+        if user_role != "admin":
+            return jsonify({"message": "Unauthorized"}), 401
+        if request.json is None:
+            return jsonify({"message": "No JSON data provided"}), 400
+        username = request.json.get('username')
+        if not username:
+            return jsonify({"message": "Username not provided"}), 400
+        db = get_db()
+        manager = db.execute("SELECT * FROM managers WHERE username=?", (username,)).fetchone()
+        if not manager:
+            return jsonify({"message": "Manager not found"}), 404
 
-## future feature
-# @admin_functions.route('/admin/view_statistics', methods=['GET'])
-# def view_statistics():
-#     db = get_db()
-#     statistics = db.execute("SELECT * FROM statistics").fetchall()
-#     close_db()
-#     return {"statistics": [dict(statistic) for statistic in statistics]}
+        # Delete manager's restaurants
+        manager_id = manager['id']
+        db.execute("DELETE FROM restaurants WHERE manager_id = ?", (manager_id,))
+        
+        # Delete manager
+        db.execute("DELETE FROM managers WHERE username=?", (username,))
+        db.commit()
+        close_db()
+        return jsonify({"message": "Manager and associated restaurants deleted successfully"}), 200
+    else:
+        return jsonify({"message": "Method not allowed"}), 405
+
+
 
 
 

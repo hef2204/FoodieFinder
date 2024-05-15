@@ -19,8 +19,7 @@ CREATE TABLE IF NOT EXISTS admin (
                     full_name TEXT,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'admin',
-                    firstLogin BOOLEAN NOT NULL DEFAULT 1
+                    role TEXT NOT NULL DEFAULT 'admin'
 
 );
 
@@ -32,8 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
                     email TEXT,
                     first_name TEXT,
                     last_name TEXT,
-                    role TEXT NOT NULL DEFAULT 'user',
-                    firstLogin BOOLEAN NOT NULL DEFAULT 1
+                    role TEXT NOT NULL DEFAULT 'user'
 );
 
 CREATE TABLE IF NOT EXISTS managers (
@@ -42,10 +40,8 @@ CREATE TABLE IF NOT EXISTS managers (
                     full_name TEXT,
                     password TEXT NOT NULL,
                     email TEXT NOT NULL,
-                    restaurant TEXT NOT NULL,
                     phone_number TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'manager',
-                    firstLogin BOOLEAN NOT NULL DEFAULT 1
+                    role TEXT NOT NULL DEFAULT 'manager'
 );
 
 CREATE TABLE IF NOT EXISTS menu_items (
@@ -84,12 +80,12 @@ INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, availability, discounts, rating_count, manager_id) VALUES ('McDonalds', '456 Elm St', '123-456-7890', 'Fast Food', 'No', 'Yes', 'Yes', 0.0, 0, 2);
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, availability, discounts, rating_count, manager_id) VALUES ('Burger King', '789 Oak St', '123-456-7890', 'Fast Food', 'No', 'Yes', 'Yes', 0.0, 0, 3);
 INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, availability, discounts, rating_count, manager_id) VALUES ('Subway', '101 Pine St', '123-456-7890', 'Fast Food', 'No', 'Yes', 'Yes', 0.0, 0, 4);
-INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user1', 'user1', 'sfsdf', 'sdf', 'sdf', 'user', 1);
-INSERT INTO users (username, password, email, first_name, last_name, role, firstLogin) VALUES ('user2', 'user2', 'sfsdf', 'sdf', 'sdf', 'user', 1);
-INSERT INTO admin (username, password, email, full_name, role, firstLogin) VALUES ('admin1', 'admin1', 'sfsdf', 'sdf', 'admin', 1);
-INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager1', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
-INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager2', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
-INSERT INTO managers (username, password, email, full_name, restaurant, phone_number, role, firstLogin) VALUES ('manager3', '1234', 'sfsdf', 'sdf', 'sdf', 'sdf', 'manager', 1);
+INSERT INTO users (username, password, email, first_name, last_name, role) VALUES ('user1', 'user1', 'sfsdf', 'sdf', 'sdf', 'user');
+INSERT INTO users (username, password, email, first_name, last_name, role) VALUES ('user2', 'user2', 'sfsdf', 'sdf', 'sdf', 'user');
+INSERT INTO admin (username, password, email, full_name, role) VALUES ('admin1', 'admin1', 'sfsdf', 'sdf', 'admin');
+INSERT INTO managers (username, password, email, full_name, phone_number, role) VALUES ('manager1', '1234', 'sfsdf', 'sdf', 'sdf', 'manager');
+INSERT INTO managers (username, password, email, full_name, phone_number, role) VALUES ('manager2', '1234', 'sfsdf', 'sdf', 'sdf', 'manager');
+INSERT INTO managers (username, password, email, full_name, phone_number, role) VALUES ('manager3', '1234', 'sfsdf', 'sdf', 'sdf', 'manager');
 INSERT INTO menu_items (restaurant_id, name, description, price) VALUES (1, 'Pizza', 'Delicious cheese pizza', 10.0);
 INSERT INTO menu_items (restaurant_id, name, description, price) VALUES (1, 'Pasta', 'Tasty spaghetti with tomato sauce', 8.0);
 INSERT INTO menu_items (restaurant_id, name, description, price) VALUES (2, 'Burger', 'Juicy beef burger with fries', 12.0);

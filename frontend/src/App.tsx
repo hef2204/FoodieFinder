@@ -20,6 +20,7 @@ import ManagersTable from './pages/ManagersTable.tsx';
 import ManagerPage from './pages/ManagerPage.tsx';
 import AddMenuItem from './pages/UpdateMenu.tsx';
 import ResultsPage from './ResultsPage.tsx';
+import AddAdmin from './pages/AddAdmin.tsx';
 
 
 
@@ -52,44 +53,45 @@ function HomePage() {
 
     return (
         <div>
-            <div className='header'>
-                <h1>Foodie Finder</h1>
-                {user && user.role === 'user' ? (
-                    <p>Welcome, {user.username}! Find the best food in town!</p>
-                ) : (
-                    <p>Find the best food in town!</p>
-                )}
-            </div>
-            <div className="search">
-                <input
-                    type="search"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={handleSearchChange}
-                />
-                <button type="button" onClick={handleSearchSubmit}>Search</button>
-            </div>
-            <div className="link-container">
-                {user ? (
-                    <>
-                        <Button onClick={() => {
-                            localStorage.clear();
-                            setUser(null);
-                            navigate("/")
-                            }}>Logout</Button>
-                            <Link to="/pages/restaurantPage">Restaurants</Link>
-                            <Link to="/pages/user-profile">Profile</Link> 
-                            
-                    </>
-                ) : (
-                    <>
-                        <Link to="/pages/login">Login</Link>
-                        <Link to="/pages/register">Register</Link>
-                    </>
-                )}
-                <Link to="/pages/about">About</Link>
-            </div>
-        </div>
+    <div className='header'>
+        <h1>Foodie Finder</h1>
+        {user && user.role === 'user' ? (
+            <p>Welcome, {user.username}! Find the best food in town!</p>
+        ) : (
+            <p>Find the best food in town!</p>
+        )}
+    </div>
+    <div className="search">
+        <input
+            type="search"
+            placeholder="Search..."
+            value={search}
+            onChange={handleSearchChange}
+        />
+        <button type="button" onClick={handleSearchSubmit}>Search</button>
+    </div>
+    <div className="link-container">
+        {user ? (
+            <>
+                <Button onClick={() => {
+                    localStorage.clear();
+                    setUser(null);
+                    navigate("/")
+                    }}>Logout</Button>
+                <Link to="/pages/restaurantPage">Restaurants</Link> 
+                {user.role === 'admin' && <Link to="/pages/adminPage">Admin Page</Link>}
+                {user.role === 'manager' && <Link to="/pages/managerPage">Profile</Link>}
+                {user.role === 'user' && <Link to="/pages/user-profile">Profile</Link>}
+            </>
+        ) : (
+            <>
+                <Link to="/pages/login">Login</Link>
+                <Link to="/pages/register">Register</Link>
+            </>
+        )}
+        <Link to="/pages/about">About</Link>
+    </div>
+</div>
     );
 }
 
@@ -127,6 +129,7 @@ export default function App() {
                 <Route path="/restaurant/:id/menu" element={<AddMenuItem />} />
                 <Route path="/pages/results" element={<ResultsPage />} />
                 {/* <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} /> */}
+                <Route path="/pages/AddAdmin" element={<AddAdmin />} />
                 </Routes>
             </UserProvider>
         </BrowserRouter>

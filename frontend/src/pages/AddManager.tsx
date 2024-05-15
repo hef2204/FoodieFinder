@@ -8,8 +8,8 @@ class AddManager extends React.Component {
         full_name: '',
         password: '',
         email: '',
-        restaurant: '',
-        phone_number: ''
+        phone_number: '',
+        restaurantId: ''
     }
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,14 +17,25 @@ class AddManager extends React.Component {
     }
 
     addManager = () => {
-        const manager = this.state;
-        fetch('http://127.0.0.1:5000/admin/add_manager', {
+        const { username, full_name, password, email, phone_number, restaurantId } = this.state;
+        const managerData = {
+            username,
+            full_name,
+            password,
+            email,
+            phone_number,
+            restaurantId
+        };
+    
+        const token = localStorage.getItem('token');
+        fetch('http://127.0.0.1:5000/manager/add_manager', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` // Assuming you have a token variable defined
             },
-            body: JSON.stringify(manager),
-        })  
+            body: JSON.stringify(managerData),
+        })
         .then(response => response.json())
         .then(data => console.log(data))
         .catch(error => console.error('Error:', error));
@@ -40,7 +51,6 @@ class AddManager extends React.Component {
                     <input className="input-field" name="full_name" value={this.state.full_name} onChange={this.handleChange} placeholder="Full Name" />
                     <input className="input-field" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
                     <input className="input-field" name="email" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
-                    <input className="input-field" name="restaurant" value={this.state.restaurant} onChange={this.handleChange} placeholder="Restaurant" />
                     <input className="input-field" name="phone_number" value={this.state.phone_number} onChange={this.handleChange} placeholder="Phone Number" />
                     <button className="button" onClick={this.addManager}>Add Manager</button>
                 </div>

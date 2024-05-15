@@ -21,7 +21,7 @@ const Register: React.FC = () => {
             first_name: first_name,
             last_name: last_name
         };
-
+    
         try {
             const response = await fetch('http://localhost:5000/register', { 
                 method: 'POST',
@@ -30,22 +30,32 @@ const Register: React.FC = () => {
                 },
                 body: JSON.stringify(user)
             });
+    
+            if (response.status === 409) {
+                // Handle username already taken
+                console.error('Username already taken');
+                return;
+            }
 
+            if (response.status === 410) {
+                // Handle email already taken
+                console.error('Email already taken');
+                return;
+            }
+    
             if (!response.ok) {
                 throw new Error('register failed');
             }
-
+    
             const data = await response.json();
-
-            
+    
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
             localStorage.clear();
-            navigate('/')
+            navigate("/pages/login")
         } catch (error) {
             console.error('Error:', error);
-            
         }
     };
 

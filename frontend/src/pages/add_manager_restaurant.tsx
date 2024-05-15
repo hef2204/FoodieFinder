@@ -9,7 +9,6 @@ class AddManagerAndRestaurant extends React.Component {
         full_name: '',
         password: '',
         email: '',
-        restaurant: '',
         phone_number: '',
         // Restaurant state
         name: '',
@@ -33,7 +32,6 @@ class AddManagerAndRestaurant extends React.Component {
             full_name: this.state.full_name,
             password: this.state.password,
             email: this.state.email,
-            restaurant: this.state.restaurant,
             phone_number: this.state.phone_number
         };
 
@@ -53,12 +51,15 @@ class AddManagerAndRestaurant extends React.Component {
             restaurant
         };
 
+
         fetch('http://127.0.0.1:5000/admin/add_manager_and_restaurant', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify(body),
+            
         })  
         .then(response => response.json())
         .then(data => console.log(data))
@@ -76,7 +77,6 @@ class AddManagerAndRestaurant extends React.Component {
                     <input className="input-field" name="full_name" value={this.state.full_name} onChange={this.handleChange} placeholder="Full Name" />
                     <input className="input-field" name="password" value={this.state.password} onChange={this.handleChange} placeholder="Password" />
                     <input className="input-field" name="email" value={this.state.email} onChange={this.handleChange} placeholder="Email" />
-                    <input className="input-field" name="restaurant" value={this.state.restaurant} onChange={this.handleChange} placeholder="Restaurant" />
                     <input className="input-field" name="phone_number" value={this.state.phone_number} onChange={this.handleChange} placeholder="Phone Number" />
 
                     <h2>Restaurant Details</h2>

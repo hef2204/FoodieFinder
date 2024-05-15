@@ -1,5 +1,5 @@
 
-from models import User, Manager, Restaurant, Menu
+from models import User
 from flask import Flask, request, make_response, Blueprint, jsonify
 
 from flask_cors import CORS
@@ -62,9 +62,7 @@ def login():
 
     if user:
         user = dict(user)
-        if user['firstLogin']:
-            db.execute(f"UPDATE {table_used} SET firstLogin = 0 WHERE username = ?", (username,))
-            db.commit()
+        
         if table_used == 'managers':
 
             restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
@@ -72,7 +70,11 @@ def login():
                 user['restaurantId'] = restaurant['id']
                 user['restaurantName'] = db.execute("SELECT name FROM restaurants WHERE id = ?", (restaurant['id'],)).fetchone()['name']
                 user['managerName'] = db.execute("SELECT username FROM managers WHERE id = ?", (user['id'],)).fetchone()['username']
-                user['firstName'] = db.execute("SELECT first_name FROM users WHERE id = ?", (user['id'],)).fetchone()['first_name']
+                first_name_result = db.execute("SELECT first_name FROM users WHERE id = ?", (user['id'],)).fetchone()
+                if first_name_result is not None:
+                    user['firstName'] = first_name_result['first_name']
+                else:
+                    user['firstName'] = None
                 
             
         access_token = create_access_token(identity=user, expires_delta=timedelta(seconds=500000))
@@ -92,12 +94,35 @@ def register():
     db = get_db()
     if request.json is not None:
         user = User(**request.json)
+        
+        existing_user = db.execute(
+            "SELECT * FROM users WHERE username = ?",
+            (user.username,)
+        ).fetchone()
+
+        if existing_user:
+            response = make_response({"message": "Username already taken"})
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response, 409
+        
+        # Check if email already exists
+        existing_email = db.execute(
+            "SELECT * FROM users WHERE email = ?",
+            (user.email,)
+        ).fetchone()
+
+        if existing_email:
+            response = make_response({"message": "Email already taken"})
+            response.headers.add("Access-Control-Allow-Origin", "*")
+            return response, 410
+
         db.execute(
             "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
             (user.username, user.password, user.email, user.first_name, user.last_name)
         )
         db.commit()
-        response = make_response({"message": "User added successfully", "username": user.username})
+        response = make_response({"message": "User added successfully"})
+            
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     else:
@@ -115,14 +140,38 @@ def home():
 
 
 
+from flask import request
+
 @app.route('/restaurants', methods=["GET"])
 def get_restaurants():
+    filters = {}
+
+    # Extracting filters from query parameters
+    location = request.args.get('location')
+    if location:
+        filters['location'] = location
+
+    type_of_food = request.args.get('type')
+    if type_of_food:
+        filters['type'] = type_of_food
+
+    # Building the SQL query dynamically
+    query = "SELECT * FROM restaurants WHERE 1=1"
+    params = []
+    for key, value in filters.items():
+        query += f" AND {key} = ?"
+        params.append(value)
+
+    # Executing the query
     db = get_db()
-    restaurants = db.execute("SELECT * FROM restaurants").fetchall()
+    restaurants = db.execute(query, params).fetchall()
     close_db()
+
+    # Returning the response
     response = make_response({"restaurants": [dict(restaurant) for restaurant in restaurants]})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
+
 
 
 
