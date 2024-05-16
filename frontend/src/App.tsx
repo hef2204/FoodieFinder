@@ -31,7 +31,6 @@ import ManagerReservationPage from './pages/ManagerReservationPage.tsx';
 
 
 function HomePage() {
-    const [search, setSearch] = useState('');
     const [user, setUser] = useState<{ username: string, role: string } | null>(null);
     const navigate = useNavigate();
 
@@ -45,14 +44,7 @@ function HomePage() {
         }
     }, []);
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.target.value);
-    };
-
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log(`Searching for ${search}`);
-    };
+   
 
     return (
         <div>
@@ -63,15 +55,6 @@ function HomePage() {
         ) : (
             <p>Find the best food in town!</p>
         )}
-    </div>
-    <div className="search">
-        <input
-            type="search"
-            placeholder="Search..."
-            value={search}
-            onChange={handleSearchChange}
-        />
-        <button type="button" onClick={handleSearchSubmit}>Search</button>
     </div>
     <div className="link-container">
         {user ? (
@@ -125,7 +108,7 @@ export default function App() {
                 <Route path="/pages/managerPage" element={<ManagerPage />} />
                 <Route path="/restaurant/:id/menu" element={<AddMenuItem />} />
                 <Route path="/pages/results" element={<ResultsPage />} />
-                {/* <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} /> */}
+                <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} />
                 <Route path="/pages/AddAdmin" element={<AddAdmin />} />
                 <Route path="/restaurant/:id/reservation" element={<ReservationPage />} />
                 <Route path="/pages/UserReservationPage" element={<UserReservationPage />} />

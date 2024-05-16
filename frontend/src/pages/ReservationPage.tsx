@@ -1,4 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const ReservationPage: React.FC = () => {
@@ -10,7 +12,8 @@ const ReservationPage: React.FC = () => {
         restaurant_name: localStorage.getItem('restaurantName') || "",
     });
     const [message, setMessage] = useState('');
-    const restaurantId = localStorage.getItem("restaurantId"); // Replace with the actual restaurant ID
+    const restaurantId = localStorage.getItem("restaurantId"); 
+    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -33,12 +36,15 @@ const ReservationPage: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 setMessage(data.message);
+                navigate('/restaurant/' + restaurantId);
+
             } else {
                 setMessage('Failed to add reservation');
             }
         } catch (error) {
             console.error('Error:', error);
             setMessage('An error occurred');
+            
         }
     };
     if (!restaurantId) {

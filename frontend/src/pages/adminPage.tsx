@@ -14,7 +14,7 @@ function AdminPage() {
             fetch('http://127.0.0.1:5000/admin/adminPage', {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` // assuming the token is stored in the user object
+                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
                 }
             })
             .then(response => response.json())
@@ -49,7 +49,6 @@ function AdminPage() {
                 <li className="dropdown">
                     <span className="active-link">Menu</span>
                     <div className="dropdown-content">
-                        <NavLink to="/pages/AddRestaurant">Add Restaurant</NavLink>
                         <NavLink to="/pages/users">Manage Users</NavLink>
                         <NavLink to="/pages/ManagersTable">Manage managers</NavLink>
                         <NavLink to="/pages/restaurantPage">restaurants</NavLink>

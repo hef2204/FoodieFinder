@@ -20,6 +20,8 @@ const RestaurantPage = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [filters, setFilters] = useState({ location: '', type: '' });
     const [showFilterOptions, setShowFilterOptions] = useState(false);
+    const userRole = localStorage.getItem('role');
+
 
     useEffect(() => {
         const fetchRestaurants = () => {
@@ -44,6 +46,7 @@ const RestaurantPage = () => {
     };
 
     const handleRemoveRestaurant = (id: number, name: string) => {
+        if (window.confirm('Are you sure you want to remove this restaurant?'))
         fetch('http://localhost:5000/admin/delete_restaurant', {
             method: 'DELETE',
             headers: {
@@ -90,7 +93,7 @@ const RestaurantPage = () => {
                         <th>Location</th>
                         <th>Phone Number</th>
                         <th>Type</th>
-                        <th>Action</th>
+                        {userRole === 'admin' && <th>Action</th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -104,15 +107,18 @@ const RestaurantPage = () => {
                             <td>{restaurant.location}</td>
                             <td>{restaurant.phone_number}</td>
                             <td>{restaurant.type}</td>
-                            <td>
-                                <button onClick={() => handleRemoveRestaurant(restaurant.id, restaurant.name)}>
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
-                            </td>
+                            {userRole === 'admin' && (
+                                <td>
+                                    <button onClick={() => handleRemoveRestaurant(restaurant.id, restaurant.name)}>
+                                        <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                </td>
+                            )}
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <button className="Back-button" onClick={() => window.history.back()}>Back</button>
         </div>
     );
 };

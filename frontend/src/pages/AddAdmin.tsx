@@ -48,6 +48,7 @@ const AddAdmin: React.FC = () => {
                 <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required />
                 <button type="submit">Add Admin</button>
             </form>
+            <button className='back-button' onClick={() => window.history.back()}>back</button>
         </div>
     );
 };

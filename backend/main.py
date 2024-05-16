@@ -105,7 +105,6 @@ def register():
             response.headers.add("Access-Control-Allow-Origin", "*")
             return response, 409
         
-        # Check if email already exists
         existing_email = db.execute(
             "SELECT * FROM users WHERE email = ?",
             (user.email,)
@@ -141,7 +140,6 @@ def home():
 def get_restaurants():
     filters = {}
 
-    # Extracting filters from query parameters
     location = request.args.get('location')
     if location:
         filters['location'] = location
@@ -258,26 +256,30 @@ def reservation(restaurant_id):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
-@app.route('/user_profile/<int:user_id>/reservations', methods=["GET", "DELETE"])
+@app.route('/user_profile/<int:user_id>/reservations', methods=["GET"])
 def user_reservations(user_id):
-    db = get_db()
     if request.method == 'GET':
+        db = get_db()
         reservations = db.execute("SELECT id, restaurant_id, restaurant_name, date, time, number_of_people FROM reservations WHERE user_id = ?", (user_id,)).fetchall()
         close_db()
         response = make_response({"reservations": [dict(reservation) for reservation in reservations]})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    elif request.method == 'DELETE':
-        db.execute("DELETE FROM reservations WHERE user_id = ?", (user_id,))
-        db.commit()
-        close_db()
-        response = make_response({"message": "Reservations deleted successfully"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
     else:
         response = make_response({"message": "Invalid request method"})
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
+    
+
+@app.route('/user_profile/<int:user_id>/reservations/<int:reservation_id>', methods=["DELETE"])
+def delete_user_reservation(user_id, reservation_id):
+    db = get_db()
+    db.execute("DELETE FROM reservations WHERE user_id = ? AND id = ?", (user_id, reservation_id))
+    db.commit()
+    close_db()
+    response = make_response({"message": "Reservation deleted successfully"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 

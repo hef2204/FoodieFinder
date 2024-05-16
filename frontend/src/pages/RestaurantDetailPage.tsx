@@ -67,13 +67,13 @@ const RestaurantDetailPage = () => {
         setActiveTab(key === activeTab ? null : key);
     };
     
-    // const restaurantId = restaurant.id;
-    
     
     
     return (
         <div className="restaurant-detail1">
             <div className="buttons-container">
+            <button className='user-profile' onClick={() => navigate(`/pages/user-profile`)}>User Profile</button>
+            <button className='make-reservation' onClick={() => navigate(`/restaurant/:id/reservation`)}>Make a Reservation</button>
                 {userRole === 'manager' && managerId === restaurant?.manager_id && (
                     <>
                         <div className='updateRestaurant'>
@@ -126,6 +126,7 @@ const RestaurantDetailPage = () => {
                 </Tab>
             </Tabs>
             <button className='back-button' onClick={() => navigate('/')}>Back</button>
+           
         </div>
 
     );

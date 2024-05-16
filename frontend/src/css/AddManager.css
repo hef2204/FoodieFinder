@@ -41,7 +41,7 @@ body {
     width: 100%;
     padding: 10px;
     background-color: #007bff;
-    color: #fff;
+    color: #3614ce;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -55,7 +55,7 @@ body {
 /* Back button styles */
 .back-button {
     margin-top: 20px;
-    background-color: #ccc;
+    background-color: #3614ce;
     color: #333;
     border: none;
     padding: 10px 20px;
@@ -66,5 +66,5 @@ body {
 
 /* Back button hover effect */
 .back-button:hover {
-    background-color: #bbb;
+    background-color: #3614ce;
 }

@@ -32,13 +32,11 @@ const Register: React.FC = () => {
             });
     
             if (response.status === 409) {
-                // Handle username already taken
                 console.error('Username already taken');
                 return;
             }
 
             if (response.status === 410) {
-                // Handle email already taken
                 console.error('Email already taken');
                 return;
             }

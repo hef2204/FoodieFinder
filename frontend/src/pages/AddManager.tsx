@@ -32,7 +32,7 @@ class AddManager extends React.Component {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // Assuming you have a token variable defined
+                'Authorization': `Bearer ${token}` 
             },
             body: JSON.stringify(managerData),
         })

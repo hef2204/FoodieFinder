@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../css/UserReservationPage.css';
 
 interface Reservation {
     id: number;
@@ -37,10 +38,10 @@ const UserReservationPage: React.FC = () => {
         }
     };
 
-    const deleteReservation = async () => {
+    const deleteReservation = async (reservationId: number) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/user_profile/${userId}/reservations/`, {
+            const response = await fetch(`http://localhost:5000/user_profile/${userId}/reservations/${reservationId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -48,7 +49,7 @@ const UserReservationPage: React.FC = () => {
             });
             if (response.ok) {
                 setMessage('Reservation deleted successfully');
-                fetchUserReservations(); // Refresh the reservations list
+                fetchUserReservations();  // Refresh the list of reservations
             } else {
                 setMessage('Failed to delete reservation');
             }
@@ -80,12 +81,13 @@ const UserReservationPage: React.FC = () => {
                             <td>{reservation.time}</td>
                             <td>{reservation.number_of_people}</td>
                             <td>
-                                <button onClick={() => deleteReservation(reservation.id)}>Delete</button>
+                            <button onClick={() => deleteReservation(reservation.id)}>Delete</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <button onClick={() => window.history.back()}>Go Back</button>
         </div>
     );
 };

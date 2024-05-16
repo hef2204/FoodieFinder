@@ -38,7 +38,7 @@ h1 {
     display: none; /* Hide dropdown content by default */
     flex-direction: row; /* Align items in a row */
     position: absolute;
-    background-color: #f9f9f9;
+    background-color: #3614ce;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
     top: 100%; /* Position dropdown below the navbar */
@@ -63,8 +63,8 @@ h1 {
 
 /* Logout button */
 .logout-button {
-    background-color: #ccc;
-    color: #333;
+    background-color: #3614ce;
+    color: #3614ce;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
@@ -74,5 +74,5 @@ h1 {
 
 /* Logout button hover effect */
 .logout-button:hover {
-    background-color: #bbb;
+    background-color: #3614ce;
 }

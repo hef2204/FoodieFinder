@@ -53,6 +53,9 @@ const UserProfile: React.FC = () => {
             <button className='reservation' onClick={() => {
                 navigate("/pages/UserReservationPage")
             }}>Reservations</button>
+            <button className='back' onClick={() => {
+                navigate(-1)
+            }}>Back</button>
         </div>
     );
 };

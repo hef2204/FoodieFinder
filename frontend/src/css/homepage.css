@@ -6,13 +6,13 @@ div {
 }
 
 h1 {
-    color: #aaa; /* Lighter gray for better contrast */
+    color: #110eaab7; /* Lighter gray for better contrast */
     font-size: 2.5em;
     margin-bottom: 0.8em;
 }
 
 p {
-    color: #aaa; /* Even lighter gray for better readability */
+    color: #3614ce; 
     font-size: 1.2em;
     margin-bottom: 1em;
     top: 200px;
@@ -34,44 +34,6 @@ a {
 
 a:hover {
     color: #0056b3;
-}
-
-.search {
-    position: absolute;
-    top: 50px;
-    right: 10px; /* Positioned at the right corner */
-}
-
-
-.search form {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #4042e2;
-}
-
-.search input[type="search"] {
-    width: 200px;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-
-.search button {
-    margin-left: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-}
-
-.search button:hover {
-    background-color: #0056b3;
 }
 
 .header {
