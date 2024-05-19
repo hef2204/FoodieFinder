@@ -20,6 +20,7 @@ from datetime import timedelta
 
 
 
+
 load_dotenv()
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'your-secret-key'
