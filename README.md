@@ -14,8 +14,7 @@ This repository contains the backend and frontend code for a full stack applicat
 1. **Clone the repository**:
 
     ```sh
-    git clone <repository_url>
-    cd <repository_directory>
+    git clone https://github.com/hef2204/FoodieFinder.git
     ```
 
 2. **Install the required packages**:
