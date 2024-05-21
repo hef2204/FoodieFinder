@@ -33,3 +33,11 @@ Expansion of features to include restaurant ratings and reviews, special offers,
 Conclusion:
 
 Foodie Finder simplifies the process of discovering and reserving tables at restaurants, offering a convenient solution for both users and restaurant managers. With its intuitive design and seamless functionality, Foodie Finder enhances the dining experience and fosters connections between food enthusiasts and their favorite eateries.
+
+# How to run it?
+
+1. Install the dependencies:
+    pip install -r requirements.txt
+2. Create a .env file:
+    You already have the necessary environment variables defined. Create a .env file in the root of your project with the installed content.
+3. Ensure your main.py is set up to read these environment variables using python-dotenv
