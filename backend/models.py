@@ -19,9 +19,8 @@ class Manager:
     full_name: str
     password: str
     email: str
-    # restaurant: str
     phone_number: str
-    role: str = "manager" # default value
+    role: str = "manager" 
 
 
 @dataclass
@@ -68,6 +67,13 @@ class Menu:
     name: str
     price: str
     description: str
+
+@dataclass
+class Admin:
+    username: str
+    full_name: str
+    password: str
+    email: str
 
 
 class AdminActions:
