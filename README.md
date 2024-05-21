@@ -1,4 +1,4 @@
-# Full Stack Application
+# FoodieFinder Application
 
 This repository contains the backend and frontend code for a full stack application. The backend is built with Flask and the frontend is built with React and TypeScript.
 
