@@ -127,16 +127,17 @@ UsersTable.tsx
 Usage
 
 Usage
-    ```sh
-    Start the backend server:
-    flask run
-    ```
+```sh
+Start the backend server:
+flask run
+
+
 Start the frontend development server:
-
 npm run dev
-Open your browser and navigate to:
 
+Open your browser and navigate to:
 http://localhost:5173
+
 Notes
 Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
 Update the environment variables as per your requirements.
