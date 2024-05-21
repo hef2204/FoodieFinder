@@ -127,9 +127,10 @@ UsersTable.tsx
 Usage
 
 Usage
-Start the backend server:
-
-flask run
+    ```sh
+    Start the backend server:
+    flask run
+    ```
 Start the frontend development server:
 
 npm run dev
