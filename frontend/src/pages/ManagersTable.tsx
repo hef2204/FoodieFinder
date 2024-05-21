@@ -87,18 +87,21 @@ return (
         <thead>
             <tr>
                 <th>username</th>
-                <th>email</th>
                 <th>full_name</th>
+                <th>email</th>
                 <th>role</th>
+                <th>Actions</th>
+                
             </tr>
         </thead>
         <tbody>
             {manager.map((manager) => (
                 <tr key={manager.id}>
                     <td>{manager.username}</td>
-                    <td>{manager.email}</td>
                     <td>{manager.full_name}</td>
+                    <td>{manager.email}</td>
                     <td>{manager.role}</td>
+                    
                     <td>
                     <button onClick={() => {
                         if (window.confirm('Are you sure you want to delete this manager?')) {

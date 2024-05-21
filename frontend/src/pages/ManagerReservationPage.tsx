@@ -59,6 +59,7 @@ const ManagerReservationPage: React.FC = () => {
                     ))}
                 </tbody>
             </table>
+            <button onClick={() => window.history.back()}>Go Back</button>
         </div>
     );
 };

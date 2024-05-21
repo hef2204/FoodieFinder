@@ -1,43 +1,141 @@
-# Project Title: Foodie Finder
+# Full Stack Application
 
-Foodie Finder is a web application designed to help users discover and reserve tables at their favorite restaurants. It provides a user-friendly platform for browsing restaurants, making reservations, and managing bookings. Restaurant managers can efficiently handle reservation management through the system's dashboard.
+This repository contains the backend and frontend code for a full stack application. The backend is built with Flask and the frontend is built with React and TypeScript.
 
-Key Features:
+## Prerequisites
 
-User Authentication: Users can sign up, log in, and manage their profiles securely. Authentication ensures only authorized access to the reservation system.
+- Python 3.x
+- Node.js and npm (Node Package Manager)
 
-Restaurant Listings: The application displays a curated list of restaurants, showcasing details such as location, contact information, cuisine type, and operating hours.
+## Setup
 
-Reservation Management: Users can easily make reservations at their preferred restaurants by selecting the desired date, time, and number of guests. To modify a reservation, users must delete their existing reservation and create a new one.
+### Backend
 
-Manager Dashboard: Restaurant managers have access to a dashboard where they can efficiently manage reservations for their establishment. They can view upcoming bookings and update availability as needed.
+1. **Clone the repository**:
 
-Technologies Used:
+    ```sh
+    git clone <repository_url>
+    cd <repository_directory>
+    ```
 
-Frontend: The frontend of the application is built using React.js, a JavaScript library known for its component-based architecture. React Router facilitates seamless navigation between different pages.
+2. **Install the required packages**:
 
-Backend: The backend is developed using Python with Flask, a lightweight web framework. Flask provides endpoints to handle user authentication, restaurant management, reservation handling, and interactions with the SQLite database.
-
-Database: The application utilizes SQLite, a lightweight and easy-to-use relational database management system. SQLite stores user data, restaurant details, and reservation information efficiently.
-
-Authentication: User authentication is implemented using JSON Web Tokens (JWT) to ensure secure access to protected routes and user data.
-
-Styling: CSS is used for styling the frontend components, ensuring an attractive and user-friendly interface.
-
-Future Enhancements:
-
-Integration with payment gateways to facilitate reservation deposits or prepayments.
-Implementation of real-time notifications for users regarding reservation updates or changes.
-Addition of Geolocation functionality to suggest nearby restaurants based on the user's location.
-Expansion of features to include restaurant ratings and reviews, special offers, and table preferences.
-Conclusion:
-
-Foodie Finder simplifies the process of discovering and reserving tables at restaurants, offering a convenient solution for both users and restaurant managers. With its intuitive design and seamless functionality, Foodie Finder enhances the dining experience and fosters connections between food enthusiasts and their favorite eateries.
-
-# How to run it?
-
-1. Install the dependencies:
+    ```sh
     pip install -r requirements.txt
-2. Create a .env file:
-    You already have the necessary environment variables defined. Create a .env file in the root of your project with the installed content.
-3. Ensure your main.py is set up to read these environment variables using python-dotenv
+    ```
+
+3. **Set up environment variables**:
+
+    Create a `.env` file in the root directory of the backend and add the following variables:
+
+    ```env
+    FLASK_APP=main.py
+    FLASK_DEBUG=true
+    FLASK_FRONTEND_URL=http://localhost:5173
+    JWT_SECRET_KEY=your_secret_key
+    ```
+
+4. **Initialize the database**:
+
+    Ensure you have `database.db` and `schema.sql` in the backend directory. Then, run the following commands to set up the database:
+
+    ```sh
+    flask db init
+    flask db migrate
+    flask db upgrade
+    ```
+
+5. **Run the backend server**:
+
+    ```sh
+    flask run
+    ```
+
+### Frontend
+
+1. **Navigate to the frontend directory**:
+
+    ```sh
+    cd frontend
+    ```
+
+2. **Install the required packages**:
+
+    ```sh
+    npm install
+    ```
+
+3. **Set up environment variables**:
+
+    Create a `.env.development` file in the root directory of the frontend and add the following variables:
+
+    ```env
+    VITE_API_URL=http://localhost:5000
+    ```
+
+4. **Run the frontend development server**:
+
+    ```sh
+    npm run dev
+    ```
+
+### Production Build
+
+To create a production build of the frontend, run:
+
+```sh
+npm run build
+
+To preview the production build, run:
+npm run preview
+
+Project Structure
+Backend
+main.py: The main entry point of the Flask application.
+models.py: Contains the database models.
+db.py: Database setup and initialization.
+admin_functions.py: Functions related to admin operations.
+manager_functions.py: Functions related to manager operations.
+UserClasses.py: User-related classes.
+requirements.txt: Lists the Python dependencies.
+schema.sql: SQL script to set up the database schema.
+Frontend
+index.html: The main HTML file.
+vite.config.ts: Vite configuration file.
+package.json: Lists the Node.js dependencies and scripts.
+src/: Contains the React components and other frontend code.
+about.tsx
+add_manager_restaurant.tsx
+AddAdmin.tsx
+AddManager.tsx
+AddRestaurant.tsx
+adminPage.tsx
+homepage.tsx
+login.tsx
+ManagerPage.tsx
+ManagerReservationPage.tsx
+ManagersTable.tsx
+register.tsx
+ReservationPage.tsx
+RestaurantDetailPage.tsx
+restaurantPage.tsx
+RestaurantUpdateForm.tsx
+UpdateMenu.tsx
+user-profile.tsx
+UserReservationPage.tsx
+UsersTable.tsx
+Usage
+
+Usage
+Start the backend server:
+
+flask run
+Start the frontend development server:
+
+npm run dev
+Open your browser and navigate to:
+
+http://localhost:5173
+Notes
+Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
+Update the environment variables as per your requirements.

@@ -66,23 +66,25 @@ const RestaurantDetailPage = () => {
     const handleTabChange = (key: string | null) => {
         setActiveTab(key === activeTab ? null : key);
     };
-    
-    
-    
+
     return (
         <div className="restaurant-detail1">
             <div className="buttons-container">
-            <button className='user-profile' onClick={() => navigate(`/pages/user-profile`)}>User Profile</button>
-            <button className='make-reservation' onClick={() => navigate(`/restaurant/:id/reservation`)}>Make a Reservation</button>
+                {userRole === "user" && (
+                    <>
+                        <button className='user-profile' onClick={() => navigate(`/pages/user-profile`)}>User Profile</button>
+                        <button className='make-reservation' onClick={() => navigate(`/restaurant/${id}/reservation`)}>Make a Reservation</button>
+                    </>
+                )}
                 {userRole === 'manager' && managerId === restaurant?.manager_id && (
                     <>
                         <div className='updateRestaurant'>
-                        <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+                            <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
                         </div>
                         <div>
                             <button onClick={() => {
                                 if (id) {
-                                    navigate(`/restaurant/:id/menu`)
+                                    navigate(`/restaurant/${id}/menu`);
                                 } else {
                                     console.error('Restaurant id is not defined');
                                 }
@@ -90,12 +92,11 @@ const RestaurantDetailPage = () => {
                             <button onClick={() => {
                                 localStorage.clear();
                                 setUser(null);
-                                navigate("/")
+                                navigate("/");
                             }}>Logout</button>
                             <button className='reservation-button' onClick={() => 
                                 navigate(`/pages/ManagerReservationPage`)
-                                }>View Reservations</button>
-                            
+                            }>View Reservations</button>
                         </div>
                     </>
                 )}
@@ -126,9 +127,7 @@ const RestaurantDetailPage = () => {
                 </Tab>
             </Tabs>
             <button className='back-button' onClick={() => navigate('/')}>Back</button>
-           
         </div>
-
     );
 }
 

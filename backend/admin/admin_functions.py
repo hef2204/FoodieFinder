@@ -67,8 +67,15 @@ def add_admin():
             'full_name': admin_data['full_name'],
             'password': admin_data['password'],
             'email': admin_data['email'],
-            
         }
+
+        # Check if an admin with the same username already exists
+        existing_admin = db.execute("SELECT * FROM admin WHERE username = ?", (new_admin_data['username'],)).fetchone()
+
+        if existing_admin:
+            # If an admin with the same username already exists, return an error message
+            return jsonify({"message": "Admin already exists"}), 400
+
         db.execute(
             "INSERT INTO admin (username, full_name, password, email) VALUES (?, ?, ?, ?)",
             (new_admin_data['username'], new_admin_data['full_name'], new_admin_data['password'], new_admin_data['email'])
