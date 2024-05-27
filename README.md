@@ -73,16 +73,17 @@ This repository contains the backend and frontend code for a full stack applicat
 
 To create a production build of the frontend, run:
 
-```sh
-npm run build
+    ```sh
+    npm run build
+    ```
 
 To preview the production build, run:
-'''sh
-npm run preview
-'''
+    ```sh
+    npm run preview
+    ```
 
  
-## Backend Project Structure
+### Backend Project Structure
 
 Copy code
 backend/
