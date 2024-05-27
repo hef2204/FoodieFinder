@@ -31,17 +31,15 @@ This repository contains the backend and frontend code for a full stack applicat
     FLASK_APP=main.py
     FLASK_DEBUG=true
     FLASK_FRONTEND_URL=http://localhost:5173
-    JWT_SECRET_KEY=your_secret_key
+    JWT_SECRET_KEY=your_secret_key_here
     ```
 
 4. **Initialize the database**:
 
-    Ensure you have `database.db` and `schema.sql` in the backend directory. Then, run the following commands to set up the database:
+    Run the `schema.sql` file to set up the database:
 
     ```sh
-    flask db init
-    flask db migrate
-    flask db upgrade
+    flask shell
     ```
 
 5. **Run the backend server**:
@@ -64,15 +62,8 @@ This repository contains the backend and frontend code for a full stack applicat
     npm install
     ```
 
-3. **Set up environment variables**:
 
-    Create a `.env.development` file in the root directory of the frontend and add the following variables:
-
-    ```env
-    VITE_API_URL=http://localhost:5000
-    ```
-
-4. **Run the frontend development server**:
+3. **Run the frontend development server**:
 
     ```sh
     npm run dev
