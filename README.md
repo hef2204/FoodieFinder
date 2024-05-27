@@ -105,23 +105,23 @@ To preview the production build, run:
         ├── __init__.py
         └── test_register.py
     File Descriptions:
-    __init__.py: Marks the directory as a Python package.
-    main.py: Main entry point of the Flask application.
-    models.py: Contains database models (if any).
-    db.py: Contains functions for database setup and management.
-    UserClasses.py: Contains user-related classes.
-    requirements.txt: Lists the Python dependencies.
-    schema.sql: SQL script to set up the database schema.
-    .env: Environment variables file.
-    admin/: Directory for admin-related functions.
-    __init__.py: Marks the directory as a Python package.
-    admin_functions.py: Contains admin-related routes and functions.
-    manager/: Directory for manager-related functions.
-    __init__.py: Marks the directory as a Python package.
-    manager_functions.py: Contains manager-related routes and functions.
-    tests/: Directory for tests.
-    __init__.py: Marks the directory as a Python package.
-    test_register.py: Contains tests for user registration.
+    *__init__.py: Marks the directory as a Python package.
+    *main.py: Main entry point of the Flask application.
+    *models.py: Contains database models (if any).
+    *db.py: Contains functions for database setup and management.
+    *UserClasses.py: Contains user-related classes.
+    *requirements.txt: Lists the Python dependencies.
+    *schema.sql: SQL script to set up the database schema.
+    *.env: Environment variables file.
+    *admin/: Directory for admin-related functions.
+    *__init__.py: Marks the directory as a Python package.
+    *admin_functions.py: Contains admin-related routes and functions.
+    *manager/: Directory for manager-related functions.
+    *__init__.py: Marks the directory as a Python package.
+    *manager_functions.py: Contains manager-related routes and functions.
+    *tests/: Directory for tests.
+        *__init__.py: Marks the directory as a Python package.
+        *test_register.py: Contains tests for user registration.
 
 
 ### Frontend Project Structure
