@@ -13,17 +13,17 @@ admin_functions = Blueprint("admin_functions", __name__)
 
 @admin_functions.route("/admin/adminPage", methods=["GET"])
 @jwt_required()
-def adminPage():
+def admin_page():
     current_user = get_jwt_identity()
-    user_role = current_user['role']
-    print(user_role)
+    user_role = current_user.get('role')
     if user_role != "admin":
         return jsonify({"message": "Unauthorized"}), 401
-    db = get_db()
-    admin = db.execute("SELECT * FROM admin").fetchall()
-    if not admin:
-        return jsonify({"message": "Admin not found"}), 404
-    response = make_response({"message": "Welcome to the admin page"})
+    
+    # Sample admin data
+    admin_data = {
+        "message": "Welcome to the admin page!"
+    }
+    response = jsonify(admin_data)
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 

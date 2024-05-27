@@ -10,18 +10,35 @@ function AdminPage() {
     const [adminData, setAdminData] = useState(null);
 
     useEffect(() => {
-        if (user && user.role === 'admin') {
-            fetch('http://127.0.0.1:5000/admin/adminPage', {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}` 
-                }
-            })
-            .then(response => response.json())
-            .then(data => setAdminData(data))
-            .catch(error => console.error('Error:', error));
+        if (!loading && user && user.role === 'admin') {
+            const token = localStorage.getItem('token');
+            if (token) {
+                fetch('http://127.0.0.1:5000/admin/adminPage', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}` 
+                    }
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        navigate('/login'); // Redirect to login if unauthorized
+                    }
+                    return response.json();
+                })
+                .then(data => setAdminData(data))
+                .catch(error => console.error('Error:', error));
+            }
         }
-    }, [user, loading]);
+    }, [user, loading, navigate]);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    // Ensure user is fully loaded and has the correct role
+    if (!user || !user.role) {
+        return <div>Loading user data...</div>;
+    }
 
     if (!user || user.role !== 'admin') {
         console.log('Unauthorized');

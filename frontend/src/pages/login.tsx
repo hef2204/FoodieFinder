@@ -82,11 +82,14 @@ const Login: React.FC = () => {
                         localStorage.setItem('firstName', data.user.firstName);
                         
                     } else if (data.user.role === 'admin') {
-                        navigate('/pages/adminPage');
                         if (data.user.id) {
                             localStorage.setItem('userId', data.user.id);
                             localStorage.setItem('role', data.user.role);
                             localStorage.setItem('username', data.user.username);
+                            localStorage.setItem('token', token);
+                            setTimeout(() => {
+                                navigate('/pages/adminPage'); 
+                            }, 100); 
                         } else {
                             console.error('Error: admin id is undefined');
                         }
