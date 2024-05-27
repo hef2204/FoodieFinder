@@ -182,6 +182,43 @@ To preview the production build, run:
             ├── UserReservationPage.css
             ├── UsersTable.css
 
+File Descriptions:
+.env.development: Environment variables for development.
+.env.production: Environment variables for production.
+.eslintrc.cjs: ESLint configuration file.
+index.html: Main HTML file.
+package.json: Lists the Node.js dependencies and scripts.
+package-lock.json: Lock file for npm.
+tsconfig.json: TypeScript configuration file.
+tsconfig.node.json: TypeScript configuration for Node.js.
+vite.config.ts: Vite configuration file.
+src/: Source directory containing the main application files.
+index.tsx: Main entry point for the React application.
+App.tsx: Main application component.
+components/: Directory for React components.
+about.tsx: Component for the about page.
+add_manager_restaurant.tsx: Component for adding a manager to a restaurant.
+AddAdmin.tsx: Component for adding an admin.
+AddManager.tsx: Component for adding a manager.
+AddRestaurant.tsx: Component for adding a restaurant.
+adminPage.tsx: Admin dashboard component.
+homepage.tsx: Homepage component.
+login.tsx: Login component.
+ManagerPage.tsx: Manager dashboard component.
+ManagerReservationPage.tsx: Manager's reservation page component.
+ManagersTable.tsx: Component displaying a table of managers.
+register.tsx: User registration component.
+ReservationPage.tsx: Reservation page component.
+RestaurantDetailPage.tsx: Restaurant detail page component.
+restaurantPage.tsx: Restaurant page component.
+RestaurantUpdateForm.tsx: Form component for updating restaurant details.
+UpdateMenu.tsx: Component for updating the menu.
+user-profile.tsx: User profile component.
+UserReservationPage.tsx: User's reservation page component.
+UsersTable.tsx: Component displaying a table of users.
+css/: Directory for CSS files corresponding to each component.
+Each component has a corresponding CSS file for styling.
+
 ### Usage
 
 1. **Start the backend server**:
