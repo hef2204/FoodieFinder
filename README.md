@@ -73,7 +73,6 @@ This repository contains the backend and frontend code for a full stack applicat
 
 To create a production build of the frontend, run:
 
-    ```sh
     npm run build
     ```
 
