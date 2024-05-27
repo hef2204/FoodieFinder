@@ -184,23 +184,28 @@ To preview the production build, run:
 
 ### Usage
 
-Start the backend server:
-    ```sh
-    flask run
-    ```
+1. **Start the backend server**:
+        ```sh
+        flask run
+        ```
 
-Start the frontend development server:
-    ```sh
-    npm run dev
-    ```
+2. **Start the frontend development server**:
+        ```sh
+        npm run dev
+        ```
 
-Open your browser and navigate to:
-    ```sh
-    http://localhost:5173
-    ```
+3. **Open your browser and navigate to**:
+        ```sh
+        http://localhost:5173
+        ```
 
 ### Notes
-    ```sh
-    Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
-    Update the environment variables as per your requirements.
-    ```
+1. **ensure**:
+        ```sh
+        Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
+        ```
+
+2. **update**:    
+        ```sh
+        Update the environment variables as per your requirements.
+        ```
