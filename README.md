@@ -124,7 +124,63 @@ To preview the production build, run:
     test_register.py: Contains tests for user registration.
 
 
-
+### Frontend Project Structure
+        frontend/
+    │
+    ├── .env.development
+    ├── .env.production
+    ├── .eslintrc.cjs
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    ├── vite.config.ts
+    └── src/
+        ├── index.tsx
+        ├── App.tsx
+        ├── components/
+        │   ├── about.tsx
+        │   ├── add_manager_restaurant.tsx
+        │   ├── AddAdmin.tsx
+        │   ├── AddManager.tsx
+        │   ├── AddRestaurant.tsx
+        │   ├── adminPage.tsx
+        │   ├── homepage.tsx
+        │   ├── login.tsx
+        │   ├── ManagerPage.tsx
+        │   ├── ManagerReservationPage.tsx
+        │   ├── ManagersTable.tsx
+        │   ├── register.tsx
+        │   ├── ReservationPage.tsx
+        │   ├── RestaurantDetailPage.tsx
+        │   ├── restaurantPage.tsx
+        │   ├── RestaurantUpdateForm.tsx
+        │   ├── UpdateMenu.tsx
+        │   ├── user-profile.tsx
+        │   ├── UserReservationPage.tsx
+        │   ├── UsersTable.tsx
+        └── css/
+            ├── about.css
+            ├── add_manager_restaurant.css
+            ├── AddAdmin.css
+            ├── AddManager.css
+            ├── AddRestaurant.css
+            ├── adminPage.css
+            ├── homepage.css
+            ├── login.css
+            ├── ManagerPage.css
+            ├── ManagerReservationPage.css
+            ├── ManagersTable.css
+            ├── register.css
+            ├── ReservationPage.css
+            ├── RestaurantDetailPage.css
+            ├── restaurantPage.css
+            ├── RestaurantUpdateForm.css
+            ├── UpdateMenu.css
+            ├── user-profile.css
+            ├── UserReservationPage.css
+            ├── UsersTable.css
 
 Usage
 
