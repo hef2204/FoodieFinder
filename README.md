@@ -31,7 +31,7 @@ This repository contains the backend and frontend code for a full stack applicat
     FLASK_APP=main.py
     FLASK_DEBUG=true
     FLASK_FRONTEND_URL=http://localhost:5173
-    JWT_SECRET_KEY=your_secret_key
+    JWT_SECRET_KEY=your_secret_key_here
     ```
 
 4. **Initialize the database**:
