@@ -36,12 +36,10 @@ This repository contains the backend and frontend code for a full stack applicat
 
 4. **Initialize the database**:
 
-    Ensure you have `database.db` and `schema.sql` in the backend directory. Then, run the following commands to set up the database:
+    Run the `schema.sql` file to set up the database:
 
     ```sh
-    flask db init
-    flask db migrate
-    flask db upgrade
+    flask shell
     ```
 
 5. **Run the backend server**:
