@@ -182,20 +182,25 @@ To preview the production build, run:
             ├── UserReservationPage.css
             ├── UsersTable.css
 
-Usage
+### Usage
 
-Usage
-```sh
 Start the backend server:
-flask run
-
+    ```sh
+    flask run
+    ```
 
 Start the frontend development server:
-npm run dev
+    ```sh
+    npm run dev
+    ```
 
 Open your browser and navigate to:
-http://localhost:5173
+    ```sh
+    http://localhost:5173
+    ```
 
-Notes
-Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
-Update the environment variables as per your requirements.
+### Notes
+    ```sh
+    Ensure the backend server is running on port 5000 and the frontend server is running on port 5173.
+    Update the environment variables as per your requirements.
+    ```
