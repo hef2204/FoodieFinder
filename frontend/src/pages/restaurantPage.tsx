@@ -20,8 +20,28 @@ const RestaurantPage = () => {
     const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
     const [filters, setFilters] = useState({ location: '', type: '' });
     const [showFilterOptions, setShowFilterOptions] = useState(false);
+    const [types, setTypes] = useState<string[]>([]);
+    const [locations, setLocations] = useState<string[]>([]);
     const userRole = localStorage.getItem('role');
 
+    useEffect(() => {
+        const fetchRestaurantTypes = () => {
+            fetch('http://localhost:5000/restaurant/types')
+                .then(response => response.json())
+                .then(data => setTypes(data.types))
+                .catch(error => console.error('Error:', error));
+        };
+
+        const fetchRestaurantLocations = () => {
+            fetch('http://localhost:5000/restaurant/locations')
+                .then(response => response.json())
+                .then(data => setLocations(data.locations))
+                .catch(error => console.error('Error:', error));
+        };
+
+        fetchRestaurantTypes();
+        fetchRestaurantLocations();
+    }, []);
 
     useEffect(() => {
         const fetchRestaurants = () => {
@@ -47,19 +67,19 @@ const RestaurantPage = () => {
 
     const handleRemoveRestaurant = (id: number, name: string) => {
         if (window.confirm('Are you sure you want to remove this restaurant?'))
-        fetch('http://localhost:5000/admin/delete_restaurant', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            setRestaurants(prevRestaurants => prevRestaurants.filter(restaurant => restaurant.id !== id));
-        })
-        .catch(error => console.error('Error:', error));
+            fetch('http://localhost:5000/admin/delete_restaurant', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+                setRestaurants(prevRestaurants => prevRestaurants.filter(restaurant => restaurant.id !== id));
+            })
+            .catch(error => console.error('Error:', error));
     };
 
     return (
@@ -72,16 +92,15 @@ const RestaurantPage = () => {
                 <div className="filter-options">
                     <select name="location" value={filters.location} onChange={handleFilterChange}>
                         <option value="">Filter by location</option>
-                        <option value="Tel Aviv">Tel Aviv</option>
-                        <option value="Los Angeles">Los Angeles</option>
-                        <option value="Chicago">Chicago</option>
-                        <option value="Haifa">Haifa</option>
+                        {locations.map(location => (
+                            <option key={location} value={location}>{location}</option>
+                        ))}
                     </select>
                     <select name="type" value={filters.type} onChange={handleFilterChange}>
                         <option value="">Filter by type of food</option>
-                        <option value="Italian">Italian</option>
-                        <option value="Mexican">Mexican</option>
-                        <option value="Japanese">Japanese</option>
+                        {types.map(type => (
+                            <option key={type} value={type}>{type}</option>
+                        ))}
                     </select>
                 </div>
             )}

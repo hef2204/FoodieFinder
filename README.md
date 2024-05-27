@@ -88,41 +88,50 @@ npm run build
 To preview the production build, run:
 npm run preview
 
-Project Structure
-Backend
-main.py: The main entry point of the Flask application.
-models.py: Contains the database models.
-db.py: Database setup and initialization.
-admin_functions.py: Functions related to admin operations.
-manager_functions.py: Functions related to manager operations.
-UserClasses.py: User-related classes.
+Backend Project Structure
+markdown
+Copy code
+backend/
+│
+├── __init__.py
+├── main.py
+├── models.py
+├── db.py
+├── UserClasses.py
+├── requirements.txt
+├── schema.sql
+├── .env
+├── admin/
+│   ├── __init__.py
+│   └── admin_functions.py
+├── manager/
+│   ├── __init__.py
+│   └── manager_functions.py
+└── tests/
+    ├── __init__.py
+    └── test_register.py
+File Descriptions:
+__init__.py: Marks the directory as a Python package.
+main.py: Main entry point of the Flask application.
+models.py: Contains database models (if any).
+db.py: Contains functions for database setup and management.
+UserClasses.py: Contains user-related classes.
 requirements.txt: Lists the Python dependencies.
 schema.sql: SQL script to set up the database schema.
-Frontend
-index.html: The main HTML file.
-vite.config.ts: Vite configuration file.
-package.json: Lists the Node.js dependencies and scripts.
-src/: Contains the React components and other frontend code.
-about.tsx
-add_manager_restaurant.tsx
-AddAdmin.tsx
-AddManager.tsx
-AddRestaurant.tsx
-adminPage.tsx
-homepage.tsx
-login.tsx
-ManagerPage.tsx
-ManagerReservationPage.tsx
-ManagersTable.tsx
-register.tsx
-ReservationPage.tsx
-RestaurantDetailPage.tsx
-restaurantPage.tsx
-RestaurantUpdateForm.tsx
-UpdateMenu.tsx
-user-profile.tsx
-UserReservationPage.tsx
-UsersTable.tsx
+.env: Environment variables file.
+admin/: Directory for admin-related functions.
+__init__.py: Marks the directory as a Python package.
+admin_functions.py: Contains admin-related routes and functions.
+manager/: Directory for manager-related functions.
+__init__.py: Marks the directory as a Python package.
+manager_functions.py: Contains manager-related routes and functions.
+tests/: Directory for tests.
+__init__.py: Marks the directory as a Python package.
+test_register.py: Contains tests for user registration.
+
+
+
+
 Usage
 
 Usage

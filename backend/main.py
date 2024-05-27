@@ -137,6 +137,9 @@ def home():
     return response
 
 
+
+
+
 @app.route('/restaurants', methods=["GET", "DELETE"])
 def get_restaurants():
     filters = {}
@@ -163,6 +166,28 @@ def get_restaurants():
 
     # Returning the response
     response = make_response({"restaurants": [dict(restaurant) for restaurant in restaurants]})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/restaurant/types', methods=["GET"])
+def get_restaurant_types():
+    db = get_db()
+    types = db.execute("SELECT DISTINCT type FROM restaurants").fetchall()
+    close_db()
+    
+    # Returning the response
+    response = make_response({"types": [type['type'] for type in types]})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
+
+@app.route('/restaurant/locations', methods=["GET"])
+def get_restaurant_locations():
+    db = get_db()
+    locations = db.execute("SELECT DISTINCT location FROM restaurants").fetchall()
+    close_db()
+    
+    # Returning the response
+    response = make_response({"locations": [location['location'] for location in locations]})
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
