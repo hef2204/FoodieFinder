@@ -62,15 +62,8 @@ This repository contains the backend and frontend code for a full stack applicat
     npm install
     ```
 
-3. **Set up environment variables**:
 
-    Create a `.env.development` file in the root directory of the frontend and add the following variables:
-
-    ```env
-    VITE_API_URL=http://localhost:5000
-    ```
-
-4. **Run the frontend development server**:
+3. **Run the frontend development server**:
 
     ```sh
     npm run dev
