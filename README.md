@@ -36,7 +36,7 @@ This repository contains the backend and frontend code for a full stack applicat
 
 4. **Initialize the database**:
 
-    Run the `schema.sql` file to set up the database:
+    Run the `db.py` file to set up the database:
 
     ```sh
     flask shell
