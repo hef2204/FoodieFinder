@@ -89,5 +89,5 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 
 
-INSERT INTO admin (username, password, email, full_name, role) VALUES ('admin1', 'admin1', 'sfsdf', 'sdf', 'admin');
+INSERT INTO admin (username, password, email, full_name, role) VALUES ('admin', '1234', 'sfsdf', 'sdf', 'admin');
 
