@@ -30,13 +30,9 @@ def add_manager():
         )
         db.commit()
         close_db()
-        response = make_response({"message": "Manager added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Manager added successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Invalid request"})
 
 
 
@@ -48,13 +44,9 @@ def delete_menu():
         db.execute("DELETE FROM menu WHERE name=?", (request.json["name"],))
         db.commit()
         close_db()
-        response = make_response({"message": "Menu deleted successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Menu deleted successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Invalid request"})
 
     
 
@@ -73,13 +65,9 @@ def add_another_restaurant_by_manager():
         )
         db.commit()
         close_db()
-        response = make_response({"message": "Restaurant added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Restaurant added successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Invalid request"})
     
 ############################################# Done
 @manager_functions.route('/manager/restaurant_page/<int:restaurant_id>/update_restaurant', methods=["PUT"])
@@ -100,13 +88,9 @@ def update_restaurant(restaurant_id):
         )
         db.commit()
         close_db()
-        response = make_response({"message": "Restaurant updated successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Restaurant updated successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response 
+        return jsonify({"message": "Invalid request"})
 
 
 
@@ -122,15 +106,11 @@ def add_menu(restaurant_id):
             (menu.name, menu.price, menu.description, restaurant_id)
         )
         db.commit()
-        response = make_response({"message": "Menu added successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
         close_db()
-        return response
+        return jsonify({"message": "Menu added successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
         close_db()
-        return response
+        return jsonify({"message": "Invalid request"})
 
 
     
@@ -144,21 +124,21 @@ def profile_page():
     if user_role != "manager":
         return jsonify({"message": "Unauthorized"}), 401
     db = get_db()
-    manager = db.execute("SELECT * FROM managers WHERE id=?", (current_user['id'],)).fetchone()
+    manager = db.execute("SELECT * FROM users WHERE id=?", (current_user['id'],)).fetchone()
     if not manager:
         return jsonify({"message": "Manager not found"}), 404
 
     restaurants = db.execute("SELECT * FROM restaurants WHERE manager_id=?", (current_user['id'],)).fetchall()
     close_db()
-    response = make_response({
+    response_data = {
         "manager": dict(manager),
         "restaurants": [dict(restaurant) for restaurant in restaurants],
         "manager_username": manager['username'], 
         "restaurant_name": [restaurant['name'] for restaurant in restaurants],
-        "restaurant_id": [restaurant['id'] for restaurant in restaurants] 
-    })
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+        "restaurant_id": [restaurant['id'] for restaurant in restaurants]
+    }
+
+    return jsonify(response_data)
 
 
 @manager_functions.route('/manager/manager_reservations', methods=["GET"])

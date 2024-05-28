@@ -2,26 +2,36 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/register.css';
 
-
 const Register: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-    const [first_name, setFirstName] = useState('');
-    const [last_name, setLastName] = useState('');
-    const navigate = useNavigate()
-    
+    const [fullName, setFullName] = useState('');
+    const [phone_number, setPhoneNumber] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
 
-    
-    const handleRegister = async () => {
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (!validateEmail(email)) {
+            setErrorMessage('Invalid email format');
+            return;
+        }
+
         const user = {
             username: username,
             password: password,
             email: email,
-            first_name: first_name,
-            last_name: last_name
+            full_name: fullName,
+            phone_number: phone_number
         };
-    
+
         try {
             const response = await fetch('http://localhost:5000/register', { 
                 method: 'POST',
@@ -30,51 +40,79 @@ const Register: React.FC = () => {
                 },
                 body: JSON.stringify(user)
             });
-    
+
             if (response.status === 409) {
-                console.error('Username already taken');
+                setErrorMessage('Username already taken');
                 return;
             }
 
             if (response.status === 410) {
-                console.error('Email already taken');
+                setErrorMessage('Email already taken');
                 return;
             }
-    
+
             if (!response.ok) {
-                throw new Error('register failed');
+                throw new Error('Register failed');
             }
-    
+
             const data = await response.json();
-    
+
             localStorage.setItem('token', data.token);
             localStorage.setItem('username', data.username);
             localStorage.setItem('role', data.role);
-            localStorage.clear();
-            navigate("/pages/login")
+            navigate("/pages/login");
         } catch (error) {
             console.error('Error:', error);
+            setErrorMessage('An error occurred during registration');
         }
     };
 
     return (
         <div>
             <h1>Register</h1>
-            <form>
+            <form onSubmit={handleRegister}>
                 <label>Username:</label>
-                <input type="username" value={username} onChange={e => setUsername(e.target.value)} placeholder='Username' />
+                <input 
+                    type="text" 
+                    value={username} 
+                    onChange={e => setUsername(e.target.value)} 
+                    placeholder='Username' 
+                />
                 <label>Password:</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder='Password' />
+                <input 
+                    type="password" 
+                    value={password} 
+                    onChange={e => setPassword(e.target.value)} 
+                    placeholder='Password' 
+                />
                 <label>Email:</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder='Email' />
-                <label>First Name:</label>
-                <input type="first name" value={first_name} onChange={e => setFirstName(e.target.value)} placeholder='First Name'/>
-                <label>Last Name:</label>
-                <input type="lastName" value={last_name} onChange={e => setLastName(e.target.value)} placeholder='Last Name' />
-                <button type="button" onClick={handleRegister}>Register</button>
+                <input 
+                    type="email" 
+                    value={email} 
+                    onChange={e => {
+                        setEmail(e.target.value);
+                        setErrorMessage(''); // Clear the error message when email input changes
+                    }} 
+                    placeholder='Email' 
+                />
+                <label>Full Name:</label>
+                <input 
+                    type="text" 
+                    value={fullName} 
+                    onChange={e => setFullName(e.target.value)} 
+                    placeholder='Full Name' 
+                />
+                <label>Phone Number:</label>
+                <input 
+                    type="text" 
+                    value={phone_number} 
+                    onChange={e => setPhoneNumber(e.target.value)} 
+                    placeholder='Phone Number'
+                />
+                <button type="submit">Register</button>
             </form>
-            <button className='back-button' onClick={() => navigate('/')}>back</button>
-            
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+            <button className='back-button' onClick={() => navigate('/')}>Back</button>
         </div>
     );
 };

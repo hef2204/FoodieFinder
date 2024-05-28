@@ -1,6 +1,6 @@
 
 from models import User
-from flask import Flask, request, make_response, Blueprint, jsonify
+from flask import Flask, request, jsonify
 
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -9,14 +9,7 @@ from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
 from flask_jwt_extended import JWTManager, create_access_token
 from datetime import timedelta
-
-
-
-
-
-
-
-
+import logging
 
 
 
@@ -32,13 +25,13 @@ FRONTEND_URL = app.config.get("FRONTEND_URL")
 cors = CORS(app, origins=["http://localhost:5173"], methods=["GET", "POST", "DELETE", "PUT"], supports_credentials=True)
 print(FRONTEND_URL)
 
+logging.basicConfig(level=logging.DEBUG)
+
 
 
 @app.route('/')
 def root():
-    response = make_response("Hello from the backend!")
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"message": "Welcome to the restaurant API"})
 
 
 @app.route('/login', methods=["POST"])
@@ -49,92 +42,78 @@ def login():
     password = data.get("password")
 
     if not username or not password:
-        return jsonify({"message": "Invalid credentials"}, 400)
-    
-    tables = ['users', 'managers', 'admin', 'restaurants']
-    user = None
-    table_used = None
+        return jsonify({"message": "Invalid credentials"}), 400
 
-    for table in tables:
-        user = db.execute(f"SELECT * FROM {table} WHERE username=? AND password=?", (username, password)).fetchone()
-        if user is not None:
-            table_used = table
-            break
+    user = db.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password)).fetchone()
 
     if user:
         user = dict(user)
         
-        if table_used == 'managers':
-
-            restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
+        if user['role'] == 'manager':
+            restaurant = db.execute("SELECT id, name FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
             if restaurant:
                 user['restaurantId'] = restaurant['id']
-                user['restaurantName'] = db.execute("SELECT name FROM restaurants WHERE id = ?", (restaurant['id'],)).fetchone()['name']
-                user['managerName'] = db.execute("SELECT username FROM managers WHERE id = ?", (user['id'],)).fetchone()['username']
-                first_name_result = db.execute("SELECT first_name FROM users WHERE id = ?", (user['id'],)).fetchone()
-                if first_name_result is not None:
-                    user['firstName'] = first_name_result['first_name']
-                else:
-                    user['firstName'] = None
-                
-            
+                user['restaurantName'] = restaurant['name']
+                user['managerName'] = user['username']
+
         access_token = create_access_token(identity=user, expires_delta=timedelta(seconds=500000))
-        response = make_response({"message": "Login successful", "user": dict(user), "access_token": access_token})
-        return response
+        return jsonify({"message": "Login successful", "user": user, "access_token": access_token})
 
-    return jsonify({"message": "Invalid credentials"}, 401)
 
-def response(body, status):
-    res = make_response(body, status)
-    res.headers.add("Access-Control-Allow-Origin", "*")
-    return res
+    return jsonify({"message": "Invalid credentials"}), 401
 
 
 @app.route('/register', methods=["POST"])
 def register():
     db = get_db()
-    if request.json is not None:
-        user = User(**request.json)
-        
+    data = request.get_json() or {}
+    logging.debug(f"Received data: {data}")
+
+    username = data.get("username")
+    password = data.get("password")
+    email = data.get("email")
+    full_name = data.get("full_name")
+    phone_number = data.get("phone_number")
+
+    if not username or not password or not email or not full_name:
+        logging.error("Missing data")
+        return jsonify({"message": "Missing data"}), 400
+
+    try:
+        # Check if the username already exists
         existing_user = db.execute(
-            "SELECT * FROM users WHERE username = ?",
-            (user.username,)
+            "SELECT * FROM users WHERE username = ?", (username,)
         ).fetchone()
-
         if existing_user:
-            response = make_response({"message": "Username already taken"})
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response, 409
-        
+            logging.error("Username already taken")
+            return jsonify({"message": "Username already taken"}), 409
+
+        # Check if the email already exists
         existing_email = db.execute(
-            "SELECT * FROM users WHERE email = ?",
-            (user.email,)
+            "SELECT * FROM users WHERE email = ?", (email,)
         ).fetchone()
-
         if existing_email:
-            response = make_response({"message": "Email already taken"})
-            response.headers.add("Access-Control-Allow-Origin", "*")
-            return response, 410
+            logging.error("Email already taken")
+            return jsonify({"message": "Email already taken"}), 410
 
+        # Insert the new user
         db.execute(
-            "INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)",
-            (user.username, user.password, user.email, user.first_name, user.last_name)
+            "INSERT INTO users (username, password, email, full_name, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
+            (username, password, email, full_name, phone_number, "user")
         )
         db.commit()
-        response = make_response({"message": "User added successfully"})
-            
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        logging.info("User registered successfully")
+    except Exception as e:
+        logging.error(f"Error during registration: {str(e)}")
+        return jsonify({"message": str(e)}), 500
+    finally:
+        close_db()
+
+    return jsonify({"message": "User registered successfully"}), 201
 
 @app.route('/homepage')
 def home():
-    response = make_response("Welcome to the home page!")
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"message": "Welcome to the restaurant API"})
 
 
 
@@ -165,9 +144,7 @@ def get_restaurants():
     close_db()
 
     # Returning the response
-    response = make_response({"restaurants": [dict(restaurant) for restaurant in restaurants]})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"restaurants": [dict(restaurant) for restaurant in restaurants]})
 
 @app.route('/restaurant/types', methods=["GET"])
 def get_restaurant_types():
@@ -176,9 +153,7 @@ def get_restaurant_types():
     close_db()
     
     # Returning the response
-    response = make_response({"types": [type['type'] for type in types]})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"types": [type['type'] for type in types]})
 
 @app.route('/restaurant/locations', methods=["GET"])
 def get_restaurant_locations():
@@ -187,9 +162,7 @@ def get_restaurant_locations():
     close_db()
     
     # Returning the response
-    response = make_response({"locations": [location['location'] for location in locations]})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"locations": [location['location'] for location in locations]})
 
 
 
@@ -205,14 +178,9 @@ def update_user():
         )
         db.commit()
         close_db()
-        response = make_response({"message": "User updated successfully"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "User updated successfully"})
     else:
-        response = make_response({"message": "Invalid request"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
-    
+        return jsonify({"message": "Invalid request"}), 400
 
     
 
@@ -229,16 +197,13 @@ def restaurant_page(restaurant_id):
     menu = db.execute("SELECT * FROM menu_items WHERE restaurant_id=?", (restaurant_id,)).fetchall()
     close_db()
     if restaurant is not None:
-        response = make_response({
+        response = {
             "restaurant": dict(restaurant),
             "menu": [dict(item) for item in menu]
-        })
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        }
+        return jsonify(response)
     else:
-        response = make_response({"message": "Restaurant not found"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Restaurant not found"}), 404
     
 
 
@@ -250,10 +215,10 @@ def user_profile(user_id):
     db = get_db()
     if request.method == "GET":
         user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-        close_db()
         if user is None:
-            return make_response({"error": "User not found"}, 404)
-        response = make_response({"user": dict(user)})
+            return jsonify({"error": "User not found"}), 404
+        return jsonify({"user": dict(user)})
+    
     elif request.method == "PUT":
         data = request.get_json()
         db.execute(
@@ -261,11 +226,10 @@ def user_profile(user_id):
             (data['name'], data['email'], user_id)
         )
         db.commit()
-        close_db()
         user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-        response = make_response({"user": dict(user)})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+        return jsonify({"user": dict(user)})
+    
+    return jsonify({"error": "Method not allowed"}), 405
 
 
 @app.route('/restaurant_page/<int:restaurant_id>/reservation', methods=["POST"])
@@ -278,9 +242,7 @@ def reservation(restaurant_id):
     )
     db.commit()
     close_db()
-    response = make_response({"message": "Reservation added successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"message": "Reservation added successfully"}), 201
 
 @app.route('/user_profile/<int:user_id>/reservations', methods=["GET"])
 def user_reservations(user_id):
@@ -288,13 +250,9 @@ def user_reservations(user_id):
         db = get_db()
         reservations = db.execute("SELECT id, restaurant_id, restaurant_name, date, time, number_of_people FROM reservations WHERE user_id = ?", (user_id,)).fetchall()
         close_db()
-        response = make_response({"reservations": [dict(reservation) for reservation in reservations]})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"reservations": [dict(reservation) for reservation in reservations]})
     else:
-        response = make_response({"message": "Invalid request method"})
-        response.headers.add("Access-Control-Allow-Origin", "*")
-        return response
+        return jsonify({"message": "Invalid request"}), 400
     
 
 @app.route('/user_profile/<int:user_id>/reservations/<int:reservation_id>', methods=["DELETE"])
@@ -303,9 +261,7 @@ def delete_user_reservation(user_id, reservation_id):
     db.execute("DELETE FROM reservations WHERE user_id = ? AND id = ?", (user_id, reservation_id))
     db.commit()
     close_db()
-    response = make_response({"message": "Reservation deleted successfully"})
-    response.headers.add("Access-Control-Allow-Origin", "*")
-    return response
+    return jsonify({"message": "Reservation deleted successfully"})
 
 
 

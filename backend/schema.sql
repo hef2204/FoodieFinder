@@ -1,48 +1,27 @@
-CREATE TABLE IF NOT EXISTS restaurants (
-                    id INTEGER PRIMARY KEY NOT NULL,
-                    name TEXT NOT NULL UNIQUE,
-                    location TEXT,
-                    phone_number TEXT,
-                    type TEXT,
-                    Kosher TEXT ,
-                    order_table TEXT NULL,
-                    availability TEXT NULL,
-                    discounts FLOAT NOT NULL DEFAULT 0.0,
-                    rating_count INTEGER NOT NULL DEFAULT 0,
-                    manager_id INTEGER,
-                    FOREIGN KEY(manager_id) REFERENCES managers(id)
-);
-
-CREATE TABLE IF NOT EXISTS admin (
-                    id INTEGER PRIMARY KEY NOT NULL UNIQUE,
-                    username TEXT NOT NULL UNIQUE,
-                    full_name TEXT,
-                    password TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'admin'
-
-);
-
-
-CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY,
-                    username TEXT,
-                    password TEXT,
-                    email TEXT,
-                    first_name TEXT,
-                    last_name TEXT,
-                    role TEXT NOT NULL DEFAULT 'user'
-);
-
-CREATE TABLE IF NOT EXISTS managers (
+CREATE TABLE users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL UNIQUE,
-                    full_name TEXT,
+                    username TEXT UNIQUE NOT NULL,
                     password TEXT NOT NULL,
-                    email TEXT NOT NULL,
-                    phone_number TEXT NOT NULL,
-                    role TEXT NOT NULL DEFAULT 'manager'
+                    email TEXT UNIQUE NOT NULL,
+                    full_name TEXT,
+                    role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
+                    phone_number TEXT
 );
+
+CREATE TABLE restaurants (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    location TEXT NOT NULL,
+                    phone_number TEXT NOT NULL,
+                    type TEXT NOT NULL,
+                    Kosher TEXT NOT NULL,
+                    order_table TEXT NOT NULL,
+                    Availability TEXT NOT NULL,
+                    discounts TEXT NOT NULL,
+                    manager_id INTEGER,
+                    FOREIGN KEY (manager_id) REFERENCES users (id)
+);
+
 
 CREATE TABLE IF NOT EXISTS menu_items (
                     id INTEGER PRIMARY KEY,
@@ -89,5 +68,5 @@ CREATE TABLE IF NOT EXISTS reservations (
 
 
 
-INSERT INTO admin (username, password, email, full_name, role) VALUES ('admin', '1234', 'sfsdf', 'sdf', 'admin');
+INSERT INTO users (username, password, email, full_name, role, phone_number) VALUES ('admin', '1234', 'hhh@.com', 'admin', 'admin', '123456789');
 
