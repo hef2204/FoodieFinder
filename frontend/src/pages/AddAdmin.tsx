@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/AddAdmin.css';
 
 const AddAdmin: React.FC = () => {
     const navigate = useNavigate();
@@ -50,7 +51,7 @@ const AddAdmin: React.FC = () => {
     };
 
     return (
-        <div className="container">
+        <div>
             <h2>Add Admin</h2>
             <form className="add-admin-form" onSubmit={handleSubmit}>
                 <input

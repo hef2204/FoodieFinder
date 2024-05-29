@@ -10,7 +10,7 @@ interface Restaurant {
     type: string;
     Kosher: string;
     order_table: string;
-    availability: string;
+    Availability: string;
     menu: Array<{ name: string, description: string, price: number }>;
     manager_id: number;
 }
@@ -54,6 +54,7 @@ const RestaurantDetailPage = () => {
             .then(data => {
                 setRestaurant(data.restaurant);
                 setMenu(data.menu);
+                console.log(data);
             })
             .catch(error => console.error('Error:', error));
     }, [id]);
@@ -106,31 +107,30 @@ const RestaurantDetailPage = () => {
                 <p>Type: {restaurant.type}</p>
                 <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
                 <p>Order Table: {restaurant.order_table}</p>
-                <p>Availability: {restaurant.availability}</p>
-                </div>
+                <p>Availability: {restaurant.Availability}</p>
+            </div>
             <h2>Menu</h2>
             <table>
-                <thead>
-                <tr className='menu'>
-                    <th>name</th>
-                    <th>description</th>
-                    <th>price</th>
-
-                </tr>
-                </thead>
-                <tbody>
+                    <thead>
+                        <tr className='menu'>
+                            <th>name</th>
+                            <th>description</th>
+                            <th>price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                         {menu.map((item) => (
                             <tr key={item.name}>
                                 <td>{item.name}</td>
                                 <td>{item.description}</td>
-                                 <td>{item.price}</td>
+                                <td>{item.price}</td>
                             </tr>
                          ))}
                     </tbody>
             </table>
                     
                 
-            <button className='back-button' onClick={() => navigate('/')}>Back</button>
+            <button className='back-button' onClick={() => navigate('/pages/restaurantPage')}>Back</button>
         </div>
     );
 }

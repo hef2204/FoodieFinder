@@ -8,7 +8,7 @@ const About = () => {
     return (
         <div>
             <h1>About US</h1>
-            <p>
+            <p className='About'>
             "Welcome to FoodieFinder - your ultimate dining companion!
             Easily discover restaurants based on location, cuisine, kosher status, prices, and ratings. 
             You can also make reservations, order takeout, and even get discounts.

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../css/restaurantPage.css";
@@ -12,7 +12,7 @@ interface Restaurant {
     type: string;
     Kosher: string;
     order_table: string;
-    availability: string;
+    Availability: string;
     discounts: string;
 }
 
@@ -23,6 +23,7 @@ const RestaurantPage = () => {
     const [types, setTypes] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
     const userRole = localStorage.getItem('role');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchRestaurantTypes = () => {
@@ -107,11 +108,15 @@ const RestaurantPage = () => {
             
             <table>
                 <thead>
-                    <tr>
+                    <tr className='detail-of-restaurant'>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Phone Number</th>
                         <th>Type</th>
+                        <th>Kosher</th>
+                        <th>Order Table</th>
+                        <th>Availability</th>
+                        <th>Discounts</th>
                         {userRole === 'admin' && <th>Action</th>}
                     </tr>
                 </thead>
@@ -126,6 +131,10 @@ const RestaurantPage = () => {
                             <td>{restaurant.location}</td>
                             <td>{restaurant.phone_number}</td>
                             <td>{restaurant.type}</td>
+                            <td>{restaurant.Kosher}</td>
+                            <td>{restaurant.order_table}</td>
+                            <td>{restaurant.Availability}</td>
+                            <td>{restaurant.discounts}</td>
                             {userRole === 'admin' && (
                                 <td>
                                     <button onClick={() => handleRemoveRestaurant(restaurant.id, restaurant.name)}>
@@ -137,7 +146,7 @@ const RestaurantPage = () => {
                     ))}
                 </tbody>
             </table>
-            <button className="Back-button" onClick={() => window.history.back()}>Back</button>
+            <button className="Back-button-restaurantPage" onClick={() => navigate("/")}>Back</button>
         </div>
     );
 };

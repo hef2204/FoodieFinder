@@ -1,46 +1,66 @@
+/* Container for the update restaurant form */
 .handleUpdateRestaurant {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100vh; /* Full viewport height */
     padding: 20px;
-    width: 50%;
-    margin: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for readability */
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Form container styles */
 .handleUpdateRestaurant form {
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center; /* Center the form vertically */
     width: 100%;
-    background-color: #fff;
+    max-width: 200px; /* Maximum width of the form */
+    background-color: rgba(255, 255, 255, 0.9); /* Light background for the form */
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.handleUpdateRestaurant label {
-    font-size: 1em;
+/* Label styles */
+.handleUpdateRestaurant form label {
+    width: 100%;
     margin-bottom: 5px;
+    font-size: 1rem;
+    color: #333; /* Dark color for labels */
+    text-align: center;
+    
+}
+
+/* Input field styles */
+.handleUpdateRestaurant form input[type="text"] {
+    width: 80%; /* Adjust the width of the input fields */
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
     color: #333;
 }
 
-.handleUpdateRestaurant input {
-    margin-bottom: 20px;
+/* Submit button styles */
+.handleUpdateRestaurant form button {
+    width: 80%; /* Adjust the width of the submit button */
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    font-size: 0.9em;
-}
-
-.handleUpdateRestaurant button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    background-color: white;
+    background-color: #28a745;
     color: white;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1rem;
     transition: background-color 0.3s ease;
 }
 
+/* Submit button hover effect */
+.handleUpdateRestaurant form button:hover {
+    background-color: #218838;
+}

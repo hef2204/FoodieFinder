@@ -4,12 +4,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    height: 100vh; /* Full viewport height */
+    padding: 60px;
     background-color: rgba(0, 0, 0, 0.8); /* Dark background for readability */
     color: white;
     border-radius: 10px;
-    max-width: 600px;
-    margin: 50px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -22,39 +21,50 @@
 
 /* Paragraph styles */
 .update-Menu p {
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     font-size: 1.2rem;
 }
 
-/* Form styles */
+/* Form container styles */
 .product-form {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center the form vertically */
     width: 100%;
+    max-width: 250px; /* Maximum width of the form */
+    background-color: rgba(255, 255, 255, 0.9); /* Light background for the form */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Label styles */
-label {
-    margin-bottom: 10px;
+.product-form label {
+    width: 100%;
+    margin-bottom: 5px;
     font-size: 1rem;
-    color: #ddd; /* Slightly lighter color for labels */
+    color: #333; /* Dark color for labels */
+    text-align: left;
 }
 
 /* Input field styles */
-input[type="text"],
-input[type="number"] {
-    padding: 10px;
+.product-form input[type="text"],
+.product-form input[type="number"] {
+    width: 80%; /* Adjust the width of the input fields */
     margin-bottom: 15px;
-    border: none;
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
     color: #333;
 }
 
 /* Submit button styles */
-input[type="submit"] {
+.product-form input[type="submit"] {
+    width: 80%; /* Adjust the width of the submit button */
     padding: 10px;
-    background-color: #430c83;
+    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 5px;
@@ -63,7 +73,10 @@ input[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-
+/* Submit button hover effect */
+.product-form input[type="submit"]:hover {
+    background-color: #218838;
+}
 
 /* Back button container styles */
 .back {
@@ -80,7 +93,6 @@ input[type="submit"] {
     cursor: pointer;
     font-size: 1rem;
     transition: background-color 0.3s ease;
-    
 }
 
 /* Back button hover effect */

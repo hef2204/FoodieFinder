@@ -201,6 +201,7 @@ def restaurant_page(restaurant_id):
             "restaurant": dict(restaurant),
             "menu": [dict(item) for item in menu]
         }
+        print(response)
         return jsonify(response)
     else:
         return jsonify({"message": "Restaurant not found"}), 404

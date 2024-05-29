@@ -64,7 +64,7 @@ function AdminPage() {
             <ul className='navbar1'>
                 
                 <li className="dropdown">
-                    <span className="active-link">Menu</span>
+                    <span className="active-linkAdmin">Menu</span>
                     <div className="dropdown-content">
                         <NavLink to="/pages/users">Manage Users</NavLink>
                         <NavLink to="/pages/ManagersTable">Manage managers</NavLink>
@@ -75,7 +75,7 @@ function AdminPage() {
                     </div>
                 </li>
                 <div>
-                <button className="button" onClick={() => {localStorage.clear(); window.location.href = '/';}}>Logout</button>
+                <button className="LogoutAdmin" onClick={() => {localStorage.clear(); window.location.href = '/';}}>Logout</button>
                 </div>
             </ul>
             </nav>

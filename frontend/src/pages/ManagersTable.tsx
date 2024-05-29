@@ -84,7 +84,7 @@ return (
         <h1>managers</h1>
     
     <table>
-        <thead>
+        <thead className='ManageManagerHeader'>
             <tr>
                 <th>username</th>
                 <th>full_name</th>

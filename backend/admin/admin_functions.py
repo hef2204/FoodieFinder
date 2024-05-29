@@ -145,7 +145,7 @@ def manage_users():
     db = get_db()
 
     if request.method == 'GET':
-        users = db.execute("SELECT * FROM users").fetchall()
+        users = db.execute("SELECT * FROM users WHERE role = 'user'").fetchall()
         close_db()
         return jsonify({"users": [dict(user) for user in users]}), 200
     

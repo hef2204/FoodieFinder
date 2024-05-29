@@ -7,9 +7,9 @@ interface User {
     id: number;
     username: string;
     email: string;
-    first_name: string;
-    last_name: string;
-    role: string;
+    full_name: string;
+    role: "user";
+    phone_number: string;
 }
 
 
@@ -64,13 +64,12 @@ const UsersTable = () => {
         <div className='userTable'>
             <h1>Users</h1>
             <table>
-                <thead>
+                <thead className='ManageUserHeader'>
                     <tr>
                         <th>Username</th>
                         <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Role</th>
+                        <th>Full Name</th>
+                        <th>Phone Number</th>
                         <th>Delete</th> 
                     </tr>
                 </thead>
@@ -78,10 +77,9 @@ const UsersTable = () => {
                     {users.map((user) => (
                         <tr key={user.id}>
                             <td>{user.username}</td>
+                            <td>{user.full_name}</td>
                             <td>{user.email}</td>
-                            <td>{user.first_name}</td>
-                            <td>{user.last_name}</td>
-                            <td>{user.role}</td>
+                            <td>{user.phone_number}</td>
                             <td>
                                 <button onClick={() => handleDelete(user.username)}>
                                     <FontAwesomeIcon icon={faTrash} />

@@ -89,35 +89,22 @@ const UpdateRestaurantPage = () => {
 
     return (
         <div className='handleUpdateRestaurant'>
+            <h2>Update Restaurant</h2>
             <form onSubmit={handleUpdateRestaurant}>
-                <label>
-                    Name:
+                <label>Name:</label>
                     <input type="text" value={restaurant.name} onChange={e => setRestaurant({...restaurant, name: e.target.value})} />
-                </label>
-                <label>
-                    Location:
+                <label>Location:</label>
                     <input type="text" value={restaurant.location} onChange={e => setRestaurant({...restaurant, location: e.target.value})} />
-                </label>
-                <label>
-                    Phone Number:
+                <label>Phone Number:</label>
                     <input type="text" value={restaurant.phone_number} onChange={e => setRestaurant({...restaurant, phone_number: e.target.value})} />
-                </label>
-                <label>
-                    Type:
+                <label>Type:</label>
                     <input type="text" value={restaurant.type} onChange={e => setRestaurant({...restaurant, type: e.target.value})} />
-                </label>
-                <label>
-                    Kosher:
+                <label>Kosher:</label>
                     <input type="text" value={restaurant.Kosher} onChange={e => setRestaurant({...restaurant, Kosher: e.target.value})} />
-                </label>
-                <label>
-                    Order Table:
+                <label>Order Table:</label>
                     <input type="text" value={restaurant.order_table} onChange={e => setRestaurant({...restaurant, order_table: e.target.value})} />
-                </label>
-                <label>
-                    Availability:
+                <label>Availability:</label>
                     <input type="text" value={restaurant.Availability} onChange={e => setRestaurant({...restaurant, Availability: e.target.value})} />
-                </label>
                 <button type="submit">Update</button>
             </form>
         

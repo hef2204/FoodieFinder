@@ -95,8 +95,6 @@ const UpdateMenu: React.FC = () => {
                 <button onClick={() => {
                     window.history.back();
                 }}>Back</button>
-
-
             </div>
         </div>
     );
