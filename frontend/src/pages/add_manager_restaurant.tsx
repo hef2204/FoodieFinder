@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/addManagerRestaurant.css';
 
 const AddManagerAndRestaurant = () => {
     const navigate = useNavigate();
@@ -122,9 +123,9 @@ const AddManagerAndRestaurant = () => {
     }
 
     return (
-        <div className="container">
-            <div className="form">
-                <h1>Add Manager and Restaurant</h1>
+        <div className="managerRestaurant">
+            <div className="managerRestaurantAddForm">
+                <h2>Add Manager and Restaurant</h2>
                 <h2>Manager Details</h2>
                 <input className="input-field" name="username" value={formData.username} onChange={handleChange} placeholder="Username" />
                 {errors.username && <p className="error-message">{errors.username}</p>}
@@ -139,20 +140,20 @@ const AddManagerAndRestaurant = () => {
                 <input className="input-field" name="phone_number_restaurant" value={formData.phone_number_restaurant} onChange={handleChange} placeholder="Phone Number" />
                 <input className="input-field" name="type" value={formData.type} onChange={handleChange} placeholder="Type" />
                 <select className="input-field" name="Kosher" value={formData.Kosher} onChange={handleSelectChange}>
-                        <option value="">Kosher</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
+                    <option value="">Kosher</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
                 </select>
                 <select className="input-field" name="order_table" value={formData.order_table} onChange={handleSelectChange}>
                     <option value="">Order Table</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
-                </select>   
+                </select>
                 <input className="input-field" name="Availability" value={formData.Availability} onChange={handleChange} placeholder="Availability" />
                 <input className="input-field" name="discounts" value={formData.discounts} onChange={handleChange} placeholder="Discounts" />
                 <button className="button" onClick={addManagerAndRestaurant} disabled={!!errors.email || !!errors.username}>Add Manager and Restaurant</button>
             </div>
-            <button className='back-button' onClick={() => window.history.back()}>back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
         </div>
     );
 };

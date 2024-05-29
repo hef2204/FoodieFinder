@@ -112,6 +112,12 @@ def add_manager_and_restaurant():
         if existing_manager_email is not None:
             return jsonify({"message": "Email already exists"}), 400
         
+        cursor.execute("SELECT * FROM restaurants WHERE name = ?", (restaurant['name'],))
+        existing_restaurant = cursor.fetchone()
+        if existing_restaurant is not None:
+            return jsonify({"message": "Restaurant name already exists"}), 400
+
+        
         # Add manager
         cursor.execute(
             "INSERT INTO users (username, full_name, password, email, phone_number, role) VALUES (?, ?, ?, ?, ?, 'manager')",
