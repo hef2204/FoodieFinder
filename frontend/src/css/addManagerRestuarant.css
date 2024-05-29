@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #3614ce;
+    background-color: white;
 }
 
 .form {
@@ -28,7 +28,7 @@
     border: none;
     border-radius: 4px;
     background-color: #5C6BC0;
-    color: #3614ce;
+    color: white;
     cursor: pointer;
 }
 

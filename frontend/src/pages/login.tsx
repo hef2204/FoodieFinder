@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import "../css/login.css"
-import { useNavigate } from 'react-router-dom';
-
-
-
+import { Link, useNavigate } from 'react-router-dom';
+import "../css/login.css";
 
 export type LoginProps = {
     onLogin: (username: string, role: string) => void;
@@ -16,9 +12,6 @@ const Login: React.FC = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    
-    
-
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
     };
@@ -26,9 +19,6 @@ const Login: React.FC = () => {
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
     };
-
-   
-
 
     const handleSubmit = async (e: React.FormEvent) => {
         console.log('Form submitted');
@@ -58,7 +48,6 @@ const Login: React.FC = () => {
                 const data = await response.json();
                 const token = data.access_token; 
     
-                
                 localStorage.setItem('token', token);
     
                 if (data && data.user) {
@@ -98,10 +87,12 @@ const Login: React.FC = () => {
                     console.error('Error: data or data.user is undefined');
                 }
             } else {
-                console.log('Login failed');
+                const errorData = await response.json();
+                setError(errorData.message || 'Login failed');
             }
         } catch (error) {
             console.error('Error:', error);
+            setError('An unexpected error occurred. Please try again later.');
         }
     };
 
@@ -110,14 +101,13 @@ const Login: React.FC = () => {
             <Link className="about-link" to="/pages/about">About</Link>
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
-                {error && <div>{error}</div>}
+                {error && <div className="error-message">{error}</div>}
                 <input type="text" placeholder="Username" value={username} onChange={handleEmailChange} />
                 <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                 <button type="submit">Login</button>
             </form>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
         </div>
-        
     );
 };
 

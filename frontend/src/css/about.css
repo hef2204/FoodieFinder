@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh; /* Set height to fill the viewport */
-    background-image: url('https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg'); /* Path to your background image */
+    background-image: url('https://files.oaiusercontent.com/file-FfCoV23jEklhLKxJJ7gRkEtP?se=2024-05-29T09%3A58%3A51Z&sp=r&sv=2023-11-03&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D72c81cce-eaa6-4fa4-9c44-cbbd9a297c5e.webp&sig=vwrUFGCbyjdgzdno8FcaVzdrvLNdi/oVIidUwS2ba2g%3D'); /* Path to your background image */
     background-size: cover; /* Cover the entire container */
     background-position: center; /* Center the background image */
     padding: 20px; /* Add padding for content */

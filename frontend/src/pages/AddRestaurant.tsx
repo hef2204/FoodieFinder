@@ -66,7 +66,7 @@ const AddRestaurant = () => {
     }
 
     return (
-        <div className="container">
+        <div className="AddRestaurant-container">
             <div className="form">
                 <input className="input-field" name="name" value={formData.name} onChange={handleChange} placeholder="Name" />
                 <input className="input-field" name="location" value={formData.location} onChange={handleChange} placeholder="Location" />

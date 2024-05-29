@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Tabs, Tab } from 'react-bootstrap';
 import '../css/RestaurantDetailPage.css';
 
 interface Restaurant {
@@ -31,7 +30,7 @@ const RestaurantDetailPage = () => {
     const [managerId, setManagerId] = useState<number | null>(null);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
-    const [activeTab, setActiveTab] = useState<string | null>('menu');
+    
 
     useEffect(() => {
         const role = localStorage.getItem('role');
@@ -63,9 +62,7 @@ const RestaurantDetailPage = () => {
         return <div>Loading...</div>;
     }
 
-    const handleTabChange = (key: string | null) => {
-        setActiveTab(key === activeTab ? null : key);
-    };
+    
 
     return (
         <div className="restaurant-detail1">
@@ -101,31 +98,38 @@ const RestaurantDetailPage = () => {
                     </>
                 )}
             </div>
-            <h1>{restaurant.name}</h1>
-            {userRole === 'manager' && managerId === restaurant?.manager_id && <h2>Welcome, {managerName}!</h2>}
-            <p>Location: {restaurant.location}</p>
-            <p>Phone Number: {restaurant.phone_number}</p>
-            <p>Type: {restaurant.type}</p>
-            <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
-            <p>Order Table: {restaurant.order_table}</p>
-            <p>Availability: {restaurant.availability}</p>
-            <Tabs activeKey={activeTab || undefined} onSelect={handleTabChange}>
-                <Tab eventKey="menu" title="Menu">
-                    {activeTab === 'menu' && (
-                        <table>
-                            <tbody>
-                                {menu.map((item) => (
-                                    <tr key={item.name}>
-                                        <td>{item.name}</td>
-                                        <td>{item.description}</td>
-                                        <td>{item.price}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </Tab>
-            </Tabs>
+            <div className='restaurant-detail2'>
+                <h1>{restaurant.name}</h1>
+                {userRole === 'manager' && managerId === restaurant?.manager_id && <h2>Welcome, {managerName}!</h2>}
+                <p>Location: {restaurant.location}</p>
+                <p>Phone Number: {restaurant.phone_number}</p>
+                <p>Type: {restaurant.type}</p>
+                <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
+                <p>Order Table: {restaurant.order_table}</p>
+                <p>Availability: {restaurant.availability}</p>
+                </div>
+            <h2>Menu</h2>
+            <table>
+                <thead>
+                <tr className='menu'>
+                    <th>name</th>
+                    <th>description</th>
+                    <th>price</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                        {menu.map((item) => (
+                            <tr key={item.name}>
+                                <td>{item.name}</td>
+                                <td>{item.description}</td>
+                                 <td>{item.price}</td>
+                            </tr>
+                         ))}
+                    </tbody>
+            </table>
+                    
+                
             <button className='back-button' onClick={() => navigate('/')}>Back</button>
         </div>
     );

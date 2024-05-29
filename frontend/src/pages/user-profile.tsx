@@ -37,7 +37,7 @@ const UserProfile: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className='userprofile-container'>
            <h1>User Profile</h1>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>

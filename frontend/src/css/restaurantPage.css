@@ -60,6 +60,6 @@ tr:hover {
 }
 
 .back-button-RestaurantTable button:hover {
-    background-color: #3614ce; /* White background */
+    background-color: white; /* White background */
     color: black; /* Black text */
 }

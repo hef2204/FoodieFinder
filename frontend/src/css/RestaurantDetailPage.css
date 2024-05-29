@@ -68,11 +68,31 @@
   th,
   td {
     padding: 8px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #8616c7;
     text-align: left;
   }
   
   th {
-    background-color: #f2f2f2;
+    background-color: #16c07f;
   }
+
+  .menu {
+    background-color: #17ca5b; /* Light gray background */
+    color: #343a40; /* Dark gray text */
+}
+
+.menu th {
+    padding: 10px; /* Add some padding around the table headers */
+    text-align: left; /* Align the text to the left */
+    border-bottom: 2px solid #0e60b1; /* Add a border at the bottom of the headers */
+    background-color: #0e60b1;
+}
+
+.restaurant-detail2 p {
+    margin-bottom: 20px;
+    font-size: 20px;
+    
+
+    
+}
   

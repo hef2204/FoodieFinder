@@ -1,0 +1,89 @@
+/* Container for the update menu form */
+.update-Menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8); /* Dark background for readability */
+    color: white;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 50px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Heading styles */
+.update-Menu h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #fff; /* White color for better readability */
+}
+
+/* Paragraph styles */
+.update-Menu p {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+/* Form styles */
+.product-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Label styles */
+label {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #ddd; /* Slightly lighter color for labels */
+}
+
+/* Input field styles */
+input[type="text"],
+input[type="number"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Submit button styles */
+input[type="submit"] {
+    padding: 10px;
+    background-color: #430c83;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+
+
+/* Back button container styles */
+.back {
+    margin-top: 20px;
+}
+
+/* Back button styles */
+.back button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    
+}
+
+/* Back button hover effect */
+.back button:hover {
+    background-color: #0056b3;
+}

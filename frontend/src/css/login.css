@@ -50,14 +50,12 @@
 }
 
 /* Submit button hover effect */
-.submit-button:hover {
-    background-color: #0056b3;
-}
+
 
 /* Back button */
 .back-button {
     /* Remove position, top, and right properties */
-    background-color: #3614ce;
+    background-color: white;
     color: #333;
     border: none;
     padding: 10px 20px;
