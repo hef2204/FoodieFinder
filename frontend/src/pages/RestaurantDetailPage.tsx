@@ -130,7 +130,7 @@ const RestaurantDetailPage = () => {
             </table>
                     
                 
-            <button className='back-button' onClick={() => navigate('/pages/restaurantPage')}>Back</button>
+            <button className='back-button' onClick={() => navigate(-1)}>Back</button>
         </div>
     );
 }

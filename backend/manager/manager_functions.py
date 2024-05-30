@@ -10,29 +10,70 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 def add_manager():
     current_user = get_jwt_identity()
     user_role = current_user['role']
+    
     if user_role != "manager":
         return jsonify({"message": "Unauthorized"}), 401
+
     db = get_db()
     if request.json is not None:
         manager_data = request.json
-        adding_manager_restaurant_id = manager_data['restaurantId']  # get restaurantId from the adding manager
+        
+        # Validate required fields
+        if not all(key in manager_data for key in ('username', 'full_name', 'password', 'email', 'phone_number')):
+            return jsonify({"message": "Missing required fields"}), 400
+        
+        # Verify the current manager is associated with a restaurant
+        current_manager_restaurant = db.execute("SELECT * FROM restaurants WHERE manager_id = ?", 
+                                                (current_user['id'],)).fetchone()
+        if not current_manager_restaurant:
+            return jsonify({"message": "Adding manager is not associated with any restaurant"}), 401
+
+        # Check if username already exists
+        existing_user = db.execute("SELECT * FROM users WHERE username = ?", (manager_data['username'],)).fetchone()
+        if existing_user:
+            return jsonify({"message": "Username already taken"}), 409
+        
+        # Check if email already exists
+        existing_email = db.execute("SELECT * FROM users WHERE email = ?", (manager_data['email'],)).fetchone()
+        if existing_email:
+            return jsonify({"message": "Email already taken"}), 410
+
         new_manager_data = {
             'username': manager_data['username'],
             'full_name': manager_data['full_name'],
             'password': manager_data['password'],
             'email': manager_data['email'],
             'phone_number': manager_data['phone_number'],
-            'restaurantId': adding_manager_restaurant_id  
+            'role': 'manager',
         }
-        db.execute(
-            "INSERT INTO managers (username, full_name, password, email, phone_number, restaurant_id) VALUES (?, ?, ?, ?, ?, ?)",
-            (new_manager_data['username'], new_manager_data['full_name'], new_manager_data['password'], new_manager_data['email'], new_manager_data['phone_number'], new_manager_data['restaurantId'])
-        )
-        db.commit()
-        close_db()
-        return jsonify({"message": "Manager added successfully"})
+
+        try:
+            # Add new manager to users table
+            db.execute(
+                "INSERT INTO users (username, full_name, password, email, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
+                (new_manager_data['username'], new_manager_data['full_name'], new_manager_data['password'], 
+                 new_manager_data['email'], new_manager_data['phone_number'], new_manager_data['role'])
+            )
+            new_manager_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+            
+            # Associate the new manager with the same restaurant
+            db.execute(
+                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (current_manager_restaurant['name'], current_manager_restaurant['location'], current_manager_restaurant['phone_number'], 
+                 current_manager_restaurant['type'], current_manager_restaurant['Kosher'], current_manager_restaurant['order_table'], 
+                 current_manager_restaurant['Availability'], current_manager_restaurant['discounts'], new_manager_id)
+            )
+            db.commit()
+            close_db()
+            return jsonify({"message": "Manager added successfully", "manager_id": new_manager_id}), 201
+        except Exception as e:
+            return jsonify({"message": str(e)}), 500
     else:
-        return jsonify({"message": "Invalid request"})
+        return jsonify({"message": "Invalid request"}), 400
+
+
+
+
 
 
 

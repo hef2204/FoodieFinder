@@ -1,25 +1,25 @@
-CREATE TABLE users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT UNIQUE NOT NULL,
-                    password TEXT NOT NULL,
-                    email TEXT UNIQUE NOT NULL,
-                    full_name TEXT,
-                    role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
-                    phone_number TEXT
+CREATE TABLE IF NOT EXISTS users (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT UNIQUE NOT NULL,
+                        password TEXT NOT NULL,
+                        email TEXT UNIQUE NOT NULL,
+                        full_name TEXT,
+                        role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
+                        phone_number INTEGER NOT NULL
 );
 
-CREATE TABLE restaurants (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    location TEXT NOT NULL,
-                    phone_number TEXT NOT NULL,
-                    type TEXT NOT NULL,
-                    Kosher TEXT NOT NULL,
-                    order_table TEXT NOT NULL,
-                    Availability TEXT NOT NULL,
-                    discounts TEXT NOT NULL,
-                    manager_id INTEGER,
-                    FOREIGN KEY (manager_id) REFERENCES users (id)
+CREATE TABLE IF NOT EXISTS restaurants (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        location TEXT NOT NULL,
+                        phone_number TEXT NOT NULL,
+                        type TEXT NOT NULL,
+                        Kosher TEXT NOT NULL,
+                        order_table TEXT NOT NULL,
+                        Availability TEXT NOT NULL,
+                        discounts TEXT NOT NULL,
+                        manager_ids INTEGER,
+                        FOREIGN KEY (manager_ids) REFERENCES users (id)
 );
 
 
