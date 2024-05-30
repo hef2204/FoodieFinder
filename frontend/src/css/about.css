@@ -41,12 +41,14 @@ h1 {
 }
 
 /* Link container */
-.link-container {
+.AboutLink-container {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 }
 
 /* Links */
-.link-container a {
+.AboutLink-container a {
     color: #007bff;
     text-decoration: none;
     margin-right: 20px;

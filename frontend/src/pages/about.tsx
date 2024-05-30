@@ -17,7 +17,7 @@ const About = () => {
             Download the app today and start exploring the best dining options in your area!"
             </p>
             <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
-            <div className="link-container1">
+            <div className="AboutLink-container">
             {!isLoggedIn && (
                 <>
                     <Link to="/pages/login">Login</Link>
