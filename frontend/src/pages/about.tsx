@@ -1,10 +1,9 @@
-
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../css/about.css';
-
 
 const About = () => {
     const isLoggedIn = localStorage.getItem('token');
+    const navigate = useNavigate();
     return (
         <div>
             <h1>About US</h1>
@@ -20,13 +19,11 @@ const About = () => {
             <div className="AboutLink-container">
             {!isLoggedIn && (
                 <>
-                    <Link to="/pages/login">Login</Link>
-                    <Link to="/pages/register">Register</Link>
+                    <button onClick={() => navigate("/pages/login")}>Login</button>
+                    <button onClick={() => navigate("/pages/register")}>Register</button>
                 </>
             )}
-        </div>
-
-
+            </div>
         </div>
     );
 };

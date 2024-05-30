@@ -58,3 +58,6 @@ h1 {
 .link-container a:hover {
     text-decoration: underline;
 }
+.AboutLink-container button {
+    margin: 0 10px; /* Adjust this value to your liking */
+}
