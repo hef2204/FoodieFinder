@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "../css/login.css";
 
 export type LoginProps = {
@@ -98,7 +98,6 @@ const Login: React.FC = () => {
 
     return (
         <div className="login-container">
-            <Link className="about-link" to="/pages/about">About</Link>
             <h1>Login</h1>
             <form onSubmit={handleSubmit}>
                 {error && <div className="error-message">{error}</div>}

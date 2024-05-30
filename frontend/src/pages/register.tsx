@@ -71,44 +71,15 @@ const Register: React.FC = () => {
         <div>
             <h1>Register</h1>
             <form onSubmit={handleRegister}>
-                <label>Username:</label>
-                <input 
-                    type="text" 
-                    value={username} 
-                    onChange={e => setUsername(e.target.value)} 
-                    placeholder='Username' 
-                />
-                <label>Password:</label>
-                <input 
-                    type="password" 
-                    value={password} 
-                    onChange={e => setPassword(e.target.value)} 
-                    placeholder='Password' 
-                />
-                <label>Email:</label>
-                <input 
-                    type="email" 
-                    value={email} 
-                    onChange={e => {
+                <input type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder='Username' />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder='Password' />
+                <input type="email" value={email} onChange={e => {
                         setEmail(e.target.value);
                         setErrorMessage(''); // Clear the error message when email input changes
                     }} 
-                    placeholder='Email' 
-                />
-                <label>Full Name:</label>
-                <input 
-                    type="text" 
-                    value={fullName} 
-                    onChange={e => setFullName(e.target.value)} 
-                    placeholder='Full Name' 
-                />
-                <label>Phone Number:</label>
-                <input 
-                    type="text" 
-                    value={phone_number} 
-                    onChange={e => setPhoneNumber(e.target.value)} 
-                    placeholder='Phone Number'
-                />
+                    placeholder='Email'  />
+                <input type="text" value={fullName} onChange={e => setFullName(e.target.value)} placeholder='Full Name'/>
+                <input type="text" value={phone_number} onChange={e => setPhoneNumber(e.target.value)} placeholder='Phone Number'/>
                 <button type="submit">Register</button>
             </form>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

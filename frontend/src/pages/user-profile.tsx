@@ -6,8 +6,8 @@ interface User {
     name: string;
     email: string;
     username: string;
-    first_name: string;
-    last_name: string;
+    full_name: string;
+    
 }
 
 const UserProfile: React.FC = () => {
@@ -41,9 +41,7 @@ const UserProfile: React.FC = () => {
            <h1>User Profile</h1>
             <p>Username: {user.username}</p>
             <p>Email: {user.email}</p>
-            <p>First Name: {user.first_name}</p>
-            <p>Last Name: {user.last_name}</p>
-             {/* Add more profile information here */}
+            <p>Full Name: {user.full_name}</p>
          
             <button className='LogOut' onClick={() => {
             localStorage.clear();

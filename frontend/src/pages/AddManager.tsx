@@ -44,7 +44,7 @@ class AddManager extends React.Component {
     
     render() {
         return (
-            <div className="container">
+            <div className="AddManagerContainer" >
                 <div className="form">
                     <h1>Add Manager</h1>
                     <input className="input-field" name="username" value={this.state.username} onChange={this.handleChange} placeholder="Username" />

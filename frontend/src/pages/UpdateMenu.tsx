@@ -79,9 +79,9 @@ const UpdateMenu: React.FC = () => {
     }
 
     return (
-        <div className='update-Menu'>
+        <div className='update-MenuContainer'>
             <h1>Add Menu Item</h1>
-            <p>Restaurant: {restaurant.name}</p>
+            <h2>Restaurant: {restaurant.name}</h2>
             <form className='product-form' onSubmit={handleAddMenuItem}>
                 <label>Product Name:</label>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} />

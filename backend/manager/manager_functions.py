@@ -161,7 +161,13 @@ def manager_reservations():
 
     # Fetch reservations for the manager's restaurant
     reservations = db.execute(
-        "SELECT * FROM reservations WHERE restaurant_id = ?", (restaurant_id,)
+        """
+        SELECT r.id, r.date, r.time, r.number_of_people, u.full_name, u.phone_number 
+        FROM reservations r
+        JOIN users u ON r.user_id = u.id
+        WHERE r.restaurant_id = ?
+        """, 
+        (restaurant_id,)
     ).fetchall()
 
     reservations_list = []
@@ -170,7 +176,9 @@ def manager_reservations():
             'id': reservation['id'],
             'date': reservation['date'],
             'time': reservation['time'],
-            'numberOfPeople': reservation['number_of_people']
+            'numberOfPeople': reservation['number_of_people'],
+            'full_name': reservation['full_name'],
+            'phone_number': reservation['phone_number']
         })
 
     return jsonify({"reservations": reservations_list}), 200
