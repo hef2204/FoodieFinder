@@ -47,7 +47,7 @@ class addRestaurant:
     order_table: str
     Availability: str
     discounts: str
-    manager_id: str
+    manager_ids: str
 
 
 @dataclass

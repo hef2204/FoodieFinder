@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS users (
                         email TEXT UNIQUE NOT NULL,
                         full_name TEXT,
                         role TEXT NOT NULL CHECK (role IN ('user', 'manager', 'admin')),
-                        phone_number INTEGER NOT NULL
+                        phone_number TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS restaurants (

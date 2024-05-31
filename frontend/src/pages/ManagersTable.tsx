@@ -45,32 +45,29 @@ const ManagersTable = () => {
         .catch(error => console.error('Error:', error));
     }, [token]);
 
-    const deleteManager = (username: string) => {
-        fetch(`http://localhost:5000/admin/manage_managers`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username })
-        })
-        .then(response => {
+    const deleteManager = async (username: string) => {
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch('http://localhost:5000/admin/manage_managers', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ username })
+            });
+    
             if (!response.ok) {
-                throw new Error('Failed to delete manager');
+                const errorData = await response.json();
+                console.error('Error:', errorData.message);
+            } else {
+                const data = await response.json();
+                console.log('Success:', data.message);
             }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.message === 'Unauthorized') {
-                console.error('Unauthorized request');
-                return;
-            }
-            if (data.message === 'Manager deleted successfully') {
-                setManager(prevManager => prevManager.filter(m => m.username !== username));
-            }
-        }) 
-        .catch(error => console.error('Error:', error));
-    }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
 
 

@@ -15,7 +15,7 @@ instance/
 migrations/
 
 # SQLite database files
-*.db
+# *.db
 *.sqlite3
 
 # Node.js

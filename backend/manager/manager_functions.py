@@ -1,8 +1,9 @@
-from flask import make_response, Blueprint, request, jsonify
+from flask import make_response, Blueprint, request, jsonify, current_app
 from db import get_db, close_db
 from models import Restaurant, Manager, Menu, RestaurantUpdate, addRestaurant
 manager_functions = Blueprint("manager_functions", __name__)
 from flask_jwt_extended import jwt_required, get_jwt_identity
+
 
 
 @manager_functions.route("/manager/add_manager", methods=["POST"])
@@ -23,8 +24,8 @@ def add_manager():
             return jsonify({"message": "Missing required fields"}), 400
         
         # Verify the current manager is associated with a restaurant
-        current_manager_restaurant = db.execute("SELECT * FROM restaurants WHERE manager_id = ?", 
-                                                (current_user['id'],)).fetchone()
+        current_manager_restaurant = db.execute("SELECT * FROM restaurants WHERE manager_ids LIKE ?", 
+                                                ('%' + str(current_user['id']) + '%',)).fetchone()
         if not current_manager_restaurant:
             return jsonify({"message": "Adding manager is not associated with any restaurant"}), 401
 
@@ -55,13 +56,17 @@ def add_manager():
                  new_manager_data['email'], new_manager_data['phone_number'], new_manager_data['role'])
             )
             new_manager_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+            # Update the manager_ids in the restaurants table
+            manager_ids = current_manager_restaurant['manager_ids']
+            if manager_ids:
+                updated_manager_ids = f"{manager_ids},{new_manager_id}"
+            else:
+                updated_manager_ids = str(new_manager_id)
             
-            # Associate the new manager with the same restaurant
             db.execute(
-                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (current_manager_restaurant['name'], current_manager_restaurant['location'], current_manager_restaurant['phone_number'], 
-                 current_manager_restaurant['type'], current_manager_restaurant['Kosher'], current_manager_restaurant['order_table'], 
-                 current_manager_restaurant['Availability'], current_manager_restaurant['discounts'], new_manager_id)
+                "UPDATE restaurants SET manager_ids = ? WHERE id = ?",
+                (updated_manager_ids, current_manager_restaurant['id'])
             )
             db.commit()
             close_db()
@@ -70,6 +75,61 @@ def add_manager():
             return jsonify({"message": str(e)}), 500
     else:
         return jsonify({"message": "Invalid request"}), 400
+
+
+@manager_functions.route("/manager/add_restaurant", methods=["POST"])
+@jwt_required()
+def add_another_restaurant_by_manager():
+    current_user = get_jwt_identity()
+    user_role = current_user.get('role')
+    user_id = current_user.get('id')
+    
+    if user_role != "manager":
+        return jsonify({"message": "Unauthorized"}), 401
+
+    db = get_db()
+    if request.json is not None:
+        required_fields = ['name', 'location', 'phone_number', 'type', 'Kosher', 'order_table', 'Availability', 'discounts']
+        
+        current_app.logger.debug(f"Request JSON: {request.json}")
+
+        missing_fields = [field for field in required_fields if not request.json.get(field)]
+        if missing_fields:
+            current_app.logger.debug(f"Missing required fields: {missing_fields}")
+            return jsonify({"message": "Missing required fields", "missing_fields": missing_fields}), 400
+        
+        restaurant_data = {key: request.json[key] for key in required_fields}
+        
+        # Ensure manager_ids is a string and format it correctly
+        manager_ids = request.json.get('manager_ids', '')
+        if isinstance(manager_ids, list):
+            manager_ids = ','.join(map(str, manager_ids))
+        if manager_ids:
+            manager_ids += f",{user_id}"
+        else:
+            manager_ids = str(user_id)
+        restaurant_data['manager_ids'] = manager_ids
+        
+        try:
+            restaurant = addRestaurant(**restaurant_data)
+            current_app.logger.debug(f"Restaurant Data: {restaurant.__dict__}")
+            
+            db.execute(
+                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, restaurant.manager_ids)
+            )
+            db.commit()
+            close_db()
+            
+            return jsonify({"message": "Restaurant added successfully"})
+        except TypeError as e:
+            current_app.logger.error(f"TypeError: {str(e)}")
+            return jsonify({"message": f"Invalid data: {str(e)}"}), 400
+    else:
+        current_app.logger.debug("Invalid request: No JSON data received")
+        return jsonify({"message": "Invalid request"}), 400
+
+
 
 
 
@@ -93,22 +153,7 @@ def delete_menu():
 
 
 ####done 
-@manager_functions.route("/manager/add_restaurant", methods=["POST"])
-def add_another_restaurant_by_manager():
-    db = get_db()
-    if request.json is not None:
-        restaurant = addRestaurant(**request.json)
-        print(restaurant.__dict__)
-        manager_id = restaurant.manager_id 
-        db.execute(
-            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, manager_id)  # Use the manager_id variable
-        )
-        db.commit()
-        close_db()
-        return jsonify({"message": "Restaurant added successfully"})
-    else:
-        return jsonify({"message": "Invalid request"})
+
     
 ############################################# Done
 @manager_functions.route('/manager/restaurant_page/<int:restaurant_id>/update_restaurant', methods=["PUT"])
@@ -169,7 +214,7 @@ def profile_page():
     if not manager:
         return jsonify({"message": "Manager not found"}), 404
 
-    restaurants = db.execute("SELECT * FROM restaurants WHERE manager_id=?", (current_user['id'],)).fetchall()
+    restaurants = db.execute("SELECT * FROM restaurants WHERE manager_ids LIKE ?", ('%' + str(current_user['id']) + '%',)).fetchall()
     close_db()
     response_data = {
         "manager": dict(manager),
@@ -191,10 +236,10 @@ def manager_reservations():
         return jsonify({"message": "Unauthorized"}), 401
 
     db = get_db()
-    manager_id = current_user['id']
+    manager_ids = current_user['id']
 
     # Fetch restaurant ID associated with the manager
-    restaurant = db.execute("SELECT id FROM restaurants WHERE manager_id = ?", (manager_id,)).fetchone()
+    restaurant = db.execute("SELECT id FROM restaurants WHERE manager_ids = ?", (manager_ids,)).fetchone()
     if restaurant is None:
         return jsonify({"message": "Manager is not associated with any restaurant"}), 404
 

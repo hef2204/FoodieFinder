@@ -50,7 +50,7 @@ def login():
         user = dict(user)
         
         if user['role'] == 'manager':
-            restaurant = db.execute("SELECT id, name FROM restaurants WHERE manager_id = ?", (user['id'],)).fetchone()
+            restaurant = db.execute("SELECT id, name FROM restaurants WHERE manager_ids LIKE ?", ('%' + str(user['id']) + '%',)).fetchone()
             if restaurant:
                 user['restaurantId'] = restaurant['id']
                 user['restaurantName'] = restaurant['name']
@@ -65,51 +65,38 @@ def login():
 
 @app.route('/register', methods=["POST"])
 def register():
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    email = data.get('email')
+    full_name = data.get('full_name')
+    phone_number = data.get('phone_number')
+
+    if not username or not password or not email or not full_name or not phone_number:
+        return jsonify({"message": "Missing required fields"}), 400
+
     db = get_db()
-    data = request.get_json() or {}
-    logging.debug(f"Received data: {data}")
-
-    username = data.get("username")
-    password = data.get("password")
-    email = data.get("email")
-    full_name = data.get("full_name")
-    phone_number = data.get("phone_number")
-
-    if not username or not password or not email or not full_name:
-        logging.error("Missing data")
-        return jsonify({"message": "Missing data"}), 400
-
-    try:
-        # Check if the username already exists
-        existing_user = db.execute(
-            "SELECT * FROM users WHERE username = ?", (username,)
-        ).fetchone()
-        if existing_user:
-            logging.error("Username already taken")
+    existing_user = db.execute("SELECT * FROM users WHERE username = ? OR email = ?", (username, email)).fetchone()
+    if existing_user:
+        if existing_user['username'] == username:
             return jsonify({"message": "Username already taken"}), 409
-
-        # Check if the email already exists
-        existing_email = db.execute(
-            "SELECT * FROM users WHERE email = ?", (email,)
-        ).fetchone()
-        if existing_email:
-            logging.error("Email already taken")
+        if existing_user['email'] == email:
             return jsonify({"message": "Email already taken"}), 410
 
-        # Insert the new user
-        db.execute(
-            "INSERT INTO users (username, password, email, full_name, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
-            (username, password, email, full_name, phone_number, "user")
-        )
-        db.commit()
-        logging.info("User registered successfully")
-    except Exception as e:
-        logging.error(f"Error during registration: {str(e)}")
-        return jsonify({"message": str(e)}), 500
-    finally:
-        close_db()
+    db.execute("INSERT INTO users (username, password, email, full_name, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
+               (username, password, email, full_name, phone_number, 'user'))
+    db.commit()
 
-    return jsonify({"message": "User registered successfully"}), 201
+    user = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    access_token = create_access_token(identity={"id": user['id'], "username": user['username'], "role": user['role']})
+    
+    return jsonify({
+        'token': access_token,
+        'user_id': user['id'],
+        'username': user['username'],
+        'role': user['role']
+    }), 201
+
 
 @app.route('/homepage')
 def home():
@@ -228,6 +215,8 @@ def user_profile(user_id):
         )
         db.commit()
         user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
         return jsonify({"user": dict(user)})
     
     return jsonify({"error": "Method not allowed"}), 405

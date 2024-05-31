@@ -124,18 +124,18 @@ def add_manager_and_restaurant():
             (manager['username'], manager['full_name'], manager['password'], manager['email'], manager['phone_number'])
         )
         db.commit()
-        manager_id = cursor.lastrowid
+        manager_ids = cursor.lastrowid
 
         # Add restaurant
         cursor.execute(
-            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (restaurant['name'], restaurant['location'], restaurant['phone_number'], restaurant['type'], restaurant['Kosher'], restaurant['order_table'], restaurant['Availability'], restaurant['discounts'], manager_id)
+            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (restaurant['name'], restaurant['location'], restaurant['phone_number'], restaurant['type'], restaurant['Kosher'], restaurant['order_table'], restaurant['Availability'], restaurant['discounts'], manager_ids)
         )
         db.commit()
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
-    return jsonify({"message": "Manager and restaurant added successfully", "managerId": manager_id})
+    return jsonify({"message": "Manager and restaurant added successfully", "managerId": manager_ids})
 
 
     
@@ -188,9 +188,10 @@ def manage_managers():
         return jsonify({"managers": [dict(manager) for manager in managers]}), 200
     
     elif request.method == 'DELETE':
-        if request.json is None:
+        data = request.get_json()
+        if not data:
             return jsonify({"message": "No JSON data provided"}), 400
-        username = request.json.get('username')
+        username = data.get('username')
         if not username:
             return jsonify({"message": "Username not provided"}), 400
         manager = db.execute("SELECT * FROM users WHERE username=? AND role='manager'", (username,)).fetchone()
@@ -199,7 +200,7 @@ def manage_managers():
 
         # Delete manager's restaurants
         manager_id = manager['id']
-        db.execute("DELETE FROM restaurants WHERE manager_id = ?", (manager_id,))
+        db.execute("DELETE FROM restaurants WHERE manager_ids = ?", (manager_id,))
         
         # Delete manager
         db.execute("DELETE FROM users WHERE username=? AND role='manager'", (username,))
