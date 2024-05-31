@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ReservationPage: React.FC = () => {
     const [formData, setFormData] = useState({
-        user_id: localStorage.getItem('userId') || "", 
+        user_id: localStorage.getItem('user_id') || "", 
         date: '',
         time: '',
         number_of_people: '',

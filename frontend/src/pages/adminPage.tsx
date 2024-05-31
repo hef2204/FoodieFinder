@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
@@ -16,7 +15,7 @@ function AdminPage() {
                 fetch('http://127.0.0.1:5000/admin/adminPage', {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}` 
+                        'Authorization': `Bearer ${token}`
                     }
                 })
                 .then(response => {
@@ -61,29 +60,24 @@ function AdminPage() {
         <div>
             <h1>Admin Page</h1>
             <nav>
-            <ul className='navbar1'>
-                
-                <li className="dropdown">
-                    <span className="active-linkAdmin">Menu</span>
-                    <div className="dropdown-content">
-                        <NavLink to="/pages/users">Manage Users</NavLink>
-                        <NavLink to="/pages/ManagersTable">Manage managers</NavLink>
-                        <NavLink to="/pages/restaurantPage">restaurants</NavLink>
-                        <NavLink to="/pages/add_manager_restaurant">Add Manager and Restaurant</NavLink>
-                        <NavLink to="/pages/AddAdmin">Add Admin</NavLink>
-                       
+                <ul className='navbar1'>
+                    <li className="dropdown">
+                        <span className="active-linkAdmin">Menu</span>
+                        <div className="dropdown-content">
+                            <NavLink to="/pages/users">Manage Users</NavLink>
+                            <NavLink to="/pages/ManagersTable">Manage managers</NavLink>
+                            <NavLink to="/pages/restaurantPage">restaurants</NavLink>
+                            <NavLink to="/pages/add_manager_restaurant">Add Manager and Restaurant</NavLink>
+                            <NavLink to="/pages/AddAdmin">Add Admin</NavLink>
+                        </div>
+                    </li>
+                    <div>
+                        <button className="LogoutAdmin" onClick={() => {localStorage.clear(); window.location.href = '/';}}>Logout</button>
                     </div>
-                </li>
-                <div>
-                <button className="LogoutAdmin" onClick={() => {localStorage.clear(); window.location.href = '/';}}>Logout</button>
-                </div>
-            </ul>
+                </ul>
             </nav>
         </div>
     );
 }
-
-
-
 
 export default AdminPage;

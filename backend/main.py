@@ -188,7 +188,6 @@ def restaurant_page(restaurant_id):
             "restaurant": dict(restaurant),
             "menu": [dict(item) for item in menu]
         }
-        print(response)
         return jsonify(response)
     else:
         return jsonify({"message": "Restaurant not found"}), 404
@@ -226,6 +225,7 @@ def user_profile(user_id):
 def reservation(restaurant_id):
     db = get_db()
     data = request.get_json()
+    print(data)
     db.execute(
         "INSERT INTO reservations (restaurant_id, restaurant_name, user_id, date, time, number_of_people) VALUES (?, ?, ?, ?, ?, ?)",
         (restaurant_id, data['restaurant_name']  ,data['user_id'], data['date'], data['time'], data['number_of_people'])

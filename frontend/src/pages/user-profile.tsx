@@ -10,7 +10,7 @@ interface User {
 }
 
 const UserProfile: React.FC = () => {
-    const userId = localStorage.getItem('user_id');
+    const user_id = localStorage.getItem('user_id');
     const [user, setUser] = useState<User | null>(null);
     const [editMode, setEditMode] = useState(false);
     const [name, setName] = useState('');
@@ -18,8 +18,8 @@ const UserProfile: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (userId) {
-            fetch(`http://localhost:5000/user_profile/${userId}`)
+        if (user_id) {
+            fetch(`http://localhost:5000/user_profile/${user_id}`)
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.error) {
@@ -34,31 +34,31 @@ const UserProfile: React.FC = () => {
                     console.error(error);
                 });
         }
-    }, [userId]);
+    }, [user_id]);
 
-    const handleSave = () => {
-        if (userId) {
-            fetch(`http://localhost:5000/user_profile/${userId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, email })
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.error) {
-                        console.error(data.error);
-                    } else {
-                        setUser(data.user);
-                        setEditMode(false);
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
-    };
+    // const handleSave = () => {
+    //     if (userId) {
+    //         fetch(`http://localhost:5000/user_profile/${userId}`, {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify({ name, email })
+    //         })
+    //             .then((response) => response.json())
+    //             .then((data) => {
+    //                 if (data.error) {
+    //                     console.error(data.error);
+    //                 } else {
+    //                     setUser(data.user);
+    //                     setEditMode(false);
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error);
+    //             });
+    //     }
+    // };
 
     if (!user) {
         return <div>Loading...</div>;
@@ -85,7 +85,7 @@ const UserProfile: React.FC = () => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </label>
-                    <button onClick={handleSave}>Save</button>
+                    {/* <button onClick={handleSave}>Save</button> */}
                     <button onClick={() => setEditMode(false)}>Cancel</button>
                 </div>
             ) : (

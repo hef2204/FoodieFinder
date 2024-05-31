@@ -1,14 +1,26 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
 
-// UserContext to store the user's role
-const UserContext = createContext<{ 
-  user: { username: string, role: string } | null, 
-  setUser: React.Dispatch<React.SetStateAction<{ username: string, role: string } | null>> | null,
-  loading: boolean | null
-}>({ user: null, setUser: null, loading: null });
+interface User {
+  username: string;
+  role: string;
+}
+
+interface UserContextType {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  loading: boolean;
+}
+
+// Create context with default values
+const UserContext = createContext<UserContextType>({
+  user: null,
+  setUser: () => null,
+  loading: true,
+});
+
 // UserProvider component to provide the user's role to its children
-export function UserProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<{ username: string, role: string } | null>(null);
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,9 +38,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       {children}
     </UserContext.Provider>
   );
-}
+};
 
-//useUser hook to access the user's role
-export function useUser() {
+// Custom hook to access the user's role
+export const useUser = () => {
   return useContext(UserContext);
-}
+};
+
+
+
+

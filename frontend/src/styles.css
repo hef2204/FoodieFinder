@@ -1,61 +1,97 @@
-/* styles.css */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-image: url('https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg');
-    background-size: cover;
-    color: #333;
+import React, { createContext, useState, useContext, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+
+interface User {
+  username: string;
+  role: string;
 }
 
-.container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
+interface UserContextType {
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  loading: boolean;
 }
 
-h1, h2, h3 {
-    color: #444;
-}
+// Create context with default values
+const UserContext = createContext<UserContextType>({
+  user: null,
+  setUser: () => null,
+  loading: true,
+});
 
-button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
+// UserProvider component to provide the user's role to its children
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-button:hover {
-    background-color: #0056b3;
-}
+  useEffect(() => {
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
 
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.form-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .container {
-        width: 100%;
-        padding: 10px;
+    if (username && role) {
+      setUser({ username, role });
     }
+    setLoading(false);
+  }, []);
 
-    input, select, button {
-        width: 100%;
-    }
-}
+  return (
+    <UserContext.Provider value={{ user, setUser, loading }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+// Custom hook to access the user's role
+export const useUser = () => {
+  return useContext(UserContext);
+};
+
+
+
+
+
+// import React, { createContext, useState, useContext, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+
+// interface User {
+//   username: string;
+//   role: string;
+// }
+
+// interface UserContextType {
+//   user: User | null;
+//   setUser: Dispatch<SetStateAction<User | null>>;
+//   loading: boolean;
+// }
+
+// // Create context with default values
+// const UserContext = createContext<UserContextType>({
+//   user: null,
+//   setUser: () => null,
+//   loading: true,
+// });
+
+// // UserProvider component to provide the user's role to its children
+// export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+//   const [user, setUser] = useState<User | null>(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const username = localStorage.getItem('username');
+//     const role = localStorage.getItem('role');
+
+//     if (username && role) {
+//       setUser({ username, role });
+//     }
+//     setLoading(false);
+//   }, []);
+
+//   return (
+//     <UserContext.Provider value={{ user, setUser, loading }}>
+//       {children}
+//     </UserContext.Provider>
+//   );
+// };
+
+// // Custom hook to access the user's role
+// export const useUser = () => {
+//   return useContext(UserContext);
+// };

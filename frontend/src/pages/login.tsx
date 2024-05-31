@@ -64,7 +64,7 @@ const Login: React.FC = () => {
                         }
                     } else if (data.user.role === 'user') {
                         navigate('/');
-                        localStorage.setItem('userId', data.user.id);
+                        localStorage.setItem('user_id', data.user.id);
                         localStorage.setItem('role', data.user.role);
                         localStorage.setItem('username', data.user.username);
                         localStorage.setItem('token', token);
@@ -72,7 +72,7 @@ const Login: React.FC = () => {
                         
                     } else if (data.user.role === 'admin') {
                         if (data.user.id) {
-                            localStorage.setItem('userId', data.user.id);
+                            localStorage.setItem('user_id', data.user.id);
                             localStorage.setItem('role', data.user.role);
                             localStorage.setItem('username', data.user.username);
                             localStorage.setItem('token', token);

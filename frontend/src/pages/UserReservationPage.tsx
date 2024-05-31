@@ -12,16 +12,16 @@ interface Reservation {
 const UserReservationPage: React.FC = () => {
     const [reservations, setReservations] = useState<Reservation[]>([]);
     const [message, setMessage] = useState<string>('');
-    const userId = localStorage.getItem('userId');
+    const user_id = localStorage.getItem('user_id');
 
     useEffect(() => {
         fetchUserReservations();
-    }, [userId]);
+    }, [user_id]);
 
     const fetchUserReservations = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/user_profile/${userId}/reservations`, {
+            const response = await fetch(`http://localhost:5000/user_profile/${user_id}/reservations`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -41,7 +41,7 @@ const UserReservationPage: React.FC = () => {
     const deleteReservation = async (reservationId: number) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`http://localhost:5000/user_profile/${userId}/reservations/${reservationId}`, {
+            const response = await fetch(`http://localhost:5000/user_profile/${user_id}/reservations/${reservationId}`, {
                 method: 'DELETE',
                 headers: {
                     Authorization: `Bearer ${token}`
