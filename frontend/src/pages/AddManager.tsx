@@ -24,13 +24,27 @@ class AddManager extends React.Component<Record<string, never>, State> {
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        this.setState({ [name]: value } as unknown as Pick<State, keyof State>);
+        // Prevent spaces in the password field
+        if (name === 'password' && value.includes(' ')) {
+            this.setState({ error: 'Password cannot contain spaces' });
+        } else {
+            this.setState({ [name]: value, error: null } as Pick<State, keyof State>);
+        }
     };
 
     validateFields = () => {
         const { username, full_name, password, email, phone_number } = this.state;
-        if (!username || !full_name || !password || !email || !phone_number ) {
+        if (!username || !full_name || !password || !email || !phone_number) {
             this.setState({ error: 'All fields are required' });
+            return false;
+        }
+        if (password.includes(' ')) {
+            this.setState({ error: 'Password cannot contain spaces' });
+            return false;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            this.setState({ error: 'Invalid email format' });
             return false;
         }
         return true;
@@ -66,6 +80,7 @@ class AddManager extends React.Component<Record<string, never>, State> {
             if (!response.ok) {
                 const data = await response.json();
                 this.setState({ error: data.message });
+                window.alert('Failed to add manager: ' + data.message); // Display failure message
             } else {
                 this.setState({
                     username: '',
@@ -76,10 +91,12 @@ class AddManager extends React.Component<Record<string, never>, State> {
                     restaurantId: '',
                     error: null,
                 });
+                window.alert('Manager added successfully!'); // Display success message
             }
         } catch (error) {
             console.error('Error:', error);
             this.setState({ error: 'An error occurred' });
+            window.alert('An error occurred while adding the manager'); // Display error message
         }
     };
 

@@ -105,7 +105,7 @@ const UserProfile: React.FC = () => {
                 navigate("/pages/UserReservationPage")
             }}>Reservations</button>
             <button className='back' onClick={() => {
-                navigate(-1)
+                navigate('/')
             }}>Back</button>
         </div>
     );

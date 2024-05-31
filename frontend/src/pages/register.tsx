@@ -17,7 +17,7 @@ const Register: React.FC = () => {
     };
 
     const validatePassword = (password: string) => {
-        return password.length >= 6;
+        return password.length >= 6 && !password.includes(' ');
     };
 
     const validatePhoneNumber = (phoneNumber: string) => {
@@ -42,7 +42,7 @@ const Register: React.FC = () => {
         }
 
         if (!validatePassword(password)) {
-            setErrorMessage('Password must be at least 6 characters long');
+            setErrorMessage('Password must be at least 6 characters long and cannot contain spaces');
             return;
         }
 
