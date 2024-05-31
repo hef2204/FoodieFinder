@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
+import '../css/ReservationPage.css'; // Import the CSS
 
 const ReservationPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -23,8 +22,26 @@ const ReservationPage: React.FC = () => {
         }));
     };
 
+    const isDateInPast = (date: string) => {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to 00:00 to compare only the date part
+        return selectedDate < today;
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if (isDateInPast(formData.date)) {
+            setMessage('Selected date is in the past. Please choose a valid date.');
+            return;
+        }
+
+        if (parseInt(formData.number_of_people) <= 0) {
+            setMessage('Number of people cannot be 0.');
+            return;
+        }
+
         try {
             const response = await fetch(`http://localhost:5000/restaurant_page/${restaurantId}/reservation`, {
                 method: 'POST',
@@ -37,24 +54,23 @@ const ReservationPage: React.FC = () => {
                 const data = await response.json();
                 setMessage(data.message);
                 navigate('/restaurant/' + restaurantId);
-
             } else {
                 setMessage('Failed to add reservation');
             }
         } catch (error) {
             console.error('Error:', error);
             setMessage('An error occurred');
-            
         }
     };
+
     if (!restaurantId) {
         return <div>Error: Restaurant ID not found</div>;
     }
 
     return (
-        <div className='reservations'>
+        <div className='restaurant-reservations'>
             <h2>Make a Reservation</h2>
-            <form onSubmit={handleSubmit}>
+            <form  onSubmit={handleSubmit}>
                 <label>Date:</label>
                 <input type="date" name="date" value={formData.date} onChange={handleChange} required />
                 <br />
@@ -66,6 +82,9 @@ const ReservationPage: React.FC = () => {
                 <br />
                 <button type="submit">Submit</button>
             </form>
+            <div className="back-to-restaurant"> 
+                <button onClick={() => navigate('/restaurant/' + restaurantId)}>Back to Restaurant</button>
+            </div>
             {message && <p>{message}</p>}
         </div>
     );

@@ -33,18 +33,39 @@ class AddManager extends React.Component<Record<string, never>, State> {
     };
 
     validateFields = () => {
-        const { username, full_name, password, email, phone_number } = this.state;
-        if (!username || !full_name || !password || !email || !phone_number) {
-            this.setState({ error: 'All fields are required' });
+        const { username, full_name, password, email, phone_number, restaurantId } = this.state;
+
+        if (!username) {
+            this.setState({ error: 'Username is required' });
+            return false;
+        }
+        if (!full_name) {
+            this.setState({ error: 'Full name is required' });
+            return false;
+        }
+        if (!password) {
+            this.setState({ error: 'Password is required' });
             return false;
         }
         if (password.includes(' ')) {
             this.setState({ error: 'Password cannot contain spaces' });
             return false;
         }
+        if (!email) {
+            this.setState({ error: 'Email is required' });
+            return false;
+        }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             this.setState({ error: 'Invalid email format' });
+            return false;
+        }
+        if (!phone_number) {
+            this.setState({ error: 'Phone number is required' });
+            return false;
+        }
+        if (!restaurantId) {
+            this.setState({ error: 'Restaurant ID is required' });
             return false;
         }
         return true;
@@ -111,7 +132,7 @@ class AddManager extends React.Component<Record<string, never>, State> {
                     <label>FullName: <span className="required">*</span></label>
                     <input className="input-field" name="full_name" value={full_name} onChange={this.handleChange} placeholder="Full Name" />
                     <label>Password: <span className="required">*</span></label>
-                    <input className="input-field" name="password" value={password} onChange={this.handleChange} placeholder="Password" />
+                    <input className="input-field" type='password' name="password" value={password} onChange={this.handleChange} placeholder="Password" />
                     <label>Email: <span className="required">*</span></label>
                     <input className="input-field" name="email" value={email} onChange={this.handleChange} placeholder="Email" />
                     <label>Phone Number: <span className="required">*</span></label>
