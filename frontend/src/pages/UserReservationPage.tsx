@@ -87,7 +87,8 @@ const UserReservationPage: React.FC = () => {
                     ))}
                 </tbody>
             </table>
-            <button onClick={() => window.history.back()}>Go Back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 };

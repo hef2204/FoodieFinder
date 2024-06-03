@@ -16,12 +16,19 @@ const AddRestaurant = () => {
     });
     const [error, setError] = useState('');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
+        if (name === 'phone_number') {
+            if (!/^\d*$/.test(value)) {
+                setError('Phone number must contain only digits');
+                return;
+            }
+        }
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
+        setError('');
     };
 
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -89,13 +96,13 @@ const AddRestaurant = () => {
                 <h1>Add Restaurant</h1>
                 {error && <p className="error-message">{error}</p>}
                 <label>Restaurant Name: <span className="required">*</span> </label>
-                <input className="input-field" name="name" value={formData.name} onChange={handleChange} placeholder="Restaurant Name" />
+                <input className="input-field" name="name" value={formData.name} onChange={handleInputChange} placeholder="Restaurant Name" />
                 <label>Location: <span className="required">*</span> </label>
-                <input className="input-field" name="location" value={formData.location} onChange={handleChange} placeholder="Location" />
+                <input className="input-field" name="location" value={formData.location} onChange={handleInputChange} placeholder="Location" />
                 <label>Phone Number: <span className="required">*</span> </label>
-                <input className="input-field" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number" />
+                <input className="input-field" name="phone_number" value={formData.phone_number} onChange={handleInputChange} placeholder="Phone Number" pattern="\d*" />
                 <label>Type: <span className="required">*</span> </label>
-                <input className="input-field" name="type" value={formData.type} onChange={handleChange} placeholder="Type" />
+                <input className="input-field" name="type" value={formData.type} onChange={handleInputChange} placeholder="Type" />
                 <label>Kosher: <span className="required">*</span> </label>
                 <select className="input-field" name="Kosher" value={formData.Kosher} onChange={handleSelectChange}>
                     <option value="">Select</option>
@@ -103,11 +110,15 @@ const AddRestaurant = () => {
                     <option value="No">No</option>
                 </select>
                 <label>Order Table: <span className="required">*</span> </label>
-                <input className="input-field" name="order_table" value={formData.order_table} onChange={handleChange} placeholder="Order Table" />
+                <select className="input-field" name="order_table" value={formData.order_table} onChange={handleSelectChange}>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>  
+                </select>
                 <label>Availability: <span className="required">*</span> </label>
-                <input className="input-field" name="Availability" value={formData.Availability} onChange={handleChange} placeholder="Availability" />
+                <input className="input-field" name="Availability" value={formData.Availability} onChange={handleInputChange} placeholder="Availability" />
                 <label>Discounts: <span className="required">*</span> </label>
-                <input className="input-field" name="discounts" value={formData.discounts} onChange={handleChange} placeholder="Discounts" />
+                <input className="input-field" name="discounts" value={formData.discounts} onChange={handleInputChange} placeholder="Discounts" />
                 <button className="button" onClick={addRestaurant}>Add Restaurant</button>
             </div>
             <button className="back-button" onClick={() => window.history.back()}>Back</button>

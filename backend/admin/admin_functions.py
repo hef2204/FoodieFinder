@@ -61,18 +61,20 @@ def add_admin():
             'full_name': admin_data['full_name'],
             'password': admin_data['password'],
             'email': admin_data['email'],
+            'phone_number': admin_data['phone_number'],
+            "role": "admin"
         }
 
         # Check if an admin with the same username already exists
-        existing_admin = db.execute("SELECT * FROM admin WHERE username = ?", (new_admin_data['username'],)).fetchone()
+        existing_admin = db.execute("SELECT * FROM users WHERE username = ?", (new_admin_data['username'],)).fetchone()
 
         if existing_admin:
             # If an admin with the same username already exists, return an error message
             return jsonify({"message": "Admin already exists"}), 400
 
         db.execute(
-            "INSERT INTO admin (username, full_name, password, email) VALUES (?, ?, ?, ?)",
-            (new_admin_data['username'], new_admin_data['full_name'], new_admin_data['password'], new_admin_data['email'])
+            "INSERT INTO users (username, full_name, password, email, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
+            (new_admin_data['username'], new_admin_data['full_name'], new_admin_data['password'], new_admin_data['email'], new_admin_data['phone_number'], new_admin_data['role'])
         )
         db.commit()
         close_db()
@@ -128,8 +130,8 @@ def add_manager_and_restaurant():
 
         # Add restaurant
         cursor.execute(
-            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (restaurant['name'], restaurant['location'], restaurant['phone_number'], restaurant['type'], restaurant['Kosher'], restaurant['order_table'], restaurant['Availability'], restaurant['discounts'], manager_ids)
+            "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, opening_time, closing_time, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (restaurant['name'], restaurant['location'], restaurant['phone_number'], restaurant['type'], restaurant['Kosher'], restaurant['order_table'], restaurant['opening_time'], restaurant['closing_time'], restaurant['discounts'], manager_ids)
         )
         db.commit()
     except Exception as e:

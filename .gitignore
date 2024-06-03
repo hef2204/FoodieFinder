@@ -16,7 +16,7 @@ migrations/
 
 # SQLite database files
 # *.db
-*.sqlite3
+# *.sqlite3
 
 # Node.js
 node_modules/

@@ -164,7 +164,8 @@ const Register: React.FC = () => {
                 <button type="submit">Register</button>
             </form>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-            <button className='back-button' onClick={() => navigate('/')}>Back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 };

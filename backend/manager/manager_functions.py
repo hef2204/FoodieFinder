@@ -89,7 +89,7 @@ def add_another_restaurant_by_manager():
 
     db = get_db()
     if request.json is not None:
-        required_fields = ['name', 'location', 'phone_number', 'type', 'Kosher', 'order_table', 'Availability', 'discounts']
+        required_fields = ['name', 'location', 'phone_number', 'type', 'Kosher', 'order_table', 'opening_time', 'closing_time', 'discounts']
         
         current_app.logger.debug(f"Request JSON: {request.json}")
 
@@ -115,8 +115,8 @@ def add_another_restaurant_by_manager():
             current_app.logger.debug(f"Restaurant Data: {restaurant.__dict__}")
             
             db.execute(
-                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, Availability, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant.discounts, restaurant.manager_ids)
+                "INSERT INTO restaurants (name, location, phone_number, type, Kosher, order_table, opening_time, closing_time, discounts, manager_ids) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.opening_time, restaurant.closing_time, restaurant.discounts, restaurant.manager_ids)
             )
             db.commit()
             close_db()
@@ -164,8 +164,8 @@ def update_restaurant(restaurant_id):
         restaurant = RestaurantUpdate(**request.json)
         
         db.execute(
-            "UPDATE restaurants SET name=?, location=?, phone_number=?, type=?, Kosher=?, order_table=?, Availability=? WHERE id=?",
-            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.Availability, restaurant_id)
+            "UPDATE restaurants SET name=?, location=?, phone_number=?, type=?, Kosher=?, order_table=?, opening_time=?, closing_time WHERE id=?",
+            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.opening_time, restaurant.opening_time, restaurant_id)
         )
         db.commit()
         db.execute(

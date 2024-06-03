@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS restaurants (
                         type TEXT NOT NULL,
                         Kosher TEXT NOT NULL,
                         order_table TEXT NOT NULL,
-                        Availability TEXT NOT NULL,
+                        opening_time TEXT NOT NULL,
+                        closing_time TEXT NOT NULL,
                         discounts TEXT NOT NULL,
                         manager_ids INTEGER,
                         FOREIGN KEY (manager_ids) REFERENCES users (id)

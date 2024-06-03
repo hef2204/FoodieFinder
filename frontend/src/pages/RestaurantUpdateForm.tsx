@@ -107,7 +107,8 @@ const UpdateRestaurantPage = () => {
                     <input type="text" value={restaurant.Availability} onChange={e => setRestaurant({...restaurant, Availability: e.target.value})} />
                 <button type="submit">Update</button>
             </form>
-        
+
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
         </div>
     
     );

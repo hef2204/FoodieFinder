@@ -1,12 +1,13 @@
 import React from 'react';
-import '../css/AddManager.css';
+import '../css/AddManager.css'; 
+
 
 interface State {
     username: string;
     full_name: string;
     password: string;
     email: string;
-    phone_number: string;
+    phone_number: string; // Keep this as string for input handling
     restaurantId: string;
     error: string | null;
 }
@@ -22,18 +23,22 @@ class AddManager extends React.Component<Record<string, never>, State> {
         error: null,
     };
 
+    
+
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        // Prevent spaces in the password field
+    
         if (name === 'password' && value.includes(' ')) {
             this.setState({ error: 'Password cannot contain spaces' });
+        } else if (name === 'phone_number' && !/^\d+$/.test(value)) {
+            this.setState({ error: 'Phone number must contain only numbers' });
         } else {
             this.setState({ [name]: value, error: null } as Pick<State, keyof State>);
         }
     };
 
     validateFields = () => {
-        const { username, full_name, password, email, phone_number, restaurantId } = this.state;
+        const { username, full_name, password, email, phone_number } = this.state;
 
         if (!username) {
             this.setState({ error: 'Username is required' });
@@ -64,11 +69,17 @@ class AddManager extends React.Component<Record<string, never>, State> {
             this.setState({ error: 'Phone number is required' });
             return false;
         }
-        if (!restaurantId) {
-            this.setState({ error: 'Restaurant ID is required' });
+        if (isNaN(Number(phone_number))) {
+            this.setState({ error: 'Phone number must be a valid number' });
+            return false;
+        }
+        if (phone_number.length < 7 || phone_number.length > 10) {
+            this.setState({ error: 'Phone number must be between 7 and 10 digits' });
             return false;
         }
         return true;
+
+        
     };
 
     addManager = async () => {
@@ -76,7 +87,7 @@ class AddManager extends React.Component<Record<string, never>, State> {
             return;
         }
 
-        const { username, full_name, password, email, phone_number, restaurantId } = this.state;
+        const { username, full_name, password, email, phone_number } = this.state;
 
         const managerData = {
             username,
@@ -84,7 +95,6 @@ class AddManager extends React.Component<Record<string, never>, State> {
             password,
             email,
             phone_number,
-            restaurantId
         };
 
         const token = localStorage.getItem('token');
@@ -109,10 +119,10 @@ class AddManager extends React.Component<Record<string, never>, State> {
                     password: '',
                     email: '',
                     phone_number: '',
-                    restaurantId: '',
                     error: null,
                 });
-                window.alert('Manager added successfully!'); // Display success message
+                window.alert('Manager added successfully!');
+                
             }
         } catch (error) {
             console.error('Error:', error);

@@ -77,6 +77,8 @@ const ManagerPage: React.FC = () => {
                     navigate('/');
                 }}>Logout</button>
             </div>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 }

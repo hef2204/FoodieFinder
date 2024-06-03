@@ -130,7 +130,8 @@ const RestaurantDetailPage = () => {
             </table>
                     
                 
-            <button className='back-button' onClick={() => navigate(-1)}>Back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 }

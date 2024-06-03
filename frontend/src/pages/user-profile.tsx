@@ -104,9 +104,8 @@ const UserProfile: React.FC = () => {
             <button className='reservation' onClick={() => {
                 navigate("/pages/UserReservationPage")
             }}>Reservations</button>
-            <button className='back' onClick={() => {
-                navigate('/')
-            }}>Back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 };

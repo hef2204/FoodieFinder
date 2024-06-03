@@ -47,7 +47,7 @@ function AdminPage() {
             <div>
                 <h1>Unauthorized</h1>
                 <p>You do not have permission to view this page.</p>
-                <button className="button" onClick={() => {navigate(-1)}}>back</button>
+                <button className='back-button' onClick={() => window.history.back()}>Back</button>
             </div>
         );
     }

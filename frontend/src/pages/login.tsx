@@ -105,7 +105,8 @@ const Login: React.FC = () => {
                 <input type="password" placeholder="Password" value={password} onChange={handlePasswordChange} />
                 <button type="submit">Login</button>
             </form>
-            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 };

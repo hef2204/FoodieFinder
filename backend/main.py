@@ -106,23 +106,23 @@ def home():
 
 
 
-@app.route('/restaurants', methods=["GET", "DELETE"])
+@app.route('/restaurants', methods=["GET"])
 def get_restaurants():
     filters = {}
 
     location = request.args.get('location')
     if location:
-        filters['location'] = location
+        filters['location'] = location.lower()  # Convert to lowercase
 
     type_of_food = request.args.get('type')
     if type_of_food:
-        filters['type'] = type_of_food
+        filters['type'] = type_of_food.lower()  # Convert to lowercase
 
     # Building the SQL query dynamically
     query = "SELECT * FROM restaurants WHERE 1=1"
     params = []
     for key, value in filters.items():
-        query += f" AND {key} = ?"
+        query += f" AND LOWER({key}) = ?"
         params.append(value)
 
     # Executing the query

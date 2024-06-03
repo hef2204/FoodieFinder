@@ -15,7 +15,7 @@ const About = () => {
             whether it's a casual lunch, a romantic dinner, or a special celebration.
             Download the app today and start exploring the best dining options in your area!"
             </p>
-            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
             <div className="AboutLink-container">
             {!isLoggedIn && (
                 <>

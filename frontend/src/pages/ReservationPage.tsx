@@ -34,11 +34,13 @@ const ReservationPage: React.FC = () => {
 
         if (isDateInPast(formData.date)) {
             setMessage('Selected date is in the past. Please choose a valid date.');
+            window.alert('Selected date is in the past. Please choose a valid date.');
             return;
         }
 
         if (parseInt(formData.number_of_people) <= 0) {
             setMessage('Number of people cannot be 0.');
+            window.alert('Number of people cannot be 0.');
             return;
         }
 
@@ -53,13 +55,16 @@ const ReservationPage: React.FC = () => {
             if (response.ok) {
                 const data = await response.json();
                 setMessage(data.message);
+                window.alert('Reservation added successfully!');
                 navigate('/restaurant/' + restaurantId);
             } else {
                 setMessage('Failed to add reservation');
+                window.alert('Failed to add reservation');
             }
         } catch (error) {
             console.error('Error:', error);
             setMessage('An error occurred');
+            window.alert('An error occurred while adding the reservation');
         }
     };
 
@@ -70,7 +75,7 @@ const ReservationPage: React.FC = () => {
     return (
         <div className='restaurant-reservations'>
             <h2>Make a Reservation</h2>
-            <form  onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
                 <label>Date:</label>
                 <input type="date" name="date" value={formData.date} onChange={handleChange} required />
                 <br />

@@ -32,7 +32,8 @@ class Restaurant:
     type: Optional[str] = None
     Kosher: Optional[str] = None
     order_table: Optional[str] = None
-    Availability: Optional[str] = None
+    opening_time: Optional[str] = None
+    closing_time: Optional[str] = None
     discounts: Optional[str] = None
     manager_id: Optional[str] = None
 
@@ -45,7 +46,8 @@ class addRestaurant:
     type: str
     Kosher: str
     order_table: str
-    Availability: str
+    opening_time: str
+    closing_time: str
     discounts: str
     manager_ids: str
 
@@ -59,7 +61,8 @@ class RestaurantUpdate:
     type: str
     Kosher: str
     order_table: str
-    Availability: str
+    opening_time: str
+    closing_time: str
 
 
 @dataclass
@@ -74,6 +77,10 @@ class Admin:
     full_name: str
     password: str
     email: str
+    phone_number: str
+    role: str = "admin"
+    
+
 
 
 class AdminActions:
