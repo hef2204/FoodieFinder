@@ -1,6 +1,5 @@
-import React from 'react';
-import '../css/AddManager.css'; 
-
+import React, { useState, useEffect } from 'react';
+import '../css/AddManager.css';
 
 interface State {
     username: string;
@@ -12,8 +11,13 @@ interface State {
     error: string | null;
 }
 
-class AddManager extends React.Component<Record<string, never>, State> {
-    state: State = {
+interface Restaurant {
+    id: string;
+    name: string;
+}
+
+const AddManager: React.FC = () => {
+    const [state, setState] = useState<State>({
         username: '',
         full_name: '',
         password: '',
@@ -21,139 +25,156 @@ class AddManager extends React.Component<Record<string, never>, State> {
         phone_number: '',
         restaurantId: '',
         error: null,
-    };
+    });
+    const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
-    
+    useEffect(() => {
+        console.log("Fetching restaurants...");
+        fetch('http://127.0.0.1:5000/admin/get_restaurants', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Restaurants fetched:", data);
+            setRestaurants(data);
+        })
+        .catch(error => console.error('Error fetching restaurants:', error));
+    }, []);
 
-    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-    
         if (name === 'password' && value.includes(' ')) {
-            this.setState({ error: 'Password cannot contain spaces' });
+            setState({ ...state, error: 'Password cannot contain spaces' });
         } else if (name === 'phone_number' && !/^\d+$/.test(value)) {
-            this.setState({ error: 'Phone number must contain only numbers' });
+            setState({ ...state, error: 'Phone number must contain only numbers' });
         } else {
-            this.setState({ [name]: value, error: null } as Pick<State, keyof State>);
+            setState({ ...state, [name]: value, error: null });
         }
     };
 
-    validateFields = () => {
-        const { username, full_name, password, email, phone_number } = this.state;
+    const handleRestaurantChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setState({ ...state, restaurantId: event.target.value });
+    };
 
+    const validateFields = () => {
+        const { username, full_name, password, email, phone_number, restaurantId } = state;
         if (!username) {
-            this.setState({ error: 'Username is required' });
+            setState({ ...state, error: 'Username is required' });
             return false;
         }
         if (!full_name) {
-            this.setState({ error: 'Full name is required' });
+            setState({ ...state, error: 'Full name is required' });
             return false;
         }
         if (!password) {
-            this.setState({ error: 'Password is required' });
+            setState({ ...state, error: 'Password is required' });
             return false;
         }
         if (password.includes(' ')) {
-            this.setState({ error: 'Password cannot contain spaces' });
+            setState({ ...state, error: 'Password cannot contain spaces' });
+            return false;
+        }
+        if (password.length < 6) {
+            setState({ ...state, error: 'Password must be at least 6 characters long' });
             return false;
         }
         if (!email) {
-            this.setState({ error: 'Email is required' });
+            setState({ ...state, error: 'Email is required' });
             return false;
         }
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
-            this.setState({ error: 'Invalid email format' });
+            setState({ ...state, error: 'Invalid email format' });
             return false;
         }
         if (!phone_number) {
-            this.setState({ error: 'Phone number is required' });
+            setState({ ...state, error: 'Phone number is required' });
             return false;
         }
-        if (isNaN(Number(phone_number))) {
-            this.setState({ error: 'Phone number must be a valid number' });
-            return false;
-        }
-        if (phone_number.length < 7 || phone_number.length > 10) {
-            this.setState({ error: 'Phone number must be between 7 and 10 digits' });
+        if (!restaurantId) {
+            setState({ ...state, error: 'Restaurant selection is required' });
             return false;
         }
         return true;
-
-        
     };
 
-    addManager = async () => {
-        if (!this.validateFields()) {
-            return;
-        }
+    const addManager = async () => {
+        if (!validateFields()) return;
 
-        const { username, full_name, password, email, phone_number } = this.state;
+        const { username, full_name, password, email, phone_number, restaurantId } = state;
+        const managerData = { username, full_name, password, email, phone_number, restaurant_ids: [restaurantId] };
 
-        const managerData = {
-            username,
-            full_name,
-            password,
-            email,
-            phone_number,
-        };
-
-        const token = localStorage.getItem('token');
         try {
-            const response = await fetch('http://127.0.0.1:5000/manager/add_manager', {
+            const response = await fetch('http://127.0.0.1:5000/admin/add_manager', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(managerData),
             });
 
-            if (!response.ok) {
-                const data = await response.json();
-                this.setState({ error: data.message });
-                window.alert('Failed to add manager: ' + data.message); // Display failure message
-            } else {
-                this.setState({
+            if (response.ok) {
+                setState({
                     username: '',
                     full_name: '',
                     password: '',
                     email: '',
                     phone_number: '',
+                    restaurantId: '',
                     error: null,
                 });
-                window.alert('Manager added successfully!');
-                
+                window.alert('Manager added successfully');
+            } else {
+                const errorData = await response.json();
+                setState({ ...state, error: errorData.message });
+                window.alert('Failed to add manager: ' + errorData.message);
             }
         } catch (error) {
             console.error('Error:', error);
-            this.setState({ error: 'An error occurred' });
-            window.alert('An error occurred while adding the manager'); // Display error message
+            setState({ ...state, error: 'An error occurred' });
+            window.alert('An error occurred while adding the manager');
         }
     };
 
-    render() {
-        const { username, full_name, password, email, phone_number, error } = this.state;
-        return (
-            <div className="AddManagerContainer">
-                <div className="form">
-                    <h1>Add Manager</h1>
-                    <label>Username: <span className="required">*</span></label>
-                    <input className="input-field" name="username" value={username} onChange={this.handleChange} placeholder="Username" />
-                    <label>FullName: <span className="required">*</span></label>
-                    <input className="input-field" name="full_name" value={full_name} onChange={this.handleChange} placeholder="Full Name" />
-                    <label>Password: <span className="required">*</span></label>
-                    <input className="input-field" type='password' name="password" value={password} onChange={this.handleChange} placeholder="Password" />
-                    <label>Email: <span className="required">*</span></label>
-                    <input className="input-field" name="email" value={email} onChange={this.handleChange} placeholder="Email" />
-                    <label>Phone Number: <span className="required">*</span></label>
-                    <input className="input-field" name="phone_number" value={phone_number} onChange={this.handleChange} placeholder="Phone Number" />
-                    <button className="button" onClick={this.addManager}>Add Manager</button>
-                    {error && <p className="error-message">{error}</p>}
-                </div>
-                <button className='back-button' onClick={() => window.history.back()}>back</button>
+    const { username, full_name, password, email, phone_number, restaurantId, error } = state;
+
+    return (
+        <div className="AddManagerContainer">
+            <div className="form">
+                <h1>Add Manager</h1>
+                <label>Username: <span className="required">*</span></label>
+                <input className="input-field" name="username" value={username} onChange={handleChange} placeholder="Username" />
+                {error === 'Username is required' && <p className="error-message">{error}</p>}
+                <label>FullName: <span className="required">*</span></label>
+                <input className="input-field" name="full_name" value={full_name} onChange={handleChange} placeholder="Full Name" />
+                {error === 'Full name is required' && <p className="error-message">{error}</p>}
+                <label>Password: <span className="required">*</span></label>
+                <input className="input-field" type='password' name="password" value={password} onChange={handleChange} placeholder="Password" />
+                {error === 'Password is required' && <p className="error-message">{error}</p>}
+                {error === 'Password cannot contain spaces' && <p className="error-message">{error}</p>}
+                {error === 'Password must be at least 6 characters long' && <p className="error-message">{error}</p>}
+                <label>Email: <span className="required">*</span></label>
+                <input className="input-field" name="email" value={email} onChange={handleChange} placeholder="Email" />
+                {error === 'Email is required' && <p className="error-message">{error}</p>}
+                {error === 'Invalid email format' && <p className="error-message">{error}</p>}
+                <label>Phone Number: <span className="required">*</span></label>
+                <input className="input-field" name="phone_number" value={phone_number} onChange={handleChange} placeholder="Phone Number" />
+                {error === 'Phone number is required' && <p className="error-message">{error}</p>}
+                {error === 'Phone number must contain only numbers' && <p className="error-message">{error}</p>}
+                <label>Restaurant: <span className="required">*</span></label>
+                <select className="input-field" name="restaurant" value={restaurantId} onChange={handleRestaurantChange}>
+                    <option value="">Select a Restaurant</option>
+                    {restaurants.map(restaurant => (
+                        <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
+                    ))}
+                </select>
+                {error === 'Restaurant selection is required' && <p className="error-message">{error}</p>}
+                {error && <p className="error-message">{error}</p>}
+                <button className="button" onClick={addManager}>Add Manager</button>
+                
             </div>
-        );
-    }
-}
+            <button className='back-button' onClick={() => window.history.back()}>back</button>
+        </div>
+    );
+};
 
 export default AddManager;

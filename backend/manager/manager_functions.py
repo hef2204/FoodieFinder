@@ -160,19 +160,20 @@ def delete_menu():
 def update_restaurant(restaurant_id):
     db = get_db()
     if request.json is not None:
-        
         restaurant = RestaurantUpdate(**request.json)
         
         db.execute(
-            "UPDATE restaurants SET name=?, location=?, phone_number=?, type=?, Kosher=?, order_table=?, opening_time=?, closing_time WHERE id=?",
-            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.opening_time, restaurant.opening_time, restaurant_id)
+            "UPDATE restaurants SET name=?, location=?, phone_number=?, type=?, Kosher=?, order_table=?, opening_time=?, closing_time=? WHERE id=?",
+            (restaurant.name, restaurant.location, restaurant.phone_number, restaurant.type, restaurant.Kosher, restaurant.order_table, restaurant.opening_time, restaurant.closing_time, restaurant_id)
         )
         db.commit()
+        
         db.execute(
             "UPDATE reservations SET restaurant_name=? WHERE restaurant_id=?",
             (restaurant.name, restaurant_id)
         )
         db.commit()
+        
         close_db()
         return jsonify({"message": "Restaurant updated successfully"})
     else:

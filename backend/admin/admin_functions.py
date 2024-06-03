@@ -213,6 +213,71 @@ def manage_managers():
     return jsonify({"message": "Method not allowed"}), 405
 
 
+@admin_functions.route('/admin/get_restaurants', methods=['GET'])
+def get_restaurants():
+    db = get_db()
+    restaurants = db.execute("SELECT id, name FROM restaurants").fetchall()
+    close_db()
+    return jsonify([dict(row) for row in restaurants]), 200
+
+@admin_functions.route('/admin/add_manager', methods=['POST'])
+# @jwt_required()
+def add_manager():
+    db = get_db()
+
+    # current_user = get_jwt_identity()
+    # user_role = current_user['role']
+    # print(user_role)
+    # if user_role != 'admin':
+    #     return jsonify({"message": "Unauthorized"}), 401
+
+    manager_data = request.get_json()
+
+    # Extract restaurant IDs from manager_data
+    restaurant_ids = manager_data.get('restaurant_ids', [])
+    
+    # Check if username already exists
+    existing_user = db.execute("SELECT * FROM users WHERE username = ?", (manager_data['username'],)).fetchone()
+    if existing_user:
+        return jsonify({"message": "Username already taken"}), 409
+    
+    # Check if email already exists
+    existing_email = db.execute("SELECT * FROM users WHERE email = ?", (manager_data['email'],)).fetchone()
+    if existing_email:
+        return jsonify({"message": "Email already taken"}), 410
+
+    new_manager_data = {
+        'username': manager_data['username'],
+        'full_name': manager_data['full_name'],
+        'password': manager_data['password'],
+        'email': manager_data['email'],
+        'phone_number': manager_data['phone_number'],
+        'role': 'manager',
+    }
+
+    try:
+        # Add new manager to users table
+        db.execute(
+            "INSERT INTO users (username, full_name, password, email, phone_number, role) VALUES (?, ?, ?, ?, ?, ?)",
+            (new_manager_data['username'], new_manager_data['full_name'], new_manager_data['password'], 
+             new_manager_data['email'], new_manager_data['phone_number'], new_manager_data['role'])
+        )
+        new_manager_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
+        # Update the manager_ids in the restaurants table
+        for restaurant_id in restaurant_ids:
+            db.execute("UPDATE restaurants SET manager_ids = manager_ids || ',' || ? WHERE id = ?", 
+                       (new_manager_id, restaurant_id))
+        
+        db.commit()
+        close_db()
+        return jsonify({"message": "Manager added successfully"}), 201
+    except Exception as e:
+        db.rollback()
+        return jsonify({"message": "Internal server error"}), 500
+
+
+
 
 
 

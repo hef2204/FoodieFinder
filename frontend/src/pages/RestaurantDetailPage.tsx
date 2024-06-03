@@ -10,9 +10,9 @@ interface Restaurant {
     type: string;
     Kosher: string;
     order_table: string;
-    Availability: string;
+    opening_time: string;
+    closing_time: string;
     menu: Array<{ name: string, description: string, price: number }>;
-    manager_id: number;
 }
 
 interface MenuItem {
@@ -28,20 +28,22 @@ const RestaurantDetailPage = () => {
     const [userRole, setUserRole] = useState<string | null>(null);
     const [managerName, setManagerName] = useState<string | null>(null);
     const [managerId, setManagerId] = useState<number | null>(null);
+    const [managerIds, setManagerIds] = useState<number[]>([]);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
-    
 
     useEffect(() => {
         const role = localStorage.getItem('role');
-        setUserRole(role);
-        const managerId = Number(localStorage.getItem('userId'));  
-        setManagerId(managerId);
-    }, []);
-
-    useEffect(() => {
+        const managerId = Number(localStorage.getItem('userId'));
         const managerName = localStorage.getItem('managerName');
+        
+        setUserRole(role);
+        setManagerId(managerId);
         setManagerName(managerName);
+
+        console.log("User role:", role);
+        console.log("Manager ID from local storage:", managerId);
+        console.log("Manager name from local storage:", managerName);
     }, []);
 
     const handleUpdateRestaurant = () => {
@@ -54,7 +56,9 @@ const RestaurantDetailPage = () => {
             .then(data => {
                 setRestaurant(data.restaurant);
                 setMenu(data.menu);
-                console.log(data);
+                setManagerIds(data.manager_ids);
+                console.log("Fetched restaurant data:", data);
+                console.log("Parsed manager IDs:", data.manager_ids);
             })
             .catch(error => console.error('Error:', error));
     }, [id]);
@@ -63,7 +67,13 @@ const RestaurantDetailPage = () => {
         return <div>Loading...</div>;
     }
 
-    
+    console.log("Restaurant data:", restaurant);
+    console.log("Manager IDs in restaurant data:", managerIds);
+    console.log("User role:", userRole);
+    console.log("Manager ID from local storage:", managerId);
+
+    const isManagerOfRestaurant = managerIds.includes(managerId!);
+    console.log("isManagerOfRestaurant:", isManagerOfRestaurant);  // Debugging statement
 
     return (
         <div className="restaurant-detail1">
@@ -74,7 +84,7 @@ const RestaurantDetailPage = () => {
                         <button className='make-reservation' onClick={() => navigate(`/restaurant/${id}/reservation`)}>Make a Reservation</button>
                     </>
                 )}
-                {userRole === 'manager' && managerId === restaurant?.manager_id && (
+                {userRole === 'manager' && isManagerOfRestaurant && (
                     <>
                         <div className='updateRestaurant'>
                             <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
@@ -101,37 +111,34 @@ const RestaurantDetailPage = () => {
             </div>
             <div className='restaurant-detail2'>
                 <h1>{restaurant.name}</h1>
-                {userRole === 'manager' && managerId === restaurant?.manager_id && <h2>Welcome, {managerName}!</h2>}
+                {userRole === 'manager' && isManagerOfRestaurant && <h2>Welcome, {managerName}!</h2>}
                 <p>Location: {restaurant.location}</p>
                 <p>Phone Number: {restaurant.phone_number}</p>
                 <p>Type: {restaurant.type}</p>
                 <p>Kosher: {restaurant.Kosher ? 'Yes' : 'No'}</p>
                 <p>Order Table: {restaurant.order_table}</p>
-                <p>Availability: {restaurant.Availability}</p>
+                <p>Working Hours {restaurant.opening_time} - {restaurant.closing_time}</p>
             </div>
             <h2>Menu</h2>
             <table>
-                    <thead>
-                        <tr className='menu'>
-                            <th>name</th>
-                            <th>description</th>
-                            <th>price</th>
+                <thead>
+                    <tr className='menu'>
+                        <th>name</th>
+                        <th>description</th>
+                        <th>price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {menu.map((item) => (
+                        <tr key={item.name}>
+                            <td>{item.name}</td>
+                            <td>{item.description}</td>
+                            <td>{item.price}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {menu.map((item) => (
-                            <tr key={item.name}>
-                                <td>{item.name}</td>
-                                <td>{item.description}</td>
-                                <td>{item.price}</td>
-                            </tr>
-                         ))}
-                    </tbody>
+                    ))}
+                </tbody>
             </table>
-                    
-                
             <button className='back-button' onClick={() => window.history.back()}>Back</button>
-
         </div>
     );
 }

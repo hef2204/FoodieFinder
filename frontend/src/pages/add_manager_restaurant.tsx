@@ -14,8 +14,8 @@ interface FormData {
     type: string;
     Kosher: string;
     order_table: string;
-    availability_start: string;
-    availability_end: string;
+    opening_time: string;
+    closing_time: string;
     discounts: string;
 }
 
@@ -31,11 +31,12 @@ interface Errors {
     type: string;
     Kosher: string;
     order_table: string;
-    availability: string;
+    opening_time: string;
+    closing_time: string;
     discounts: string;
 }
 
-const AddManagerAndRestaurant = () => {
+const AddManagerAndRestaurant: React.FC = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         username: '',
@@ -49,43 +50,19 @@ const AddManagerAndRestaurant = () => {
         type: '',
         Kosher: '',
         order_table: '',
-        availability_start: '',
-        availability_end: '',
+        opening_time: '',
+        closing_time: '',
         discounts: ''
     });
 
-    const [errors, setErrors] = useState<Partial<Errors>>({
-        username: '',
-        full_name: '',
-        password: '',
-        email: '',
-        phone_number: '',
-        name: '',
-        location: '',
-        phone_number_restaurant: '',
-        type: '',
-        Kosher: '',
-        order_table: '',
-        availability: '',
-        discounts: ''
-    });
+    const [errors, setErrors] = useState<Partial<Errors>>({});
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
-
-        if (name === 'availability_start' || name === 'availability_end') {
-            setFormData(prevState => ({
-                ...prevState,
-                availability_start: name === 'availability_start' ? value : prevState.availability_start,
-                availability_end: name === 'availability_end' ? value : prevState.availability_end
-            }));
-        } else {
-            setFormData(prevState => ({
-                ...prevState,
-                [name]: value
-            }));
-        }
-
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
         validateField(name, value);
     };
 
@@ -103,10 +80,8 @@ const AddManagerAndRestaurant = () => {
             if (!phonePattern.test(value)) {
                 error = 'Phone number must be 10 digits';
             }
-        } else if (name === 'password') {
-            if (value.length < 6) {
-                error = 'Password must be at least 6 characters';
-            }
+        } else if (name === 'password' && value.length < 6) {
+            error = 'Password must be at least 6 characters';
         }
 
         setErrors(prevErrors => ({
@@ -132,10 +107,6 @@ const AddManagerAndRestaurant = () => {
                 }
             } else if (key === 'password' && value.length < 6) {
                 newErrors[key as keyof Errors] = 'Password must be at least 6 characters';
-            } else if (key === 'availability_start' || key === 'availability_end') {
-                if (!formData.availability_start || !formData.availability_end) {
-                    newErrors['availability'] = 'Availability times are required';
-                }
             }
         }
         setErrors(newErrors as Errors);
@@ -147,7 +118,7 @@ const AddManagerAndRestaurant = () => {
             return;
         }
 
-        const { username, full_name, password, email, phone_number, name, location, phone_number_restaurant, type, Kosher, order_table, availability_start, availability_end, discounts } = formData;
+        const { username, full_name, password, email, phone_number, name, location, phone_number_restaurant, type, Kosher, order_table, opening_time, closing_time, discounts } = formData;
 
         const manager = {
             username,
@@ -164,8 +135,8 @@ const AddManagerAndRestaurant = () => {
             type,
             Kosher,
             order_table,
-            availability_start,
-            availability_end,
+            opening_time,
+            closing_time,
             discounts
         };
 
@@ -192,7 +163,7 @@ const AddManagerAndRestaurant = () => {
             })
             .then(data => {
                 console.log(data);
-                navigate('/pages/adminPage'); 
+                navigate('/pages/adminPage');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -213,8 +184,8 @@ const AddManagerAndRestaurant = () => {
     };
 
     const isFormValid = () => {
-        return Object.values(errors).every(error => error === '') && 
-               Object.values(formData).every(value => value !== '');
+        return Object.values(errors).every(error => !error) &&
+            Object.values(formData).every(value => value !== '');
     };
 
     return (
@@ -266,13 +237,12 @@ const AddManagerAndRestaurant = () => {
                         <option value="No">No</option>
                     </select>
                     {errors.order_table && <p className="error-message">{errors.order_table}</p>}
-                    <label>Availability: <span className="required">*</span></label>
-                    <div className="availability-container">
-                        <input className="input-field time-field" name="availability_start" type="time" value={formData.availability_start} onChange={handleChange} />
-                        <span>to</span>
-                        <input className="input-field time-field" name="availability_end" type="time" value={formData.availability_end} onChange={handleChange} />
-                    </div>
-                    {errors.availability && <p className="error-message">{errors.availability}</p>}
+                    <label>Opening Time: <span className="required">*</span></label>
+                    <input className="input-field" name="opening_time" type="time" value={formData.opening_time} onChange={handleChange} />
+                    {errors.opening_time && <p className="error-message">{errors.opening_time}</p>}
+                    <label>Closing Time: <span className="required">*</span></label>
+                    <input className="input-field" name="closing_time" type="time" value={formData.closing_time} onChange={handleChange} />
+                    {errors.closing_time && <p className="error-message">{errors.closing_time}</p>}
                     <label>Discounts: <span className="required">*</span></label>
                     <input className="input-field" name="discounts" value={formData.discounts} onChange={handleChange} placeholder="Discounts" />
                     {errors.discounts && <p className="error-message">{errors.discounts}</p>}

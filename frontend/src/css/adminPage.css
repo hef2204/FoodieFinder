@@ -7,76 +7,142 @@ h1 {
     font-size: 2.5rem;
     color: green;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-
 /* Navbar */
-.navbar1 {
+.AdminNavbar {
+
+    padding: 10px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Navbar list */
+.AdminNavbar1 {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 /* Navbar items */
-.navbar1 li {
+.AdminNavbar1 li {
+    position: relative;
     margin-right: 20px;
 }
 
-/* Active link style */
-.active-linkAdmin {
+.AdminNavbar1 li:last-child {
+    margin-right: 0;
+}
+
+/* Link styles */
+.AdminNavbar1 a,
+.dropdown-toggle {
     background-color: white;
-    color: black;
-    border: none;
+    text-decoration: none;
+    color: #333;
     padding: 10px 20px;
     font-size: 1rem;
-    cursor: pointer;
     border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.AdminNavbar1 a:hover,
+.AdminNavbar1 a.active-linkAdmin,
+.dropdown-toggle:hover {
+    background-color: #007bff;
+    color: white;
 }
 
 /* Dropdown container */
-.dropdown {
+.AdminDropdown {
     position: relative;
 }
 
+.AdminDropdown .dropdown-toggle {
+    cursor: pointer;
+}
+
 /* Dropdown content */
-.dropdown-content {
-    display: none; /* Hide dropdown content by default */
-    flex-direction: row; /* Align items in a row */
+.AdminDropdown-content {
+    display: none;
     position: absolute;
     background-color: white;
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     z-index: 1;
-    top: 100%; /* Position dropdown below the navbar */
-    left: 0; /* Align dropdown with the left side of the navbar */
-    width: max-content; /* Adjust width to fit content */
-    max-height: 200px; /* Set a maximum height for the dropdown */
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    padding: 10px 0;
+    border-radius: 5px;
+    flex-direction: column;
 }
 
 /* Dropdown links */
-.dropdown-content a {
-    color: black;
-    padding: 12px 16px;
+.AdminDropdown-content a {
+    display: block;
+    padding: 10px 20px;
+    color: #333;
     text-decoration: none;
-    display: inline-block; /* Display items inline */
+    transition: background-color 0.3s ease;
+}
+
+.AdminDropdown-content a:hover {
+    background-color: #5e1919;
 }
 
 /* Show dropdown on hover */
-.dropdown:hover .dropdown-content {
-    display: flex; /* Show dropdown items horizontally on hover */
+.AdminDropdown:hover .AdminDropdown-content {
+    display: flex;
 }
 
 /* Logout button */
 .LogoutAdmin {
-    background-color: white;
-    color: black;
+    background-color: #dc3545;
+    color: white;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
     cursor: pointer;
     border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
+.LogoutAdmin:hover {
+    background-color: #c82333;
+}
 
+/* Responsive styling */
+@media (max-width: 768px) {
+    .AdminNavbar1 {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    .AdminNavbar1 li {
+        margin-bottom: 10px;
+    }
+
+    .AdminNavbar1 li:last-child {
+        margin-bottom: 0;
+    }
+
+    .AdminDropdown-content {
+        position: static;
+        box-shadow: none;
+    }
+
+    .AdminDropdown-content a {
+        padding: 10px;
+    }
+
+    .AdminDropdown:hover .AdminDropdown-content {
+        display: flex;
+    }
+}

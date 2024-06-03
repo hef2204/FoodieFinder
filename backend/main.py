@@ -180,17 +180,29 @@ def update_user():
 @app.route('/restaurant_page/<int:restaurant_id>', methods=["GET"])
 def restaurant_page(restaurant_id):
     db = get_db()
-    restaurant = db.execute("SELECT * FROM restaurants WHERE id=?", (restaurant_id,)).fetchone()
+    restaurant = db.execute("SELECT * FROM restaurants WHERE id = ?", (restaurant_id,)).fetchone()
     menu = db.execute("SELECT * FROM menu_items WHERE restaurant_id=?", (restaurant_id,)).fetchall()
     close_db()
-    if restaurant is not None:
-        response = {
-            "restaurant": dict(restaurant),
-            "menu": [dict(item) for item in menu]
-        }
-        return jsonify(response)
-    else:
+
+    if restaurant is None:
         return jsonify({"message": "Restaurant not found"}), 404
+    
+    manager_ids_raw = restaurant['manager_ids']
+    if isinstance(manager_ids_raw, int):
+        manager_ids = [manager_ids_raw]
+    elif isinstance(manager_ids_raw, str):
+        manager_ids = [int(id) for id in manager_ids_raw.split(',')]
+    else:
+        manager_ids = []
+
+    print("manager_ids_str:", manager_ids_raw)  # Debugging statement
+    print("manager_ids:", manager_ids)
+
+    return jsonify({
+        "restaurant": dict(restaurant),
+        "menu": [dict(item) for item in menu],
+        "manager_ids": manager_ids
+    })
     
 
 
