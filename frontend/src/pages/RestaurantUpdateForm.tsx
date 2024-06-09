@@ -21,6 +21,11 @@ const UpdateRestaurantPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (!id) {
+            setError('Invalid restaurant ID');
+            return;
+        }
+
         fetch(`http://localhost:5000/restaurant_page/${id}`)
             .then(response => {
                 if (!response.ok) {

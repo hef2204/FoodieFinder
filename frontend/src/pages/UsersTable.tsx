@@ -81,7 +81,11 @@ const UsersTable = () => {
                             <td>{user.email}</td>
                             <td>{user.phone_number}</td>
                             <td>
-                                <button onClick={() => handleDelete(user.username)}>
+                            <button onClick={() => {
+                                    if (window.confirm('Are you sure you want to delete this user?')) {
+                                        handleDelete(user.username);
+                                    }
+                                }}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>

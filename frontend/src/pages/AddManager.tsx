@@ -162,13 +162,12 @@ const AddManager: React.FC = () => {
                 {error === 'Phone number must contain only numbers' && <p className="error-message">{error}</p>}
                 <label>Restaurant: <span className="required">*</span></label>
                 <select className="input-field" name="restaurant" value={restaurantId} onChange={handleRestaurantChange}>
-                    <option value="">Select a Restaurant</option>
+                    <option value="" disabled selected>Select a Restaurant</option>
                     {restaurants.map(restaurant => (
                         <option key={restaurant.id} value={restaurant.id}>{restaurant.name}</option>
                     ))}
                 </select>
                 {error === 'Restaurant selection is required' && <p className="error-message">{error}</p>}
-                {error && <p className="error-message">{error}</p>}
                 <button className="button" onClick={addManager}>Add Manager</button>
                 
             </div>

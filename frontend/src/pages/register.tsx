@@ -95,12 +95,8 @@ const Register: React.FC = () => {
             const data = await response.json();
             console.log(data); // For debugging
 
-            // Automatically log in the user after successful registration
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user_id', data.user_id); // Store user_id in localStorage
-            localStorage.setItem('username', data.username);
-            localStorage.setItem('role', data.role);
-            navigate("/pages/user-profile"); // Navigate to the user profile page after login
+            // Redirect to the home page after successful registration
+            navigate('/');
         } catch (error) {
             console.error('Error:', error);
             setErrorMessage('An error occurred during registration');
@@ -165,7 +161,6 @@ const Register: React.FC = () => {
             </form>
             {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
             <button className='back-button' onClick={() => window.history.back()}>Back</button>
-
         </div>
     );
 };

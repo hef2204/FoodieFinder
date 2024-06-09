@@ -126,7 +126,7 @@ const UpdateRestaurantPage = () => {
                 <select
                     value={restaurant.Kosher}
                     onChange={e => setRestaurant({ ...restaurant, Kosher: e.target.value })}
-                >
+                >   <option value="" disabled selected>Select a Kosher</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
@@ -134,7 +134,7 @@ const UpdateRestaurantPage = () => {
                 <select
                     value={restaurant.order_table}
                     onChange={e => setRestaurant({ ...restaurant, order_table: e.target.value })}
-                >
+                >   <option value="" disabled selected>Select if Order Table</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>

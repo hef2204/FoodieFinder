@@ -36,29 +36,6 @@ const UserProfile: React.FC = () => {
         }
     }, [user_id]);
 
-    // const handleSave = () => {
-    //     if (userId) {
-    //         fetch(`http://localhost:5000/user_profile/${userId}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify({ name, email })
-    //         })
-    //             .then((response) => response.json())
-    //             .then((data) => {
-    //                 if (data.error) {
-    //                     console.error(data.error);
-    //                 } else {
-    //                     setUser(data.user);
-    //                     setEditMode(false);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 console.error(error);
-    //             });
-    //     }
-    // };
 
     if (!user) {
         return <div>Loading...</div>;

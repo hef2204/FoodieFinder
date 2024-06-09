@@ -225,14 +225,14 @@ const AddManagerAndRestaurant: React.FC = () => {
                     {errors.type && <p className="error-message">{errors.type}</p>}
                     <label>Kosher: <span className="required">*</span></label>
                     <select className="input-field" name="Kosher" value={formData.Kosher} onChange={handleChange}>
-                        <option value="">Kosher</option>
+                        <option value="" disabled selected>Select a Kosher</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
                     {errors.Kosher && <p className="error-message">{errors.Kosher}</p>}
                     <label>Order Table: <span className="required">*</span></label>
                     <select className="input-field" name="order_table" value={formData.order_table} onChange={handleChange}>
-                        <option value="">Order Table</option>
+                        <option value="" disabled selected>Select if Order Table</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>

@@ -25,6 +25,7 @@ const ManagerReservationPage: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setReservations(data.reservations);
+                    console.log(data);
                 } else {
                     setMessage('Failed to fetch reservations');
                 }

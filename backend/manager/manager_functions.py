@@ -231,13 +231,17 @@ def profile_page():
 @manager_functions.route('/manager/manager_reservations', methods=["GET"])
 @jwt_required()
 def manager_reservations():
+    print("manager_reservations route called")  # Add log
     current_user = get_jwt_identity()
     user_role = current_user['role']
+    print("User role:", user_role)  # Add log
+
     if user_role != "manager":
         return jsonify({"message": "Unauthorized"}), 401
 
     db = get_db()
     manager_ids = current_user['id']
+    print("Manager ID:", manager_ids)  # Add log
 
     # Fetch restaurant ID associated with the manager
     restaurant = db.execute("SELECT id FROM restaurants WHERE manager_ids = ?", (manager_ids,)).fetchone()
@@ -245,6 +249,7 @@ def manager_reservations():
         return jsonify({"message": "Manager is not associated with any restaurant"}), 404
 
     restaurant_id = restaurant['id']
+    print("Restaurant ID:", restaurant_id)  # Add log
 
     # Fetch reservations for the manager's restaurant
     reservations = db.execute(
@@ -268,6 +273,7 @@ def manager_reservations():
             'phone_number': reservation['phone_number']
         })
 
+    print("Reservations list:", reservations_list)  # Add log
     return jsonify({"reservations": reservations_list}), 200
 
 

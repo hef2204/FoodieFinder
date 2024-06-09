@@ -57,8 +57,7 @@ def login():
                 user['managerName'] = user['username']
 
         access_token = create_access_token(identity=user, expires_delta=timedelta(seconds=500000))
-        return jsonify({"message": "Login successful", "user": user, "access_token": access_token})
-
+        return jsonify({"message": "Login successful", "user": user, "user_id": user['id'], "access_token": access_token})
 
     return jsonify({"message": "Invalid credentials"}), 401
 

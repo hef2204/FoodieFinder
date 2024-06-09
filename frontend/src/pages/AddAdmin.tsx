@@ -4,7 +4,7 @@ import '../css/AddAdmin.css';
 
 const AddAdmin: React.FC = () => {
     const navigate = useNavigate();
-    const [errorMessage, setErrorMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<{ [key: string]: string }>({});
     const [formData, setFormData] = useState({
         username: '',
         full_name: '',
@@ -19,37 +19,39 @@ const AddAdmin: React.FC = () => {
             ...prevState,
             [name]: value
         }));
+        setErrorMessage(prevState => ({
+            ...prevState,
+            [name]: '' // Clear the error message for the current field
+        }));
     };
 
     const validateForm = () => {
         const { username, full_name, password, email, phone_number } = formData;
-        let error = '';
+        const errors: { [key: string]: string } = {};
 
-        if (!username) error = 'Username is required';
-        else if (!full_name) error = 'Full name is required';
-        else if (!password) error = 'Password is required';
-        else if (password.length < 6) error = 'Password must be at least 6 characters long';
-        else if (!email) error = 'Email is required';
+        if (!username) errors.username = 'Username is required';
+        if (!full_name) errors.full_name = 'Full name is required';
+        if (!password) errors.password = 'Password is required';
+        else if (password.length < 6) errors.password = 'Password must be at least 6 characters long';
+        if (!email) errors.email = 'Email is required';
         else {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) error = 'Invalid email format';
+            if (!emailPattern.test(email)) errors.email = 'Invalid email format';
         }
-        if (!phone_number) error = 'Phone number is required';
+        if (!phone_number) errors.phone_number = 'Phone number is required';
         else {
             const phonePattern = /^[0-9]{10}$/;
-            if (!phonePattern.test(phone_number)) error = 'Phone number must be 10 digits';
+            if (!phonePattern.test(phone_number)) errors.phone_number = 'Phone number must be 10 digits';
         }
 
-        if (error) {
-            setErrorMessage(error);
-            return false;
-        }
-        return true;
+        setErrorMessage(errors);
+
+        return Object.keys(errors).length === 0;
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMessage('');
+        setErrorMessage({});
 
         if (!validateForm()) return;
 
@@ -75,7 +77,7 @@ const AddAdmin: React.FC = () => {
         })
         .catch(error => {
             console.error('Error:', error);
-            setErrorMessage(error.message);
+            setErrorMessage({ form: error.message });
         });
     };
 
@@ -93,6 +95,7 @@ const AddAdmin: React.FC = () => {
                         placeholder="Username"
                         required
                     />
+                    {errorMessage.username && <p className="error-message">{errorMessage.username}</p>}
                 </label>
                 <label>
                     Full Name: <span className="required">*</span>
@@ -104,6 +107,7 @@ const AddAdmin: React.FC = () => {
                         placeholder="Full Name"
                         required
                     />
+                    {errorMessage.full_name && <p className="error-message">{errorMessage.full_name}</p>}
                 </label>
                 <label>
                     Password: <span className="required">*</span>
@@ -115,6 +119,7 @@ const AddAdmin: React.FC = () => {
                         placeholder="Password"
                         required
                     />
+                    {errorMessage.password && <p className="error-message">{errorMessage.password}</p>}
                 </label>
                 <label>
                     Email: <span className="required">*</span>
@@ -126,13 +131,22 @@ const AddAdmin: React.FC = () => {
                         placeholder="Email"
                         required
                     />
+                    {errorMessage.email && <p className="error-message">{errorMessage.email}</p>}
                 </label>
                 <label>
                     Phone Number: <span className="required">*</span>
-                    <input type="tel" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number"required/>
+                    <input
+                        type="tel"
+                        name="phone_number"
+                        value={formData.phone_number}
+                        onChange={handleChange}
+                        placeholder="Phone Number"
+                        required
+                    />
+                    {errorMessage.phone_number && <p className="error-message">{errorMessage.phone_number}</p>}
                 </label>
                 <button type="submit">Add Admin</button>
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                {errorMessage.form && <p className="error-message">{errorMessage.form}</p>}
             </form>
             <button className="back-button" onClick={() => window.history.back()}>Back</button>
         </div>

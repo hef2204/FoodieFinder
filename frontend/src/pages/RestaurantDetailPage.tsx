@@ -29,13 +29,16 @@ const RestaurantDetailPage = () => {
     const [managerName, setManagerName] = useState<string | null>(null);
     const [managerId, setManagerId] = useState<number | null>(null);
     const [managerIds, setManagerIds] = useState<number[]>([]);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
+    
 
     useEffect(() => {
         const role = localStorage.getItem('role');
-        const managerId = Number(localStorage.getItem('userId'));
+        const managerId = Number(localStorage.getItem('user_id'));
         const managerName = localStorage.getItem('managerName');
+        
         
         setUserRole(role);
         setManagerId(managerId);
@@ -47,7 +50,12 @@ const RestaurantDetailPage = () => {
     }, []);
 
     const handleUpdateRestaurant = () => {
+        const id = localStorage.getItem('restaurant_id');
         navigate(`/restaurant/${id}/update`);
+    };
+
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible);
     };
 
     useEffect(() => {
@@ -85,28 +93,21 @@ const RestaurantDetailPage = () => {
                     </>
                 )}
                 {userRole === 'manager' && isManagerOfRestaurant && (
-                    <>
-                        <div className='updateRestaurant'>
-                            <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
-                        </div>
-                        <div>
-                            <button onClick={() => {
-                                if (id) {
-                                    navigate(`/restaurant/${id}/menu`);
-                                } else {
-                                    console.error('Restaurant id is not defined');
-                                }
-                            }}>Add to Menu</button>
-                            <button onClick={() => {
-                                localStorage.clear();
-                                setUser(null);
-                                navigate("/");
-                            }}>Logout</button>
-                            <button className='reservation-button' onClick={() => 
-                                navigate(`/pages/ManagerReservationPage`)
-                            }>View Reservations</button>
-                        </div>
-                    </>
+                    <div className='manager-dropdown'>
+                        <button onClick={toggleDropdown}>Actions</button>
+                        {dropdownVisible && (
+                            <div className='dropdown-menu'>
+                                <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+                                <button onClick={() => navigate(`/restaurant/${id}/menu`)}>Add to Menu</button>
+                                <button onClick={() => {
+                                    localStorage.clear();
+                                    setUser(null);
+                                    navigate("/");
+                                }}>Logout</button>
+                                <button onClick={() => navigate(`/pages/ManagerReservationPage`)}>View Reservations</button>
+                            </div>
+                        )}
+                    </div>
                 )}
             </div>
             <div className='restaurant-detail2'>
@@ -138,7 +139,7 @@ const RestaurantDetailPage = () => {
                     ))}
                 </tbody>
             </table>
-            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+            <button className='back-button' onClick={() => navigate('/restaurants')}>Back to Restaurants</button>
         </div>
     );
 }

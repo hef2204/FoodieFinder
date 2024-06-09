@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../css/restaurantPage.css";
@@ -24,6 +24,7 @@ const RestaurantPage = () => {
     const [types, setTypes] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
     const userRole = localStorage.getItem('role');
+    const navigate = useNavigate();
     
 
     useEffect(() => {
@@ -190,6 +191,9 @@ const RestaurantPage = () => {
                 </tbody>
             </table>
             <button className='back-button' onClick={() => window.history.back()}>Back</button>
+            <div className="back-to-homepage">
+                <button onClick={() => navigate('/')}>Back to Homepage</button>
+            </div>
         </div>
     );
 };
