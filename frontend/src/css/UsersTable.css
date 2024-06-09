@@ -22,16 +22,9 @@ tr:nth-child {
     background-color: #f2f2f2;
 }
 
-th {
-    background-color: #4CAF50;
-    color: white;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
 td {
     font-size: 14px;
-    color: white; /* Add this line */
+    color: rgb(253, 137, 5); /* Add this line */
 }
 
 tr:hover {
@@ -62,4 +55,17 @@ tr:hover {
 .back-button-UserTable button:hover {
     background-color: white; /* White background */
     color: black; /* Black text */
+}
+
+.ManageUserHeader th {
+    background-color: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+} 
+.ManageManagerHeader th {
+    background-color: #4CAF50;
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
 }

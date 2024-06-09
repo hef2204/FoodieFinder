@@ -1,25 +1,38 @@
-/* Container for the update restaurant form */
-.handleUpdateRestaurant {
+/* Container for the update menu form */
+.update-Menu {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh; /* Full viewport height */
-    padding: 20px;
+    padding: 60px;
     background-color: rgba(0, 0, 0, 0.8); /* Dark background for readability */
     color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* Heading styles */
+.update-Menu h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #fff; /* White color for better readability */
+}
+
+/* Paragraph styles */
+.update-Menu p {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
 /* Form container styles */
-.handleUpdateRestaurant form {
+.product-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center; /* Center the form vertically */
     width: 100%;
-    max-width: 200px; /* Maximum width of the form */
+    max-width: 250px; /* Maximum width of the form */
     background-color: rgba(255, 255, 255, 0.9); /* Light background for the form */
     padding: 20px;
     border-radius: 10px;
@@ -27,17 +40,17 @@
 }
 
 /* Label styles */
-.handleUpdateRestaurant form label {
+.product-form label {
     width: 100%;
     margin-bottom: 5px;
     font-size: 1rem;
     color: #333; /* Dark color for labels */
-    text-align: center;
-    
+    text-align: left;
 }
 
 /* Input field styles */
-.handleUpdateRestaurant form input[type="text"] {
+.product-form input[type="text"],
+.product-form input[type="number"] {
     width: 80%; /* Adjust the width of the input fields */
     margin-bottom: 15px;
     padding: 10px;
@@ -48,7 +61,7 @@
 }
 
 /* Submit button styles */
-.handleUpdateRestaurant form button {
+.product-form input[type="submit"] {
     width: 80%; /* Adjust the width of the submit button */
     padding: 10px;
     background-color: #28a745;
@@ -61,6 +74,28 @@
 }
 
 /* Submit button hover effect */
-.handleUpdateRestaurant form button:hover {
+.product-form input[type="submit"]:hover {
     background-color: #218838;
+}
+
+/* Back button container styles */
+.back {
+    margin-top: 20px;
+}
+
+/* Back button styles */
+.back button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+/* Back button hover effect */
+.back button:hover {
+    background-color: #0056b3;
 }

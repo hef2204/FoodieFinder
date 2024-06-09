@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faTrash } from '@fortawesome/free-solid-svg-icons';
 import "../css/restaurantPage.css";
@@ -12,7 +12,8 @@ interface Restaurant {
     type: string;
     Kosher: string;
     order_table: string;
-    availability: string;
+    opening_time: string;
+    closing_time: string;
     discounts: string;
 }
 
@@ -23,6 +24,8 @@ const RestaurantPage = () => {
     const [types, setTypes] = useState<string[]>([]);
     const [locations, setLocations] = useState<string[]>([]);
     const userRole = localStorage.getItem('role');
+    const navigate = useNavigate();
+    
 
     useEffect(() => {
         const fetchRestaurantTypes = () => {
@@ -45,10 +48,17 @@ const RestaurantPage = () => {
 
     useEffect(() => {
         const fetchRestaurants = () => {
-            const url = `http://localhost:5000/restaurants?location=${filters.location}&type=${filters.type}`;
+            const url = `http://localhost:5000/restaurants?location=${filters.location.toLowerCase()}&type=${filters.type.toLowerCase()}`;
             fetch(url)
                 .then(response => response.json())
-                .then(data => setRestaurants(data.restaurants))
+                .then(data => {
+                    const normalizedRestaurants = data.restaurants.map((restaurant: Restaurant) => ({
+                        ...restaurant,
+                        location: restaurant.location.toLowerCase(),
+                        type: restaurant.type.toLowerCase()
+                    }));
+                    setRestaurants(normalizedRestaurants);
+                })
                 .catch(error => console.error('Error:', error));
         };
 
@@ -57,7 +67,7 @@ const RestaurantPage = () => {
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFilters(prevFilters => ({ ...prevFilters, [name]: value }));
+        setFilters(prevFilters => ({ ...prevFilters, [name]: value.toLowerCase() }));
     };
 
     const handleLinkClick = (id: number) => {
@@ -85,6 +95,7 @@ const RestaurantPage = () => {
     return (
         <div>
             <h1>Restaurants</h1>
+            <h2>in order to enter a restaurant, click on the restaurant</h2>
             <div className="filter-icon" onClick={() => setShowFilterOptions(!showFilterOptions)}>
                 <FontAwesomeIcon icon={faFilter} />
             </div>
@@ -93,13 +104,13 @@ const RestaurantPage = () => {
                     <select name="location" value={filters.location} onChange={handleFilterChange}>
                         <option value="">Filter by location</option>
                         {locations.map(location => (
-                            <option key={location} value={location}>{location}</option>
+                            <option key={location} value={location.toLowerCase()}>{location}</option>
                         ))}
                     </select>
                     <select name="type" value={filters.type} onChange={handleFilterChange}>
                         <option value="">Filter by type of food</option>
                         {types.map(type => (
-                            <option key={type} value={type}>{type}</option>
+                            <option key={type} value={type.toLowerCase()}>{type}</option>
                         ))}
                     </select>
                 </div>
@@ -107,11 +118,16 @@ const RestaurantPage = () => {
             
             <table>
                 <thead>
-                    <tr>
+                    <tr className='detail-of-restaurant'>
                         <th>Name</th>
                         <th>Location</th>
                         <th>Phone Number</th>
                         <th>Type</th>
+                        <th>Kosher</th>
+                        <th>Order Table</th>
+                        <th>opening_time</th>
+                        <th>closing_time</th>
+                        <th>Discounts</th>
                         {userRole === 'admin' && <th>Action</th>}
                     </tr>
                 </thead>
@@ -123,9 +139,46 @@ const RestaurantPage = () => {
                                     {restaurant.name}
                                 </Link>
                             </td>
-                            <td>{restaurant.location}</td>
-                            <td>{restaurant.phone_number}</td>
-                            <td>{restaurant.type}</td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.location}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.phone_number}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.type}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.Kosher}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.order_table}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.opening_time}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.closing_time}
+                                </Link>
+                            </td>
+                            <td>
+                                <Link to={`/restaurant/${restaurant.id}`} onClick={() => handleLinkClick(restaurant.id)}>
+                                    {restaurant.discounts}
+                                </Link>
+                            </td>
                             {userRole === 'admin' && (
                                 <td>
                                     <button onClick={() => handleRemoveRestaurant(restaurant.id, restaurant.name)}>
@@ -137,7 +190,10 @@ const RestaurantPage = () => {
                     ))}
                 </tbody>
             </table>
-            <button className="Back-button" onClick={() => window.history.back()}>Back</button>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+            <div className="back-to-homepage">
+                <button onClick={() => navigate('/')}>Back to Homepage</button>
+            </div>
         </div>
     );
 };

@@ -1,0 +1,76 @@
+.restaurant-reservations {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.restaurant-reservations h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.restaurant-reservations form.reservations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.restaurant-reservations label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.restaurant-reservations input[type="date"],
+.restaurant-reservations input[type="time"],
+.restaurant-reservations input[type="number"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.restaurant-reservations button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.restaurant-reservations button[type="submit"]:hover {
+    background-color: #1e0941;
+}
+
+.restaurant-reservations .back-to-restaurant {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.restaurant-reservations .back-to-restaurant button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.restaurant-reservations .back-to-restaurant button:hover {
+    background-color: #0056b3;
+}
+
+.restaurant-reservations p {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}

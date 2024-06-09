@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh; /* Set height to fill the viewport */
-    background-image: url('https://toohotel.com/wp-content/uploads/2022/09/TOO_restaurant_Panoramique_vue_Paris_nuit_v2-scaled.jpg'); /* Path to your background image */
+    background-image: url('https://files.oaiusercontent.com/file-nB7ZhEX4TcnXcp9KVgeNvdYO?se=2024-05-30T07%3A03%3A46Z&sp=r&sv=2023-11-03&sr=b&rscc=max-age%3D31536000%2C%20immutable&rscd=attachment%3B%20filename%3D09ac6cfe-0992-4896-a632-4b64ed47ccc6.webp&sig=ApAhdew9/ldsLWgR6nlt4kEyHmnuU8/wrI14T8WiVPU%3D'); /* Path to your background image */
     background-size: cover; /* Cover the entire container */
     background-position: center; /* Center the background image */
     padding: 20px; /* Add padding for content */
@@ -18,10 +18,9 @@ h1 {
 }
 
 /* Paragraph text */
-p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: white;
+.About  {
+    font-size: 1.2rem;
+    color: White(32, 14, 192);
     margin-bottom: 20px;
 }
 
@@ -42,12 +41,14 @@ p {
 }
 
 /* Link container */
-.link-container {
+.AboutLink-container {
+    display: flex;
+    justify-content: center;
     margin-top: 20px;
 }
 
 /* Links */
-.link-container a {
+.AboutLink-container a {
     color: #007bff;
     text-decoration: none;
     margin-right: 20px;
@@ -56,4 +57,7 @@ p {
 /* Link hover effect */
 .link-container a:hover {
     text-decoration: underline;
+}
+.AboutLink-container button {
+    margin: 0 10px; /* Adjust this value to your liking */
 }

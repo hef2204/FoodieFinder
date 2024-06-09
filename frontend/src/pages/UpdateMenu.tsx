@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/UpdateMenu.css';
 
 interface Restaurant {
     id: number;
@@ -78,30 +79,22 @@ const UpdateMenu: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className='update-MenuContainer'>
             <h1>Add Menu Item</h1>
-            <p>Restaurant: {restaurant.name}</p>
-            <form onSubmit={handleAddMenuItem}>
-                <label>
-                    Name:
+            <h2>Restaurant: {restaurant.name}</h2>
+            <form className='product-form' onSubmit={handleAddMenuItem}>
+                <label>Product Name:</label>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} />
-                </label>
-                <label>
-                    Description:
+                <label>Description:</label>
                     <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
-                </label>
-                <label>
-                    Price:
+                <label>Price:</label>
                     <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
-                </label>
                 <input type="submit" value="Add Menu Item" />
             </form>
             <div className='back'>
                 <button onClick={() => {
                     window.history.back();
                 }}>Back</button>
-
-
             </div>
         </div>
     );

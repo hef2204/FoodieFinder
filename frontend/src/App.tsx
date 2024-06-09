@@ -1,20 +1,17 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useNavigate} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 import Login from './pages/login';
 import Register from './pages/register';
 import About from './pages/about';
-import './css/homepage.css';
-import AdminPage from './pages/adminPage.tsx'; 
-import { UserProvider } from './UserContext';
+import AdminPage from './pages/adminPage.tsx';
 import AddManager from './pages/AddManager';
 import AddRestaurant from './pages/AddRestaurant';
 import RestaurantPage from './pages/restaurantPage.tsx';
 import UsersTable from './pages/UsersTable.tsx';
-import  AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
+import AddManagerAndRestaurant from './pages/add_manager_restaurant.tsx';
 import RestaurantDetailPage from './pages/RestaurantDetailPage.tsx';
 import UpdateRestaurantPage from './pages/RestaurantUpdateForm.tsx';
-import { Button } from 'react-bootstrap';
 import UserProfile from './pages/user-profile.tsx';
 import ManagersTable from './pages/ManagersTable.tsx';
 import ManagerPage from './pages/ManagerPage.tsx';
@@ -23,6 +20,23 @@ import AddAdmin from './pages/AddAdmin.tsx';
 import ReservationPage from './pages/ReservationPage.tsx';
 import UserReservationPage from './pages/UserReservationPage.tsx';
 import ManagerReservationPage from './pages/ManagerReservationPage.tsx';
+import { AuthProvider, useAuth } from './authContext';
+import { Button } from 'react-bootstrap';
+import './css/homepage.css';
+
+const ProtectedRoute = ({ element, requiredRole }: { element: JSX.Element; requiredRole?: string }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!user || (requiredRole && user.role !== requiredRole)) {
+    return <Navigate to="/pages/login" />;
+  }
+
+  return element;
+};
 
 
 
@@ -88,33 +102,32 @@ export default function App() {
             <Helmet>
                 <title>FoodieFinder</title>
             </Helmet>
-            <UserProvider>
+            <AuthProvider>
                 <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/pages/login" element={<Login />} />
                 <Route path="/pages/register" element={<Register />} />
                 <Route path="/pages/about" element={<About />} />
-                <Route path="/pages/adminPage" element={<AdminPage />} />
-                <Route path="/restaurant/:id/update" element={<UpdateRestaurantPage />} />
-                <Route path="/pages/AddManager" element={<AddManager />} />
-                <Route path="/pages/AddRestaurant" element={<AddRestaurant />} />
-                <Route path="/pages/restaurantPage" element={<RestaurantPage />} />
-                <Route path="/pages/users" element={<UsersTable />} />
-                <Route path="/pages/add_manager_restaurant" element={<AddManagerAndRestaurant />} />
-                <Route path="/restaurant/:id" element={<RestaurantDetailPage />} />
-                <Route path="/pages/user-profile" element={<UserProfile />} />
-                <Route path="/pages/ManagersTable" element={<ManagersTable />} />
-                <Route path="/pages/managerPage" element={<ManagerPage />} />
-                <Route path="/restaurant/:id/menu" element={<AddMenuItem />} />
-                <Route path='/pages/RestaurantUpdateForm' element={<UpdateRestaurantPage />} />
-                <Route path="/pages/AddAdmin" element={<AddAdmin />} />
-                <Route path="/restaurant/:id/reservation" element={<ReservationPage />} />
-                <Route path="/pages/UserReservationPage" element={<UserReservationPage />} />
-                <Route path="/pages/ManagerReservationPage" element={<ManagerReservationPage />} />
-                
+                <Route path="/pages/adminPage" element={<ProtectedRoute element={<AdminPage />} requiredRole="admin" />} />
+                <Route path="/restaurant/:id/update" element={<ProtectedRoute element={<UpdateRestaurantPage />} requiredRole="manager" />} />
+                <Route path="/pages/AddManager" element={<ProtectedRoute element={<AddManager />} requiredRole="admin" />} />
+                <Route path="/pages/AddRestaurant" element={<ProtectedRoute element={<AddRestaurant />} requiredRole="admin" />} />
+                <Route path="/pages/restaurantPage" element={<ProtectedRoute element={<RestaurantPage />} />} />
+                <Route path="/pages/users" element={<ProtectedRoute element={<UsersTable />} requiredRole="admin" />} />
+                <Route path="/pages/add_manager_restaurant" element={<ProtectedRoute element={<AddManagerAndRestaurant />} requiredRole="admin" />} />
+                <Route path="/restaurant/:id" element={<ProtectedRoute element={<RestaurantDetailPage />} />} />
+                <Route path="/pages/user-profile" element={<ProtectedRoute element={<UserProfile />} />} />
+                <Route path="/pages/ManagersTable" element={<ProtectedRoute element={<ManagersTable />} requiredRole="admin" />} />
+                <Route path="/pages/managerPage" element={<ProtectedRoute element={<ManagerPage />} requiredRole="manager" />} />
+                <Route path="/restaurant/:id/menu" element={<ProtectedRoute element={<AddMenuItem />} requiredRole="manager" />} />
+                <Route path='/pages/RestaurantUpdateForm'  element={<UpdateRestaurantPage />} />
+                <Route path="/pages/AddAdmin" element={<ProtectedRoute element={<AddAdmin />} requiredRole="admin" />} />
+                <Route path="/restaurant/:id/reservation" element={<ProtectedRoute element={<ReservationPage />} requiredRole="user" />} />
+                <Route path="/pages/UserReservationPage" element={<ProtectedRoute element={<UserReservationPage />} requiredRole="user" />} />
+                <Route path="/pages/ManagerReservationPage" element={<ProtectedRoute element={<ManagerReservationPage />} requiredRole="manager" />} />
                 </Routes>
-            </UserProvider>
-        </BrowserRouter>
+            </AuthProvider>
+            </BrowserRouter>
     
 );
 }

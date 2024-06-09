@@ -68,15 +68,14 @@ const ManagerPage: React.FC = () => {
             <div>
                 <button onClick={() => navigate("/pages/AddRestaurant")}>Add Restaurant</button>
             </div>
-            <div>
-                <button onClick={() => navigate("/pages/AddManager")}>Add Manager</button>
-            </div>
             <div className='logout admin'>
                 <button onClick={() => {
                     localStorage.clear();
                     navigate('/');
                 }}>Logout</button>
             </div>
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+
         </div>
     );
 }

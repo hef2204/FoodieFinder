@@ -1,9 +1,44 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../css/addManagerRestaurant.css';
 
-const AddManagerAndRestaurant = () => {
+interface FormData {
+    username: string;
+    full_name: string;
+    password: string;
+    email: string;
+    phone_number: string;
+    name: string;
+    location: string;
+    phone_number_restaurant: string;
+    type: string;
+    Kosher: string;
+    order_table: string;
+    opening_time: string;
+    closing_time: string;
+    discounts: string;
+}
+
+interface Errors {
+    username: string;
+    full_name: string;
+    password: string;
+    email: string;
+    phone_number: string;
+    name: string;
+    location: string;
+    phone_number_restaurant: string;
+    type: string;
+    Kosher: string;
+    order_table: string;
+    opening_time: string;
+    closing_time: string;
+    discounts: string;
+}
+
+const AddManagerAndRestaurant: React.FC = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         username: '',
         full_name: '',
         password: '',
@@ -15,49 +50,75 @@ const AddManagerAndRestaurant = () => {
         type: '',
         Kosher: '',
         order_table: '',
-        Availability: '',
+        opening_time: '',
+        closing_time: '',
         discounts: ''
     });
 
-    const [errors, setErrors] = useState({
-        username: '',
-        email: ''
-    });
+    const [errors, setErrors] = useState<Partial<Errors>>({});
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = event.target;
         setFormData(prevState => ({
             ...prevState,
             [name]: value
         }));
+        validateField(name, value);
+    };
 
-        // Validate email format
-        if (name === 'email') {
+    const validateField = (name: string, value: string) => {
+        let error = '';
+        if (!value) {
+            error = `${name.replace('_', ' ')} is required`;
+        } else if (name === 'email') {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailPattern.test(value)) {
-                setErrors(prevErrors => ({
-                    ...prevErrors,
-                    email: 'Invalid email format'
-                }));
-            } else {
-                setErrors(prevErrors => ({
-                    ...prevErrors,
-                    email: ''
-                }));
+                error = 'Invalid email format';
+            }
+        } else if (name === 'phone_number' || name === 'phone_number_restaurant') {
+            const phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(value)) {
+                error = 'Phone number must be 10 digits';
+            }
+        } else if (name === 'password' && value.length < 6) {
+            error = 'Password must be at least 6 characters';
+        }
+
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            [name]: error
+        }));
+    };
+
+    const validateForm = () => {
+        const newErrors: Partial<Errors> = {};
+        for (const [key, value] of Object.entries(formData)) {
+            if (!value) {
+                newErrors[key as keyof Errors] = `${key.replace('_', ' ')} is required`;
+            } else if (key === 'email') {
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailPattern.test(value)) {
+                    newErrors[key as keyof Errors] = 'Invalid email format';
+                }
+            } else if (key === 'phone_number' || key === 'phone_number_restaurant') {
+                const phonePattern = /^[0-9]{10}$/;
+                if (!phonePattern.test(value)) {
+                    newErrors[key as keyof Errors] = 'Phone number must be 10 digits';
+                }
+            } else if (key === 'password' && value.length < 6) {
+                newErrors[key as keyof Errors] = 'Password must be at least 6 characters';
             }
         }
-    }
-
-    const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const { name, value } = event.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
+        setErrors(newErrors as Errors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const addManagerAndRestaurant = () => {
-        const { username, full_name, password, email, phone_number, name, location, phone_number_restaurant, type, Kosher, order_table, Availability, discounts } = formData;
+        if (!validateForm()) {
+            return;
+        }
+
+        const { username, full_name, password, email, phone_number, name, location, phone_number_restaurant, type, Kosher, order_table, opening_time, closing_time, discounts } = formData;
 
         const manager = {
             username,
@@ -74,7 +135,8 @@ const AddManagerAndRestaurant = () => {
             type,
             Kosher,
             order_table,
-            Availability,
+            opening_time,
+            closing_time,
             discounts
         };
 
@@ -101,7 +163,7 @@ const AddManagerAndRestaurant = () => {
             })
             .then(data => {
                 console.log(data);
-                navigate('/pages/adminPage'); 
+                navigate('/pages/adminPage');
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -119,40 +181,75 @@ const AddManagerAndRestaurant = () => {
                     alert('An unexpected error occurred: ' + error.message);
                 }
             });
-    }
+    };
+
+    const isFormValid = () => {
+        return Object.values(errors).every(error => !error) &&
+            Object.values(formData).every(value => value !== '');
+    };
 
     return (
-        <div className="container">
-            <div className="form">
-                <h1>Add Manager and Restaurant</h1>
-                <h2>Manager Details</h2>
-                <input className="input-field" name="username" value={formData.username} onChange={handleChange} placeholder="Username" />
-                {errors.username && <p className="error-message">{errors.username}</p>}
-                <input className="input-field" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Full Name" />
-                <input className="input-field" name="password" value={formData.password} onChange={handleChange} placeholder="Password" />
-                <input className="input-field" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
-                {errors.email && <p className="error-message">{errors.email}</p>}
-                <input className="input-field" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number" />
-                <h2>Restaurant Details</h2>
-                <input className="input-field" name="name" value={formData.name} onChange={handleChange} placeholder="Name" />
-                <input className="input-field" name="location" value={formData.location} onChange={handleChange} placeholder="Location" />
-                <input className="input-field" name="phone_number_restaurant" value={formData.phone_number_restaurant} onChange={handleChange} placeholder="Phone Number" />
-                <input className="input-field" name="type" value={formData.type} onChange={handleChange} placeholder="Type" />
-                <select className="input-field" name="Kosher" value={formData.Kosher} onChange={handleSelectChange}>
-                        <option value="">Kosher</option>
+        <div className="managerRestaurant">
+            <div className="form-container">
+                <div className="Manager-form-section">
+                    <h2>Manager Details</h2>
+                    <label>Username: <span className="required">*</span></label>
+                    <input className="input-field" name="username" value={formData.username} onChange={handleChange} placeholder="Username" />
+                    {errors.username && <p className="error-message">{errors.username}</p>}
+                    <label>Full Name: <span className="required">*</span></label>
+                    <input className="input-field" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Full Name" />
+                    {errors.full_name && <p className="error-message">{errors.full_name}</p>}
+                    <label>Password: <span className="required">*</span></label>
+                    <input className="input-field" name="password" type="password" value={formData.password} onChange={handleChange} placeholder="Password" />
+                    {errors.password && <p className="error-message">{errors.password}</p>}
+                    <label>Email: <span className="required">*</span></label>
+                    <input className="input-field" name="email" value={formData.email} onChange={handleChange} placeholder="Email" />
+                    {errors.email && <p className="error-message">{errors.email}</p>}
+                    <label>Phone Number: <span className="required">*</span></label>
+                    <input className="input-field" name="phone_number" value={formData.phone_number} onChange={handleChange} placeholder="Phone Number" />
+                    {errors.phone_number && <p className="error-message">{errors.phone_number}</p>}
+                </div>
+                <div className="Restaurant-form-section">
+                    <h2>Restaurant Details</h2>
+                    <label>Name: <span className="required">*</span></label>
+                    <input className="input-field" name="name" value={formData.name} onChange={handleChange} placeholder="Name" />
+                    {errors.name && <p className="error-message">{errors.name}</p>}
+                    <label>Location: <span className="required">*</span></label>
+                    <input className="input-field" name="location" value={formData.location} onChange={handleChange} placeholder="Location" />
+                    {errors.location && <p className="error-message">{errors.location}</p>}
+                    <label>Phone Number: <span className="required">*</span></label>
+                    <input className="input-field" name="phone_number_restaurant" value={formData.phone_number_restaurant} onChange={handleChange} placeholder="Phone Number" />
+                    {errors.phone_number_restaurant && <p className="error-message">{errors.phone_number_restaurant}</p>}
+                    <label>Type: <span className="required">*</span></label>
+                    <input className="input-field" name="type" value={formData.type} onChange={handleChange} placeholder="Type" />
+                    {errors.type && <p className="error-message">{errors.type}</p>}
+                    <label>Kosher: <span className="required">*</span></label>
+                    <select className="input-field" name="Kosher" value={formData.Kosher} onChange={handleChange}>
+                        <option value="" disabled selected>Select a Kosher</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
-                </select>
-                <select className="input-field" name="order_table" value={formData.order_table} onChange={handleSelectChange}>
-                    <option value="">Order Table</option>
-                    <option value="Yes">Yes</option>
-                    <option value="No">No</option>
-                </select>   
-                <input className="input-field" name="Availability" value={formData.Availability} onChange={handleChange} placeholder="Availability" />
-                <input className="input-field" name="discounts" value={formData.discounts} onChange={handleChange} placeholder="Discounts" />
-                <button className="button" onClick={addManagerAndRestaurant} disabled={!!errors.email || !!errors.username}>Add Manager and Restaurant</button>
+                    </select>
+                    {errors.Kosher && <p className="error-message">{errors.Kosher}</p>}
+                    <label>Order Table: <span className="required">*</span></label>
+                    <select className="input-field" name="order_table" value={formData.order_table} onChange={handleChange}>
+                        <option value="" disabled selected>Select if Order Table</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                    {errors.order_table && <p className="error-message">{errors.order_table}</p>}
+                    <label>Opening Time: <span className="required">*</span></label>
+                    <input className="input-field" name="opening_time" type="time" value={formData.opening_time} onChange={handleChange} />
+                    {errors.opening_time && <p className="error-message">{errors.opening_time}</p>}
+                    <label>Closing Time: <span className="required">*</span></label>
+                    <input className="input-field" name="closing_time" type="time" value={formData.closing_time} onChange={handleChange} />
+                    {errors.closing_time && <p className="error-message">{errors.closing_time}</p>}
+                    <label>Discounts: <span className="required">*</span></label>
+                    <input className="input-field" name="discounts" value={formData.discounts} onChange={handleChange} placeholder="Discounts" />
+                    {errors.discounts && <p className="error-message">{errors.discounts}</p>}
+                </div>
             </div>
-            <button className='back-button' onClick={() => window.history.back()}>back</button>
+            <button className="button" onClick={addManagerAndRestaurant} disabled={!isFormValid()}>Add Manager and Restaurant</button>
+            <button className="back-button" onClick={() => window.history.back()}>Back</button>
         </div>
     );
 };

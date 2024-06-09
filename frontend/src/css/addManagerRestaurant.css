@@ -1,0 +1,70 @@
+.managerRestaurant {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.form-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    justify-content: space-between;
+}
+
+.Manager-form-section,
+.Restaurant-form-section {
+    flex: 1;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.Manager-form-section {
+    border-right: 1px solid #ccc; /* Optional: adds a dividing line between sections */
+}
+
+h2 {
+    text-align: center;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.required {
+    color: red;
+}
+
+.input-field {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.875em;
+}
+
+.button {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 20px;
+}
+
+.button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

@@ -1,14 +1,13 @@
-
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../css/about.css';
-
 
 const About = () => {
     const isLoggedIn = localStorage.getItem('token');
+    const navigate = useNavigate();
     return (
         <div>
             <h1>About US</h1>
-            <p>
+            <p className='About'>
             "Welcome to FoodieFinder - your ultimate dining companion!
             Easily discover restaurants based on location, cuisine, kosher status, prices, and ratings. 
             You can also make reservations, order takeout, and even get discounts.
@@ -16,17 +15,15 @@ const About = () => {
             whether it's a casual lunch, a romantic dinner, or a special celebration.
             Download the app today and start exploring the best dining options in your area!"
             </p>
-            <button className='back-button' onClick={() => window.location.href = '/'}>back</button>
-            <div className="link-container1">
+            <button className='back-button' onClick={() => window.history.back()}>Back</button>
+            <div className="AboutLink-container">
             {!isLoggedIn && (
                 <>
-                    <Link to="/pages/login">Login</Link>
-                    <Link to="/pages/register">Register</Link>
+                    <button onClick={() => navigate("/pages/login")}>Login</button>
+                    <button onClick={() => navigate("/pages/register")}>Register</button>
                 </>
             )}
-        </div>
-
-
+            </div>
         </div>
     );
 };

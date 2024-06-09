@@ -5,6 +5,8 @@ interface Reservation {
     date: string;
     time: string;
     numberOfPeople: number;
+    full_name: string;
+    phone_number: string;
 }
 
 const ManagerReservationPage: React.FC = () => {
@@ -23,6 +25,7 @@ const ManagerReservationPage: React.FC = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setReservations(data.reservations);
+                    console.log(data);
                 } else {
                     setMessage('Failed to fetch reservations');
                 }
@@ -43,15 +46,20 @@ const ManagerReservationPage: React.FC = () => {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Phone Number</th>
                         <th>Date</th>
                         <th>Time</th>
                         <th>Number of People</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     {reservations.map((reservation: Reservation) => (
                         <tr key={reservation.id}>
                             <td>{reservation.id}</td>
+                            <td>{reservation.full_name}</td>
+                            <td>{reservation.phone_number}</td>
                             <td>{reservation.date}</td>
                             <td>{reservation.time}</td>
                             <td>{reservation.numberOfPeople}</td>
