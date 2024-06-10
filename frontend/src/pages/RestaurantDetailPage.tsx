@@ -49,10 +49,6 @@ const RestaurantDetailPage = () => {
         console.log("Manager name from local storage:", managerName);
     }, []);
 
-    const handleUpdateRestaurant = () => {
-        const id = localStorage.getItem('restaurant_id');
-        navigate(`/restaurant/${id}/update`);
-    };
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
@@ -97,7 +93,7 @@ const RestaurantDetailPage = () => {
                         <button onClick={toggleDropdown}>Actions</button>
                         {dropdownVisible && (
                             <div className='dropdown-menu'>
-                                <button onClick={handleUpdateRestaurant}>Update Restaurant</button>
+                                <button onClick={() => navigate(`/restaurant/${id}/update`)}>Update Restaurant</button>
                                 <button onClick={() => navigate(`/restaurant/${id}/menu`)}>Add to Menu</button>
                                 <button onClick={() => {
                                     localStorage.clear();
