@@ -49,6 +49,7 @@ const RestaurantDetailPage = () => {
         console.log("Manager name from local storage:", managerName);
     }, []);
 
+    
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible);
@@ -135,7 +136,7 @@ const RestaurantDetailPage = () => {
                     ))}
                 </tbody>
             </table>
-            <button className='back-button' onClick={() => navigate('/restaurants')}>Back to Restaurants</button>
+            <button className='back-button' onClick={() => navigate('/pages/restaurantPage')}>Back to Restaurants</button>
         </div>
     );
 }
