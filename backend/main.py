@@ -8,6 +8,8 @@ from db import get_db, close_db
 from admin.admin_functions import admin_functions
 from manager.manager_functions import manager_functions
 from flask_jwt_extended import JWTManager, create_access_token
+from admin.admin_functions import add_manager
+from manager.manager_functions import add_another_restaurant_by_manager
 from datetime import timedelta
 import logging
 
@@ -27,6 +29,18 @@ print(FRONTEND_URL)
 
 logging.basicConfig(level=logging.DEBUG)
 
+
+@app.route('/admin/add_manager', methods=['POST'])
+def admin_add_manager():
+    data = request.get_json()
+    result = add_manager(data)
+    return jsonify(result), 200
+
+@app.route('/manager/add_restaurant', methods=['POST'])
+def manager_add_restaurant():
+    data = request.get_json()
+    result = add_another_restaurant_by_manager(data)
+    return jsonify(result), 200
 
 
 @app.route('/')

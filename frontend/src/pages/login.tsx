@@ -9,9 +9,11 @@ const Login: React.FC = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { user, login } = useAuth(); // Get auth context
+  console.log("Rendering login page")
 
   useEffect(() => {
     if (user) {
+      console.log("User is already logged in", user)
       navigate('/');
     }
   }, [user, navigate]);
@@ -70,7 +72,6 @@ const Login: React.FC = () => {
       setError('An unexpected error occurred. Please try again later.');
     }
   };
-
   return (
     <div className="login-container">
       <h1>Login</h1>
