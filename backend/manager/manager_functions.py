@@ -237,29 +237,31 @@ def manager_reservations():
     print("User role:", user_role)  # Add log
 
     if user_role != "manager":
+        print("Unauthorized access attempt")  # Add log
         return jsonify({"message": "Unauthorized"}), 401
 
     db = get_db()
-    manager_ids = current_user['id']
-    print("Manager ID:", manager_ids)  # Add log
+    manager_id = current_user['id']
+    print("Manager ID:", manager_id)  # Add log
 
-    # Fetch restaurant ID associated with the manager
-    restaurant = db.execute("SELECT id FROM restaurants WHERE manager_ids = ?", (manager_ids,)).fetchone()
-    if restaurant is None:
+    # Fetch restaurants where manager_ids contains the current manager_id
+    restaurants = db.execute("SELECT id FROM restaurants WHERE manager_ids LIKE ?", (f"%{manager_id}%",)).fetchall()
+    if not restaurants:
+        print("Manager not associated with any restaurant")  # Add log
         return jsonify({"message": "Manager is not associated with any restaurant"}), 404
 
-    restaurant_id = restaurant['id']
-    print("Restaurant ID:", restaurant_id)  # Add log
+    restaurant_ids = [restaurant['id'] for restaurant in restaurants]
+    print("Restaurant IDs:", restaurant_ids)  # Add log
 
-    # Fetch reservations for the manager's restaurant
+    # Fetch reservations for the manager's restaurants
     reservations = db.execute(
         """
         SELECT r.id, r.date, r.time, r.number_of_people, u.full_name, u.phone_number 
         FROM reservations r
         JOIN users u ON r.user_id = u.id
-        WHERE r.restaurant_id = ?
-        """, 
-        (restaurant_id,)
+        WHERE r.restaurant_id IN ({})
+        """.format(','.join('?' * len(restaurant_ids))), 
+        restaurant_ids
     ).fetchall()
 
     reservations_list = []
@@ -275,6 +277,8 @@ def manager_reservations():
 
     print("Reservations list:", reservations_list)  # Add log
     return jsonify({"reservations": reservations_list}), 200
+
+
 
 
 ############################################################################################################    

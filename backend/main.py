@@ -1,5 +1,5 @@
 
-from models import User
+# from models import User
 from flask import Flask, request, jsonify
 
 from flask_cors import CORS
@@ -151,26 +151,51 @@ def get_restaurant_locations():
     return jsonify({"locations": [location['location'] for location in locations]})
 
 
-
-
-@app.route('/update_user', methods=["POST"])
-def update_user():
+@app.route('/user_profile/<int:user_id>', methods=["GET", "PUT"])
+def user_profile(user_id):
     db = get_db()
-    if request.json is not None:
-        user = User(**request.json)
-        db.execute(
-            "UPDATE users SET email=?, first_name=?, last_name=? WHERE username=?",
-            (user.email, user.first_name, user.last_name, user.username)
-        )
-        db.commit()
-        close_db()
-        return jsonify({"message": "User updated successfully"})
-    else:
-        return jsonify({"message": "Invalid request"}), 400
-
     
+    if request.method == "GET":
+        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+        return jsonify({"user": dict(user)}), 200
+    
+    elif request.method == "PUT":
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
 
+        if 'email' in data:
+            email_check = db.execute("SELECT id FROM users WHERE email = ? AND id != ?", (data['email'], user_id)).fetchone()
+            if email_check is not None:
+                return jsonify({"error": "Email is already taken"}), 400
 
+        if 'username' in data:
+            username_check = db.execute("SELECT id FROM users WHERE username = ? AND id != ?", (data['username'], user_id)).fetchone()
+            if username_check is not None:
+                return jsonify({"error": "Username is already taken"}), 400
+        
+        if 'password' in data:
+            password = data['password']
+            if len(password) < 6 or ' ' in password:
+                return jsonify({"error": "Password must be at least 6 characters long and contain no spaces"}), 400
+            db.execute("UPDATE users SET password = ? WHERE id = ?", (password, user_id))
+
+        updates = {key: data[key] for key in data if key in ['full_name', 'email', 'username']}
+        if updates:
+            set_clause = ', '.join(f"{key} = ?" for key in updates)
+            values = list(updates.values()) + [user_id]
+            db.execute(f"UPDATE users SET {set_clause} WHERE id = ?", values)
+        
+        db.commit()
+        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+        if user is None:
+            return jsonify({"error": "User not found"}), 404
+        return jsonify({"user": dict(user)}), 200
+
+    return jsonify({"error": "Method not allowed"}), 405
 
 
 
@@ -208,28 +233,7 @@ def restaurant_page(restaurant_id):
     
 
 
-@app.route('/user_profile/<int:user_id>', methods=["GET", "PUT"])
-def user_profile(user_id):
-    db = get_db()
-    if request.method == "GET":
-        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-        if user is None:
-            return jsonify({"error": "User not found"}), 404
-        return jsonify({"user": dict(user)})
-    
-    elif request.method == "PUT":
-        data = request.get_json()
-        db.execute(
-            "UPDATE users SET name = ?, email = ? WHERE id = ?",
-            (data['name'], data['email'], user_id)
-        )
-        db.commit()
-        user = db.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-        if user is None:
-            return jsonify({"error": "User not found"}), 404
-        return jsonify({"user": dict(user)})
-    
-    return jsonify({"error": "Method not allowed"}), 405
+
 
 
 @app.route('/restaurant_page/<int:restaurant_id>/reservation', methods=["POST"])

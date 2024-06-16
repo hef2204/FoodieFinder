@@ -15,6 +15,9 @@ const UserProfile: React.FC = () => {
     const [editMode, setEditMode] = useState(false);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,8 +29,9 @@ const UserProfile: React.FC = () => {
                         console.error(data.error);
                     } else {
                         setUser(data.user);
-                        setName(data.user.name);
+                        setName(data.user.full_name);
                         setEmail(data.user.email);
+                        setUsername(data.user.username);
                     }
                 })
                 .catch((error) => {
@@ -36,6 +40,55 @@ const UserProfile: React.FC = () => {
         }
     }, [user_id]);
 
+    const validateEmail = (email: string) => {
+        const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return EMAIL_REGEX.test(email);
+    };
+
+    const handleSave = () => {
+        if (!window.confirm('Are you sure you want to save the changes?')) {
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setError('Invalid email format');
+            return;
+        }
+
+        if (password && (password.length < 6 || password.includes(' '))) {
+            setError('Password must be at least 6 characters long and contain no spaces');
+            return;
+        }
+
+        if (user_id) {
+            const updateData: { [key: string]: string } = {};
+            if (name) updateData['name'] = name;
+            if (email) updateData['email'] = email;
+            if (username) updateData['username'] = username;
+            if (password) updateData['password'] = password;
+
+            fetch(`http://localhost:5000/user_profile/${user_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updateData),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.error) {
+                        setError(data.error);
+                    } else {
+                        setUser(data.user);
+                        setEditMode(false);
+                        setError('');
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    };
 
     if (!user) {
         return <div>Loading...</div>;
@@ -52,6 +105,7 @@ const UserProfile: React.FC = () => {
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            placeholder="Enter your full name"
                         />
                     </label>
                     <label>
@@ -60,10 +114,30 @@ const UserProfile: React.FC = () => {
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
                         />
                     </label>
-                    {/* <button onClick={handleSave}>Save</button> */}
+                    <label>
+                        Username:
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter your username"
+                        />
+                    </label>
+                    <label>
+                        Password:
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter a new password (optional)"
+                        />
+                    </label>
+                    <button onClick={handleSave}>Save</button>
                     <button onClick={() => setEditMode(false)}>Cancel</button>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
                 </div>
             ) : (
                 <div>
@@ -76,13 +150,12 @@ const UserProfile: React.FC = () => {
             <button className='LogOut' onClick={() => {
                 localStorage.clear();
                 setUser(null);
-                navigate("/")
+                navigate("/");
             }}>Logout</button>
             <button className='reservation' onClick={() => {
-                navigate("/pages/UserReservationPage")
+                navigate("/pages/UserReservationPage");
             }}>Reservations</button>
             <button className='back-button' onClick={() => window.history.back()}>Back</button>
-
         </div>
     );
 };
