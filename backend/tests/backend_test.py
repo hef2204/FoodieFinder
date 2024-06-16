@@ -17,7 +17,7 @@ def test_admin_add_manager(mock_add_manager, client):
     data = {'username': 'new_manager', 'password': 'password123'}
     response = client.post('/admin/add_manager', json=data)
     assert response.status_code == 200
-    assert b'success' in response.data
+    assert b'success' in response.data1
 
 @patch('backend.main.add_restaurant')
 def test_manager_manager_add_restaurantt(mock_add_restaurant, client):
