@@ -33,7 +33,7 @@ const RestaurantDetailPage = () => {
     const [dropdownVisible, setDropdownVisible] = useState(false);
     const navigate = useNavigate();
     const [, setUser] = useState<{ username: string, role: string } | null>(null);
-    const { user, login, logout, loading } = useContext(AuthContext);
+    const context = useContext(AuthContext);
 
     useEffect(() => {
         const role = localStorage.getItem('role');
@@ -100,12 +100,11 @@ const RestaurantDetailPage = () => {
                                 <button onClick={() => {
                                     localStorage.clear();
                                     setUser(null);
-                                    logout();  // Use logout function from context
+                                    context?.logout();  // Use logout function from context
                                     navigate("/");
                                 }}>Logout</button>
                                 <button onClick={() => navigate(`/pages/ManagerReservationPage`)}>View Reservations</button>
-                            </div>
-                        )}
+                            </div>                        )}
                     </div>
                 )}
             </div>

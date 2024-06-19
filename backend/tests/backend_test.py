@@ -1,33 +1,49 @@
-import pytest
-from unittest.mock import patch
+from db import get_db
 from main import app
-from db import init_db, get_db
 
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-    with app.test_client() as client:
-        with app.app_context():
-            init_db()
-        yield client
+app.config['JWT_SECRET_KEY'] = 'super-secret'  # Change this to your actual secret key
 
-@patch('backend.main.add_manager')
-def test_admin_add_manager(mock_add_manager, client):
-    mock_add_manager.return_value = {'status': 'success'}
-    data = {'username': 'new_manager', 'password': 'password123'}
-    response = client.post('/admin/add_manager', json=data)
-    assert response.status_code == 200
-    assert b'success' in response.data1
-
-@patch('backend.main.add_restaurant')
-def test_manager_manager_add_restaurantt(mock_add_restaurant, client):
-    mock_add_restaurant.return_value = {'status': 'success'}
-    data = {'name': 'New Restaurant', 'location': '123 Main St'}
-    response = client.post('/manager/add_restaurant', json=data)
-    assert response.status_code == 200
-    assert b'success' in response.data
-
-def test_db_connection(client):
+def test_add_manager_route():
+    client = app.test_client()
+    new_manager_data = {
+        'username': "test_manager1",
+        'full_name': "Ofer Sadan",
+        'password': "fadsjdfhlsdh",
+        'email': "example@email.com",
+        'phone_number': "923492364",
+    }
+    response = client.post('/admin/add_manager', json=new_manager_data)
+    assert response.status_code == 401
     with app.app_context():
-        db = get_db()
-        assert db is not None
+        get_db().cursor().execute("DELETE FROM users WHERE username = 'test_manager1'").connection.commit()
+
+
+def test_login_bad_route():
+    client = app.test_client()
+    login_data = {
+        'username': "test_manager1",
+        'password': "fadsjdfhlsdh",
+    }
+    response = client.post('/login', json=login_data)
+    assert response.status_code == 401
+
+
+def test_login_good_route():
+    client = app.test_client()
+    login_data = {
+        'username': "admin",
+        'password': "1234",
+    }
+    response = client.post('/login', json=login_data)
+    assert response.status_code == 200
+
+
+def test_login_bad_password_route():
+    client = app.test_client()
+    login_data = {
+        'username': "admin",
+        'password': "12yy34",
+    }
+    response = client.post('/login', json=login_data)
+    assert response.status_code == 401
+

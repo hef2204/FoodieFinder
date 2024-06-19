@@ -221,7 +221,7 @@ def get_restaurants():
     return jsonify([dict(row) for row in restaurants]), 200
 
 @admin_functions.route('/admin/add_manager', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def add_manager():
     db = get_db()
 
