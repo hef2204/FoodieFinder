@@ -47,3 +47,23 @@ def test_login_bad_password_route():
     response = client.post('/login', json=login_data)
     assert response.status_code == 401
 
+
+def test_add_another_restaurant():
+    client = app.test_client()
+    new_restaurant_data = {
+        'name': "test_restaurant1",
+        'location': "test_address1",
+        'phone_number': "123456789",
+        'manager_ids': 1,
+        "type": "test_type1",
+        "kosher": "test_kosher1",
+        "order_table": "test_order_table1",
+        "opening time": "test_opening_time1",
+        "closing time": "test_closing_time1",
+        "discounts": "test_discount1",
+    }
+    response = client.post('/manager/add_restaurant', json=new_restaurant_data)
+    assert response.status_code == 401
+    with app.app_context():
+        get_db().cursor().execute("DELETE FROM restaurants WHERE name = 'test_restaurant1'").connection.commit()
+

@@ -95,7 +95,6 @@ const RestaurantPage = () => {
     return (
         <div>
             <h1>Restaurants</h1>
-            <h2>in order to enter a restaurant, click on the restaurant</h2>
             <div className="filter-icon" onClick={() => setShowFilterOptions(!showFilterOptions)}>
                 <FontAwesomeIcon icon={faFilter} />
             </div>

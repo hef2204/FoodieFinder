@@ -1,4 +1,4 @@
-from flask import make_response, Blueprint, request, jsonify
+from flask import  Blueprint, request, jsonify
 from db import get_db, close_db
 from models import Restaurant, Manager
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -223,13 +223,13 @@ def get_restaurants():
 @admin_functions.route('/admin/add_manager', methods=['POST'])
 @jwt_required()
 def add_manager():
+    current_user = get_jwt_identity()
+    user_role = current_user['role']
+    print(user_role)
+    if user_role != 'admin':
+        return jsonify({"message": "Unauthorized"}), 401
+    
     db = get_db()
-
-    # current_user = get_jwt_identity()
-    # user_role = current_user['role']
-    # print(user_role)
-    # if user_role != 'admin':
-    #     return jsonify({"message": "Unauthorized"}), 401
 
     manager_data = request.get_json()
 

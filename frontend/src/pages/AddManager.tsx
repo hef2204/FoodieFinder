@@ -105,10 +105,14 @@ const AddManager: React.FC = () => {
         const { username, full_name, password, email, phone_number, restaurantId } = state;
         const managerData = { username, full_name, password, email, phone_number, restaurant_ids: [restaurantId] };
 
+        const token = localStorage.getItem('token');
+
         try {
             const response = await fetch('http://127.0.0.1:5000/admin/add_manager', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' ,
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(managerData),
             });
 

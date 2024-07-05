@@ -245,4 +245,82 @@ To preview the production build, run:
 2. **update**:    
         ```sh
         Update the environment variables as per your requirements.
+
+
+## Docker Setup
+
+### Prerequisites
+- Docker installed on your machine
+- Docker Compose (optional but recommended)
+
+### Building Docker Images
+
+#### Backend
+
+1. Navigate to the backend directory:
+    ```bash
+    cd backend
+    ```
+
+2. Build the Docker image:
+    ```bash
+    docker build -t my-backend .
+    ```
+
+3. Run the Docker container:
+    ```bash
+    docker run -p 5000:5000 --env-file .env my-backend
+    ```
+
+#### Frontend
+
+1. Navigate to the frontend directory:
+    ```bash
+    cd frontend
+    ```
+
+2. Build the Docker image:
+    ```bash
+    docker build -t my-frontend .
+    ```
+
+3. Run the Docker container:
+    ```bash
+    docker run -p 3000:3000 my-frontend
+    ```
+
+### Environment Variables
+
+Ensure you have the necessary environment variables set in your `.env` files for both the backend and frontend.
+
+### Using Docker Compose (Optional)
+
+If you prefer to use Docker Compose, you can use the provided `docker-compose.yml` file.
+
+1. In the root of your project, create a `docker-compose.yml` file with the following content:
+
+    ```yaml
+    version: '3.8'
+
+    services:
+      backend:
+        build: ./backend
+        ports:
+          - "5000:5000"
+        env_file:
+          - ./backend/.env
+
+      frontend:
+        build: ./frontend
+        ports:
+          - "3000:3000"
+    ```
+
+2. Run the following command to start the entire application:
+    ```bash
+    docker-compose up
+    ```
+
+This will build and start both the backend and frontend services, exposing them on ports 5000 and 3000 respectively.
+
         ```
