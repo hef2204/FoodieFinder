@@ -30,18 +30,6 @@ print(FRONTEND_URL)
 logging.basicConfig(level=logging.DEBUG)
 
 
-@app.route('/admin/add_manager', methods=['POST'])
-def admin_add_manager():
-    data = request.get_json()
-    result = add_manager(data)
-    return jsonify(result), 200
-
-@app.route('/manager/add_restaurant', methods=['POST'])
-def manager_add_restaurant():
-    data = request.get_json()
-    result = add_another_restaurant_by_manager(data)
-    return jsonify(result), 200
-
 
 @app.route('/')
 def root():
